@@ -6,7 +6,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
-    "lightningcss-cli": "^1.28.2"
+    "lightningcss-cli": "^1.28.2",
+    "terser": "^5.51.2"
   },
   "allowScripts": {
     "lightningcss-cli@1.33.0": true,
