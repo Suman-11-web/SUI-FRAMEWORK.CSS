@@ -643,3 +643,19 @@
 .sui-ease-in { transition-timing-function: cubic-bezier(0.4, 0, 1, 1); }
 .sui-ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
 .sui-ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Native Syntax Highlighter Theme (Enforced) */
+pre code { color: #d4d4d4 !important; }
+
+/* HTML Tokens */
+.token.comment { color: #6a9955 !important; }
+.token.tag { color: #569cd6 !important; }
+.token.attr-name { color: #9cdcfe !important; }
+.token.attr-value { color: #ce9178 !important; }
+.token.punctuation { color: #808080 !important; }
+
+/* CSS Tokens */
+.token.selector { color: #d7ba7d !important; }
+.token.property { color: #9cdcfe !important; }
+.token.function { color: #dcdcaa !important; }
+.token.value { color: #b5cea8 !important; }

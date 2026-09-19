@@ -5,9 +5,11 @@
     "build": "lightningcss --minify --bundle --targets \">= 0.25%\" src/sui.css -o dist/sui.min.css"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "lightningcss-cli": "^1.28.2"
   },
   "allowScripts": {
-    "lightningcss-cli@1.33.0": true
+    "lightningcss-cli@1.33.0": true,
+    "esbuild@0.28.2": true
   }
 }
