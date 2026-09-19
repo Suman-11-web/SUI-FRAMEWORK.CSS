@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sui.css - Premium Documentation</title>
   
-  <!-- Core Framework -->
   <link rel="stylesheet" href="../dist/sui.min.css">
   
   <style>
@@ -14,64 +13,93 @@
        ========================================================================== */
     body { 
       margin: 0; 
-      overflow: hidden; 
       background-color: var(--sui-bg); 
       font-family: system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
     }
 
-    /* --- LAYOUT SHELL --- */
-    .docs-layout {
+    /* --------------------------------------------------------------------------
+       BULLETPROOF FLOATING ISLAND NAVBAR (GLOBAL)
+       -------------------------------------------------------------------------- */
+    .sui-floating-nav {
+      position: fixed;
+      top: 1.5rem;
+      left: 0;
+      right: 0;
+      margin-inline: auto; 
+      z-index: 200;
       display: flex;
-      height: 100vh;
-      width: 100vw;
-    }
-
-    /* --- MOBILE APP BAR --- */
-    .docs-mobile-header {
-      display: none;
       align-items: center;
       justify-content: space-between;
-      height: 70px;
-      padding: 0 var(--sui-space-4);
-      background: oklch(from var(--sui-surface) l c h / 0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--sui-border);
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 80;
+      gap: 1rem;
+      box-sizing: border-box;
+      width: max-content;
+      max-width: calc(100vw - 2rem);
+      padding: 0.5rem 0.5rem 0.5rem 1rem;
+      background: oklch(from var(--sui-surface) l c h / 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--sui-border);
+      border-radius: 9999px;
+      box-shadow: 0 20px 40px -10px oklch(0% 0 0 / 0.15);
     }
 
-    /* --- PREMIUM SIDEBAR --- */
-    .docs-sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      height: 100vh;
-      background: var(--sui-surface);
-      border-right: 1px solid var(--sui-border-subtle);
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--sui-text); flex-shrink: 0; }
+    .nav-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .nav-pill-link { position: relative; padding: 0.4rem 0.9rem; font-size: 0.85rem; font-weight: 500; color: var(--sui-text-muted); text-decoration: none; border-radius: 999px; transition: color 0.3s ease; z-index: 1; white-space: nowrap; }
+    .nav-pill-link:hover { color: var(--sui-text); background: var(--sui-surface-hover); }
+    .nav-pill-link.active { color: var(--sui-text); background: var(--sui-border-subtle); }
+
+    .nav-desktop-menu { display: none; }
+    .nav-mobile-btn { display: flex; align-items: center; justify-content: center; background: var(--sui-surface-hover); border: 1px solid var(--sui-border); padding: 0.5rem; border-radius: 50%; cursor: pointer; color: var(--sui-text); transition: background 0.2s ease; }
+    .nav-mobile-btn:hover { background: var(--sui-border); }
+    
+    @media (min-width: 992px) {
+      .nav-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
+      .nav-mobile-btn { display: none !important; }
+    }
+
+    /* Global Mobile Drawer */
+    .mobile-drawer { position: fixed; inset: 0; z-index: 9999; display: flex; justify-content: flex-end; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease; }
+    .mobile-drawer.is-open { visibility: visible; opacity: 1; pointer-events: auto; }
+    .drawer-backdrop { position: absolute; inset: 0; background: oklch(0% 0 0 / 0.5); backdrop-filter: blur(4px); cursor: pointer; }
+    .drawer-panel { position: relative; width: 280px; height: 100%; background: var(--sui-surface); border-left: 1px solid var(--sui-border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: -10px 0 30px oklch(0% 0 0 / 0.2); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+    .mobile-drawer.is-open .drawer-panel { transform: translateX(0); }
+
+    /* --------------------------------------------------------------------------
+       DOCS LAYOUT ENGINE
+       -------------------------------------------------------------------------- */
+    .docs-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 8rem var(--sui-space-6) 4rem; 
       display: flex;
-      flex-direction: column;
-      z-index: 100;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      align-items: flex-start;
+      gap: var(--sui-space-8);
+      min-height: 100vh;
+      position: relative;
     }
 
-    .docs-sidebar-header {
-      padding: var(--sui-space-6);
-      border-bottom: 1px solid var(--sui-border-subtle);
-    }
-
-    .docs-sidebar-scroll {
-      padding: var(--sui-space-4);
+    /* Sidebar (Sticky Desktop) */
+    .docs-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 6rem;
+      max-height: calc(100vh - 8rem);
       overflow-y: auto;
-      flex: 1;
+      padding-right: 1rem;
+      border-right: 1px solid var(--sui-border-subtle);
+      z-index: 50;
     }
 
-    /* --- SIDEBAR NAVIGATION LINKS --- */
+    /* Sidebar Links */
     .nav-category {
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--sui-text-muted);
-      margin: 1.5rem 0 0.5rem 1rem;
+      margin: 1.5rem 0 0.5rem 0.5rem;
       font-weight: 700;
     }
     
@@ -79,172 +107,271 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.6rem 1rem;
+      padding: 0.6rem 0.75rem;
       margin-bottom: 0.25rem;
       border-radius: var(--sui-radius-md);
       color: var(--sui-text);
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
     }
 
-    /* Hover Nudge Effect */
-    .docs-nav-link:hover {
-      background: var(--sui-surface-hover);
-      transform: translateX(4px);
+    .docs-nav-link svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      flex-shrink: 0;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
+
+    .docs-nav-link span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .docs-nav-link:hover { background: var(--sui-surface-hover); transform: translateX(4px); }
+    .docs-nav-link:hover svg { opacity: 1; transform: scale(1.1); }
     
-    /* Premium Active State (Glowing Pill) */
     .docs-nav-link.active {
       background: var(--sui-color-primary-500);
       color: white;
       box-shadow: 0 4px 12px oklch(from var(--sui-color-primary-500) l c h / 0.35);
       transform: translateX(4px);
     }
-    
-    /* SVG Icon Styling */
-    .docs-nav-link svg {
-      width: 1.1rem;
-      height: 1.1rem;
-      opacity: 0.6;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .docs-nav-link:hover svg { opacity: 1; transform: scale(1.1); }
     .docs-nav-link.active svg { opacity: 1; }
 
-    /* --- MAIN CONTENT & IFRAME --- */
+    /* Main Content */
     .docs-main {
       flex: 1;
-      height: 100vh;
-      padding: var(--sui-space-6);
+      min-width: 0;
       display: flex;
       flex-direction: column;
     }
 
+    /* Interactive Preview Iframe */
     .docs-iframe {
       width: 100%;
-      flex: 1;
+      height: 75vh;
+      min-height: 700px;
       border: 1px solid var(--sui-border);
       border-radius: var(--sui-radius-xl);
       background-color: var(--sui-bg);
       box-shadow: var(--sui-shadow-md);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .docs-iframe:hover {
+      box-shadow: var(--sui-shadow-lg);
+      border-color: var(--sui-border-strong);
     }
 
-    /* --- MOBILE BACKDROP OVERLAY --- */
-    .docs-overlay {
+    /* Docs Mobile Toggle */
+    .docs-mobile-menu-btn {
+      display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: var(--sui-surface);
+      border: 1px solid var(--sui-border-strong);
+      border-radius: var(--sui-radius-lg);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      color: var(--sui-text);
+      cursor: pointer;
+    }
+
+    /* Docs Mobile Backdrop Overlay */
+    .docs-sidebar-overlay {
       position: fixed;
       inset: 0;
-      background: oklch(0% 0 0 / 0.4);
-      backdrop-filter: blur(6px);
-      z-index: 90;
+      background: oklch(0% 0 0 / 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 250;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.3s ease;
+      display: none;
+    }
+    .docs-sidebar-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     /* ==========================================================================
-       MOBILE RESPONSIVENESS (< 768px)
+       MOBILE RESPONSIVENESS
        ========================================================================== */
-    @media (max-width: 768px) {
-      .docs-mobile-header { display: flex; }
+    @media (max-width: 992px) {
+      .docs-wrapper { flex-direction: column; padding-top: 6rem; gap: 1rem; }
       
-      .docs-main {
-        padding-top: calc(70px + var(--sui-space-4));
-        padding-inline: var(--sui-space-4);
-        padding-bottom: var(--sui-space-4);
-      }
-
-      /* Glassmorphism Mobile Drawer */
+      .docs-mobile-menu-btn { display: flex; }
+      .docs-sidebar-overlay { display: block; }
+      
       .docs-sidebar {
         position: fixed;
         top: 0; left: 0; bottom: 0;
-        transform: translateX(-100%);
-        background: oklch(from var(--sui-surface) l c h / 0.7);
-        backdrop-filter: blur(24px); /* Ultra premium Apple-style blur */
+        width: 300px;
+        max-height: 100vh;
+        background: oklch(from var(--sui-surface) l c h / 0.95);
+        backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
+        padding: 2rem 1.5rem;
+        border-right: 1px solid var(--sui-border);
         box-shadow: var(--sui-shadow-2xl);
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 300;
       }
-      
-      /* Active Mobile States */
+
       .docs-sidebar.is-open { transform: translateX(0); }
-      .docs-overlay.is-open { opacity: 1; pointer-events: auto; }
+      
+      .docs-sidebar-close {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--sui-border);
+      }
+
+      .docs-iframe { height: 85vh; min-height: 500px; }
+    }
+    
+    @media (min-width: 993px) {
+      .docs-sidebar-close { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- MOBILE BACKDROP OVERLAY -->
-  <div id="mobile-overlay" class="docs-overlay"></div>
-
-  <!-- MOBILE APP BAR -->
-  <header class="docs-mobile-header sui-animate-slide-up">
-    <div class="sui-flex sui-items-center sui-gap-3">
-      <div class="sui-avatar sui-bg-primary sui-text-inverse sui-animate-pulse-glow" style="width: 2.25rem; height: 2.25rem; box-shadow: 0 0 10px var(--sui-color-primary-500);">S</div>
-      <strong class="sui-text-lg">Sui.css</strong>
-    </div>
-    <button id="menu-toggle" class="sui-btn sui-btn-outline sui-btn-icon" style="border: none; padding: 0.5rem; background: transparent;">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-    </button>
-  </header>
-
-  <div class="docs-layout">
+  <!-- =======================================================================
+       GLOBAL NAVBAR
+       ======================================================================= -->
+  <nav class="sui-floating-nav sui-animate-slide-up">
+    <a href="../index.html" class="nav-brand">
+      <div class="sui-avatar sui-animate-glow" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
+      <strong style="font-size: 0.95rem;">SUI.css</strong>
+    </a>
     
-    <!-- SIDEBAR DRAWER -->
-    <aside id="sidebar" class="docs-sidebar">
-      
-      <div class="docs-sidebar-header sui-flex sui-items-center sui-gap-3">
-        <div class="sui-avatar sui-bg-primary sui-text-inverse sui-animate-pulse-glow" style="width: 2.5rem; height: 2.5rem; box-shadow: 0 0 15px var(--sui-color-primary-500);">S</div>
-        <div>
-          <strong class="sui-text-lg sui-block" style="line-height: 1;">Sui.css</strong>
-          <span class="sui-text-xs sui-text-muted">Pro Max Edition v2.0</span>
-        </div>
+    <div class="nav-desktop-menu">
+      <a href="../index.html" class="nav-pill-link">Home</a>
+      <a href="index.html" class="nav-pill-link active">Docs</a>
+      <a href="../example/buttons.html" class="nav-pill-link">Components</a>
+      <a href="../example/utilities.html" class="nav-pill-link">Utilities</a>
+      <a href="../example/animations.html" class="nav-pill-link">Animations</a>
+      <a href="../example/advanced.html" class="nav-pill-link">Examples</a>
+    </div>
+    
+    <div class="nav-actions">
+      <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full nav-github-btn" style="padding: 0.4rem 1rem; font-size: 0.85rem;">GitHub &rarr;</a>
+      <button id="globalMenuBtn" class="nav-mobile-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- GLOBAL MOBILE DRAWER (Right Side) -->
+  <div id="globalMobileDrawer" class="mobile-drawer">
+    <div class="drawer-backdrop" id="globalCloseBackdrop"></div>
+    <div class="drawer-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 1.1rem; color: var(--sui-text);">SUI.css</strong>
+        <button id="globalCloseBtn" class="nav-mobile-btn" style="border: none; background: transparent;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
+      <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <a href="../index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Home</a>
+        <a href="index.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Docs</a>
+        <a href="../example/buttons.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Components</a>
+        <a href="../example/utilities.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Utilities</a>
+        <a href="../example/animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations</a>
+        <a href="../example/advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Examples</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       DOCS LAYOUT
+       ======================================================================= -->
+  
+  <!-- Hard-bound Backdrop for Docs Sidebar (Mobile Only) -->
+  <div id="docsSidebarOverlay" class="docs-sidebar-overlay"></div>
+
+  <div class="docs-wrapper">
+    
+    <!-- Mobile Document Menu Trigger -->
+    <button id="docsMenuBtn" class="docs-mobile-menu-btn sui-animate-blur-in">
+      <span>Browse Documentation</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+
+    <!-- DOCS SIDEBAR -->
+    <aside id="docsSidebar" class="docs-sidebar sui-animate-slide-right">
       
-      <nav class="docs-sidebar-scroll">
-        
-        <div class="nav-category">Components</div>
+      <!-- Mobile Close (X) Header with Hard-bound ID -->
+      <div class="docs-sidebar-close">
+        <strong class="sui-text-lg">Documentation</strong>
+        <button id="closeDocsBtnReal" class="nav-mobile-btn" style="background: transparent; border: none; cursor: pointer; padding: 0.25rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <nav id="docsSidebarNav">
+        <div class="nav-category" style="margin-top: 0;">Components</div>
         
         <a href="../example/buttons.html" target="preview-frame" class="docs-nav-link active">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M9 12h6"></path></svg>
-          Buttons
+          <span>Buttons & Badges</span>
         </a>
         
         <a href="../example/cards.html" target="preview-frame" class="docs-nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><rect x="7" y="7" width="3" height="9"></rect><rect x="14" y="7" width="3" height="5"></rect></svg>
-          Cards & Panels
+          <span>Cards & Panels</span>
         </a>
         
         <a href="../example/forms.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          Form Controls
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <span>Form Controls</span>
         </a>
         
         <div class="nav-category" style="margin-top: 2rem;">Architecture</div>
         
         <a href="../example/layout.html" target="preview-frame" class="docs-nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-          Layout Engine
+          <span>Layout Engine</span>
+        </a>
+
+        <a href="../example/utilities.html" target="preview-frame" class="docs-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          <span>Utility Classes</span>
         </a>
         
         <a href="../example/animations.html" target="preview-frame" class="docs-nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          Animations
+          <span>Motion & Spring</span>
         </a>
         
         <a href="../example/advanced.html" target="preview-frame" class="docs-nav-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-          Advanced Features
+          <span>Advanced Logic</span>
         </a>
-        
       </nav>
     </aside>
     
-    <!-- MAIN CONTENT AREA -->
-    <main class="docs-main sui-animate-blur-in">
+    <!-- MAIN CONTENT AREA (Iframe Integration) -->
+    <main class="docs-main sui-animate-blur-in sui-delay-1">
+      <div class="sui-mb-6 sui-hidden md:sui-block">
+        <h1 class="sui-text-3xl sui-mb-2">Documentation Hub</h1>
+        <p class="sui-text-muted">Select a module from the sidebar to view the interactive documentation and code examples.</p>
+      </div>
+
+      <!-- Iframe to load existing pages dynamically -->
       <iframe 
         name="preview-frame" 
-        src="../example/buttons.html" 
+        src="../example/cards.html" 
         class="docs-iframe" 
         title="Component Preview Window">
       </iframe>
@@ -252,40 +379,102 @@
     
   </div>
 
+  <!-- =======================================================================
+       GLOBAL ULTRA PRO MAX FOOTER
+       ======================================================================= -->
+  <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 var(--sui-space-6);">
+      <div class="sui-grid sui-gap-8 sui-text-left" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        
+        <div class="sui-flex sui-flex-col sui-gap-4">
+          <div class="sui-flex sui-items-center sui-gap-2">
+            <div class="sui-avatar" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
+            <strong class="sui-text-lg">Sui.css</strong>
+          </div>
+          <p class="sui-text-sm sui-text-muted">The ultra pro max CSS architecture for modern web applications.</p>
+        </div>
+
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Modules</strong>
+          <a href="../example/buttons.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Buttons & Badges</a>
+          <a href="../example/cards.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Cards & Matrices</a>
+          <a href="../example/forms.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Form Controls</a>
+        </div>
+
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Architecture</strong>
+          <a href="../example/layout.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Layout Engine</a>
+          <a href="../example/animations.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Motion & Spring</a>
+          <a href="../example/advanced.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Advanced Engine</a>
+        </div>
+
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Resources</strong>
+          <a href="../how-to-use.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Setup Guide</a>
+          <a href="index.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Documentation</a>
+          <a href="https://github.com/Suman-11-web" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">GitHub Repository</a>
+        </div>
+
+      </div>
+      
+      <div class="sui-border-t sui-border-subtle sui-mt-12 sui-pt-8 sui-flex sui-justify-between sui-items-center sui-flex-wrap sui-gap-4">
+        <p class="sui-text-sm sui-text-muted">&copy; 2026 Sui.css Framework. Built for developers. Free and open source.</p>
+        <span class="sui-badge sui-badge-outline">SUI.css v2.0.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../dist/sui.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const menuToggle = document.getElementById('menu-toggle');
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('mobile-overlay');
-      const navLinks = document.querySelectorAll('.docs-nav-link');
+      
+      // 1. GLOBAL MOBILE DRAWER LOGIC (Right Side Nav)
+      const globalMenuBtn = document.getElementById('globalMenuBtn');
+      const globalDrawer = document.getElementById('globalMobileDrawer');
+      
+      function closeGlobal() {
+        if(globalDrawer) globalDrawer.classList.remove('is-open');
+      }
+      if (globalMenuBtn) {
+        globalMenuBtn.addEventListener('click', () => globalDrawer.classList.add('is-open'));
+      }
+      document.getElementById('globalCloseBtn')?.addEventListener('click', closeGlobal);
+      document.getElementById('globalCloseBackdrop')?.addEventListener('click', closeGlobal);
 
-      // Toggle drawer and overlay
-      function toggleMenu() {
-        const isOpen = sidebar.classList.toggle('is-open');
-        overlay.classList.toggle('is-open');
-        
-        // Transform hamburger to "X" natively
-        if (isOpen) {
-          menuToggle.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-        } else {
-          menuToggle.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-        }
+      // 2. DOCS SIDEBAR DRAWER LOGIC (Left Side Menu with Hard-Bound IDs)
+      const docsMenuBtn = document.getElementById('docsMenuBtn');
+      const docsSidebar = document.getElementById('docsSidebar');
+      const docsOverlay = document.getElementById('docsSidebarOverlay');
+      const closeDocsBtn = document.getElementById('closeDocsBtnReal');
+
+      function openDocs() {
+        if(docsSidebar) docsSidebar.classList.add('is-open');
+        if(docsOverlay) docsOverlay.classList.add('is-open');
       }
 
-      menuToggle.addEventListener('click', toggleMenu);
-      overlay.addEventListener('click', toggleMenu);
+      function closeDocs() {
+        if(docsSidebar) docsSidebar.classList.remove('is-open');
+        if(docsOverlay) docsOverlay.classList.remove('is-open');
+      }
 
-      // Manage active states and auto-close drawer on mobile
-      navLinks.forEach(link => {
+      if (docsMenuBtn) docsMenuBtn.addEventListener('click', openDocs);
+      if (closeDocsBtn) closeDocsBtn.addEventListener('click', closeDocs);
+      if (docsOverlay) docsOverlay.addEventListener('click', closeDocs);
+
+      // 3. AUTO-CLOSE & ACTIVE STATE FOR SIDEBAR LINKS
+      const docNavLinks = document.querySelectorAll('.docs-nav-link');
+      docNavLinks.forEach(link => {
         link.addEventListener('click', function() {
-          navLinks.forEach(l => l.classList.remove('active'));
+          docNavLinks.forEach(l => l.classList.remove('active'));
           this.classList.add('active');
           
-          if (sidebar.classList.contains('is-open')) {
-            toggleMenu();
+          if (window.innerWidth < 992) {
+            closeDocs();
           }
         });
       });
+
     });
   </script>
 </body>

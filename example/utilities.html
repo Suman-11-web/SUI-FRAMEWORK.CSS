@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sui.css - Premium Button Components</title>
+  <title>Sui.css - Utility Classes (Ultra Pro Max)</title>
   
   <!-- Core Framework -->
   <link rel="stylesheet" href="../dist/sui.min.css">
-  
+
   <style>
     /* ==========================================================================
        PREMIUM GLOBAL STYLES & LAYOUT
@@ -85,68 +85,49 @@
         radial-gradient(circle at 80% 20%, oklch(from var(--sui-color-primary-500) l c h / 0.1), transparent 30%),
         radial-gradient(circle at 20% 80%, oklch(from var(--sui-color-accent-500) l c h / 0.1), transparent 30%);
       filter: blur(60px);
+      animation: sui-pulse-glow 8s infinite alternate;
     }
 
     .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
 
     /* --------------------------------------------------------------------------
-       COMPONENT SHOWCASE SPECIFIC STYLES
+       UTILITY SHOWCASE (MAGNETIC BENTO)
        -------------------------------------------------------------------------- */
-    .showcase-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: var(--sui-space-12) var(--sui-space-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sui-space-12);
-    }
+    .section-wrapper { padding: var(--sui-space-12) var(--sui-space-6); }
+    .section-container { max-width: 1200px; margin: 0 auto; width: 100%; }
     
-    .demo-section {
+    .utility-bento { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sui-space-6); margin-bottom: var(--sui-space-12); }
+    @media (max-width: 992px) { .utility-bento { grid-template-columns: 1fr; } }
+    
+    .u-card {
       background: var(--sui-surface);
       border: 1px solid var(--sui-border);
-      border-radius: var(--sui-radius-xl);
+      border-radius: var(--sui-radius-2xl);
       overflow: hidden;
-      box-shadow: var(--sui-shadow-sm);
-    }
-
-    .demo-header {
-      padding: var(--sui-space-6);
-      border-bottom: 1px solid var(--sui-border);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      position: relative;
+      --mouse-x: 50%; --mouse-y: 50%;
     }
-
-    .demo-canvas {
-      padding: var(--sui-space-10) var(--sui-space-6);
-      background: var(--sui-bg);
-      background-image: radial-gradient(var(--sui-border-subtle) 1px, transparent 1px);
-      background-size: 20px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--sui-space-6);
-      align-items: center;
-      justify-content: center;
+    .u-card::before {
+      content: ""; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), oklch(from var(--sui-color-primary-500) l c h / 0.05), transparent 40%);
+      z-index: 0; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
     }
-
-    .code-reveal-panel {
-      display: none;
-      border-top: 1px solid var(--sui-border);
-    }
+    .u-card:hover::before { opacity: 1; }
     
-    .code-reveal-panel.is-open {
-      display: block;
-      animation: sui-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    .u-preview { padding: var(--sui-space-10); display: flex; align-items: center; justify-content: center; background: var(--sui-surface-hover); border-bottom: 1px solid var(--sui-border); min-height: 250px; position: relative; z-index: 1; }
+    .u-code { padding: var(--sui-space-6); background: var(--sui-surface); position: relative; z-index: 1; }
     
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
-      font-size: 0.85rem !important;
-      background: #1e1e1e !important;
-      color: #d4d4d4 !important;
-      padding: 2rem !important;
-    }
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 1.5rem; margin: 0; font-family: monospace; overflow-x: auto; font-size: 0.85rem; border-radius: var(--sui-radius-lg); }
+
+    /* Custom Animation Demo Blocks */
+    .flex-demo-box { width: 3rem; height: 3rem; background: var(--sui-color-primary-500); border-radius: var(--sui-radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+    .flex-demo-box:nth-child(2) { background: var(--sui-color-accent-500); }
+    .flex-demo-box:nth-child(3) { background: var(--sui-color-success-500); }
+
+    /* Scroll Reveal Engine */
+    .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body class="sui-bg">
@@ -163,8 +144,8 @@
     <div class="nav-desktop-menu">
       <a href="../index.html" class="nav-pill-link">Home</a>
       <a href="../docs/index.html" class="nav-pill-link">Docs</a>
-      <a href="buttons.html" class="nav-pill-link active">Components</a>
-      <a href="utilities.html" class="nav-pill-link">Utilities</a>
+      <a href="buttons.html" class="nav-pill-link">Components</a>
+      <a href="utilities.html" class="nav-pill-link active">Utilities</a>
       <a href="animations.html" class="nav-pill-link">Animations</a>
       <a href="advanced.html" class="nav-pill-link">Examples</a>
     </div>
@@ -190,8 +171,8 @@
       <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
         <a href="../index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Home</a>
         <a href="../docs/index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Docs</a>
-        <a href="buttons.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Components</a>
-        <a href="utilities.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Utilities</a>
+        <a href="buttons.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Components</a>
+        <a href="utilities.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Utilities</a>
         <a href="animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations</a>
         <a href="advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Examples</a>
       </nav>
@@ -203,162 +184,130 @@
        ======================================================================= -->
   <header class="hero-section">
     <div class="hero-mesh-bg"></div>
-    <div class="hero-content sui-animate-blur-in">
-      <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
-      <h1 class="sui-text-hero sui-mb-4" style="font-size: clamp(2.5rem, 6vw, 4rem);">Interactive Buttons</h1>
-      <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
-        A comprehensive suite of highly tactile, accessible button primitives[cite: 5]. Engineered with fluid padding, perceptual contrast, and hardware-accelerated micro-interactions[cite: 5].
+    <div class="hero-content">
+      <span class="sui-badge sui-badge-primary sui-mb-4 sui-animate-spring-up">Atomic Engine</span>
+      <h1 class="sui-text-hero sui-mb-4 sui-animate-spring-up sui-delay-1 sui-tracking-tighter" style="font-size: clamp(2.5rem, 6vw, 4rem);">
+        Build Fast.<br>
+        <span class="sui-text-transparent" style="background: linear-gradient(135deg, var(--sui-text), var(--sui-text-muted)); -webkit-background-clip: text; background-clip: text;">Style Everything.</span>
+      </h1>
+      <p class="sui-text-xl sui-text-muted sui-mb-8 sui-animate-spring-up sui-delay-2">
+        SUI.css provides hundreds of low-level, composable utility classes. From flexbox layouts to typography scaling, construct your entire UI without leaving your HTML.
       </p>
     </div>
   </header>
 
   <!-- =======================================================================
-       COMPONENT SHOWCASE
+       UTILITIES SHOWCASE
        ======================================================================= -->
-  <main class="showcase-container">
-
-    <!-- 1. Semantic Variants -->
-    <section class="demo-section sui-animate-spring-up sui-delay-1">
-      <div class="demo-header">
-        <div>
-          <h2 class="sui-text-xl">Semantic Variants</h2>
-          <p class="sui-text-sm sui-text-muted">Core styles for primary, secondary, and destructive actions[cite: 5].</p>
+  <main class="section-wrapper">
+    <div class="section-container">
+      
+      <!-- FLEXBOX & ALIGNMENT -->
+      <div class="utility-bento reveal-on-scroll">
+        <div class="u-card">
+          <div class="u-preview sui-bg-surface-hover">
+            <!-- Animated Flex Demo -->
+            <div class="sui-flex sui-flex-row sui-items-center sui-justify-between sui-w-full sui-p-4 sui-border sui-border-strong sui-rounded-xl sui-bg-surface">
+              <div class="flex-demo-box sui-animate-float">1</div>
+              <div class="flex-demo-box sui-animate-pulse" style="animation-delay: 0.2s;">2</div>
+              <div class="flex-demo-box sui-hover-lift">3</div>
+            </div>
+          </div>
+          <div class="u-code">
+            <h3 class="sui-text-xl sui-mb-2">Flexbox & Alignment</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">Complete control over CSS flexbox properties.</p>
+<pre class="code-block">&lt;div class="sui-flex sui-flex-row sui-items-center sui-justify-between"&gt;
+  &lt;div&gt;1&lt;/div&gt;
+  &lt;div&gt;2&lt;/div&gt;
+  &lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;</pre>
+          </div>
         </div>
-        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
-      </div>
-      <div class="demo-canvas">
-        <button class="sui-btn sui-btn-primary sui-hover-lift sui-active-push">Primary Action</button>
-        <button class="sui-btn sui-btn-secondary sui-hover-lift sui-active-push">Secondary</button>
-        <button class="sui-btn sui-btn-outline sui-hover-lift sui-active-push">Outline Variant</button>
-        <button class="sui-btn sui-btn-ghost sui-hover-lift sui-active-push">Ghost Button</button>
-        <button class="sui-btn sui-btn-danger sui-hover-lift sui-active-push">Delete Repository</button>
-      </div>
-      <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI Core Button Variants --&gt;
-&lt;button class="sui-btn sui-btn-primary sui-hover-lift sui-active-push"&gt;Primary Action&lt;/button&gt;
-&lt;button class="sui-btn sui-btn-secondary sui-hover-lift sui-active-push"&gt;Secondary&lt;/button&gt;
-&lt;button class="sui-btn sui-btn-outline sui-hover-lift sui-active-push"&gt;Outline Variant&lt;/button&gt;
-&lt;button class="sui-btn sui-btn-ghost sui-hover-lift sui-active-push"&gt;Ghost Button&lt;/button&gt;
-&lt;button class="sui-btn sui-btn-danger sui-hover-lift sui-active-push"&gt;Delete Repository&lt;/button&gt;</code></pre>
-      </div>
-    </section>
 
-    <!-- 2. Sizing Scale -->
-    <section class="demo-section sui-animate-spring-up sui-delay-2">
-      <div class="demo-header">
-        <div>
-          <h2 class="sui-text-xl">Volumetric Sizing</h2>
-          <p class="sui-text-sm sui-text-muted">Fluid size variants that maintain perfect aspect ratios and touch targets[cite: 5].</p>
+        <!-- TYPOGRAPHY -->
+        <div class="u-card">
+          <div class="u-preview">
+            <div class="sui-flex sui-flex-col sui-gap-2 sui-w-full">
+              <div class="sui-text-4xl sui-font-bold sui-tracking-tighter">Display Hero</div>
+              <div class="sui-text-xl sui-text-muted">Subtitle Text Muted</div>
+              <div class="sui-text-base sui-font-medium sui-text-primary">Primary Colored Medium</div>
+              <div class="sui-text-sm sui-tracking-widest sui-uppercase">Tracking Widest</div>
+            </div>
+          </div>
+          <div class="u-code">
+            <h3 class="sui-text-xl sui-mb-2">Typography Hierarchy</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">Fluid scaling text sizes, weights, and tracking utilities.</p>
+<pre class="code-block">&lt;p class="sui-text-4xl sui-font-bold sui-tracking-tighter"&gt;...&lt;/p&gt;
+&lt;p class="sui-text-xl sui-text-muted"&gt;...&lt;/p&gt;
+&lt;p class="sui-text-sm sui-tracking-widest sui-uppercase"&gt;...&lt;/p&gt;</pre>
+          </div>
         </div>
-        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
-      <div class="demo-canvas">
-        <button class="sui-btn sui-btn-primary sui-btn-sm sui-active-push">Small (sm)</button>
-        <button class="sui-btn sui-btn-primary sui-active-push">Default (base)</button>
-        <button class="sui-btn sui-btn-primary sui-btn-lg sui-active-push">Large Scale (lg)</button>
-        <button class="sui-btn sui-btn-primary sui-btn-icon sui-active-push" aria-label="Settings">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        </button>
-      </div>
-      <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI Size Modifiers --&gt;
-&lt;button class="sui-btn sui-btn-primary sui-btn-sm"&gt;Small (sm)&lt;/button&gt;
-&lt;button class="sui-btn sui-btn-primary"&gt;Default (base)&lt;/button&gt;
-&lt;button class="sui-btn sui-btn-primary sui-btn-lg"&gt;Large Scale (lg)&lt;/button&gt;
 
-&lt;!-- Perfect Square Icon Button --&gt;
-&lt;button class="sui-btn sui-btn-primary sui-btn-icon"&gt;
-  &lt;svg&gt;...&lt;/svg&gt;
-&lt;/button&gt;</code></pre>
-      </div>
-    </section>
-
-    <!-- 3. Complex Compositions (Icons & Badges) -->
-    <section class="demo-section sui-animate-spring-up sui-delay-3">
-      <div class="demo-header">
-        <div>
-          <h2 class="sui-text-xl">Rich Compositions</h2>
-          <p class="sui-text-sm sui-text-muted">Buttons containing integrated SVG icons, status dots, and inline badges[cite: 5].</p>
+      <!-- SPACING & BORDERS -->
+      <div class="utility-bento reveal-on-scroll">
+        <div class="u-card">
+          <div class="u-preview">
+            <div class="sui-flex sui-items-end sui-gap-4">
+              <!-- Padding Demos -->
+              <div class="sui-bg-primary sui-p-2 sui-rounded-md sui-text-inverse sui-text-xs">p-2</div>
+              <div class="sui-bg-primary sui-p-4 sui-rounded-md sui-text-inverse sui-text-xs">p-4</div>
+              <div class="sui-bg-primary sui-p-6 sui-rounded-md sui-text-inverse sui-text-xs">p-6</div>
+              <div class="sui-bg-primary sui-p-8 sui-rounded-md sui-text-inverse sui-text-xs">p-8</div>
+            </div>
+          </div>
+          <div class="u-code">
+            <h3 class="sui-text-xl sui-mb-2">Spacing Scale</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">Predictable margin and padding classes (p-1 to p-12).</p>
+<pre class="code-block">&lt;div class="sui-p-4 sui-m-2"&gt;...&lt;/div&gt;
+&lt;div class="sui-px-6 sui-py-3"&gt;...&lt;/div&gt;
+&lt;div class="sui-mt-8 sui-mb-4"&gt;...&lt;/div&gt;</pre>
+          </div>
         </div>
-        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
-      </div>
-      <div class="demo-canvas">
-        
-        <!-- Leading Icon -->
-        <button class="sui-btn sui-btn-outline sui-hover-lift">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Download Export
-        </button>
 
-        <!-- Trailing Icon -->
-        <button class="sui-btn sui-btn-primary sui-hover-lift">
-          Continue to Payment
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </button>
-
-        <!-- Badge Integration -->
-        <button class="sui-btn sui-btn-secondary">
-          Notifications
-          <span class="sui-badge sui-badge-danger sui-ml-2">3 New</span>
-        </button>
-
-      </div>
-      <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI flexbox natively handles SVG gap alignment within .sui-btn --&gt;
-&lt;button class="sui-btn sui-btn-outline"&gt;
-  &lt;svg width="18" height="18"&gt;...&lt;/svg&gt;
-  Download Export
-&lt;/button&gt;
-
-&lt;button class="sui-btn sui-btn-primary"&gt;
-  Continue to Payment
-  &lt;svg width="18" height="18"&gt;...&lt;/svg&gt;
-&lt;/button&gt;
-
-&lt;button class="sui-btn sui-btn-secondary"&gt;
-  Notifications
-  &lt;span class="sui-badge sui-badge-danger sui-ml-2"&gt;3 New&lt;/span&gt;
-&lt;/button&gt;</code></pre>
-      </div>
-    </section>
-
-    <!-- 4. States & Feedback -->
-    <section class="demo-section sui-animate-spring-up sui-delay-4">
-      <div class="demo-header">
-        <div>
-          <h2 class="sui-text-xl">States & Processing</h2>
-          <p class="sui-text-sm sui-text-muted">Handling disabled states and asynchronous loading actions[cite: 5].</p>
+        <div class="u-card">
+          <div class="u-preview">
+            <div class="sui-flex sui-gap-4 sui-flex-wrap sui-justify-center">
+              <div class="sui-w-20 sui-h-20 sui-bg-surface sui-border sui-border-strong sui-rounded-sm sui-flex sui-items-center sui-justify-center sui-text-xs sui-text-muted">sm</div>
+              <div class="sui-w-20 sui-h-20 sui-bg-surface sui-border sui-border-strong sui-rounded-lg sui-flex sui-items-center sui-justify-center sui-text-xs sui-text-muted">lg</div>
+              <div class="sui-w-20 sui-h-20 sui-bg-surface sui-border sui-border-strong sui-rounded-full sui-flex sui-items-center sui-justify-center sui-text-xs sui-text-muted">full</div>
+            </div>
+          </div>
+          <div class="u-code">
+            <h3 class="sui-text-xl sui-mb-2">Borders & Radius</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">Easily control border widths, colors, and rounding.</p>
+<pre class="code-block">&lt;div class="sui-border sui-border-strong sui-rounded-lg"&gt;...&lt;/div&gt;
+&lt;div class="sui-border-t sui-rounded-full"&gt;...&lt;/div&gt;
+&lt;div class="sui-rounded-none"&gt;...&lt;/div&gt;</pre>
+          </div>
         </div>
-        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
-      <div class="demo-canvas">
-        
-        <!-- Disabled State -->
-        <button class="sui-btn sui-btn-primary" disabled>
-          Insufficient Permissions
-        </button>
 
-        <!-- Loading State -->
-        <button class="sui-btn sui-btn-primary" style="cursor: wait;">
-          <div class="sui-spinner" style="width: 1.25rem; height: 1.25rem; border-width: 2px; border-top-color: white; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent;"></div>
-          Processing Request...
-        </button>
+      <!-- VISUAL EFFECTS & GLASSMORPHISM -->
+      <div class="utility-bento reveal-on-scroll" style="grid-template-columns: 1fr;">
+        <div class="u-card">
+          <div class="u-preview" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; min-height: 350px;">
+            <div class="sui-glass sui-p-8 sui-rounded-2xl sui-max-w-md sui-w-full sui-text-center sui-shadow-xl sui-animate-float">
+              <h3 class="sui-text-2xl sui-text-inverse sui-mb-2">Glassmorphism</h3>
+              <p class="sui-text-inverse sui-opacity-80">The .sui-glass utility applies perfect blur, saturation, and translucent borders instantly.</p>
+            </div>
+          </div>
+          <div class="u-code">
+            <h3 class="sui-text-xl sui-mb-2">Backdrop Filters & Shadows</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">Create depth and premium visual effects natively.</p>
+<pre class="code-block">&lt;!-- Drop an ultra-premium frosted glass panel anywhere --&gt;
+&lt;div class="sui-glass sui-p-8 sui-rounded-2xl sui-shadow-xl"&gt;
+  &lt;h3 class="sui-text-inverse"&gt;Glassmorphism&lt;/h3&gt;
+&lt;/div&gt;
 
+&lt;!-- Or use standard depth shadows --&gt;
+&lt;div class="sui-shadow-sm"&gt;...&lt;/div&gt;
+&lt;div class="sui-shadow-lg"&gt;...&lt;/div&gt;</pre>
+          </div>
+        </div>
       </div>
-      <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- Disabled (HTML5 Native Attribute) --&gt;
-&lt;button class="sui-btn sui-btn-primary" disabled&gt;
-  Insufficient Permissions
-&lt;/button&gt;
 
-&lt;!-- Loading State (Integrated Spinner) --&gt;
-&lt;button class="sui-btn sui-btn-primary" style="cursor: wait;"&gt;
-  &lt;div class="sui-spinner" style="width: 1.25rem; height: 1.25rem;"&gt;&lt;/div&gt;
-  Processing Request...
-&lt;/button&gt;</code></pre>
-      </div>
-    </section>
-
+    </div>
   </main>
 
   <!-- =======================================================================
@@ -406,6 +355,7 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="../dist/sui.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -423,28 +373,27 @@
       document.getElementById('globalCloseBtn')?.addEventListener('click', closeGlobal);
       document.getElementById('globalCloseBackdrop')?.addEventListener('click', closeGlobal);
 
-      // 2. CODE TOGGLE LOGIC
-      const codeButtons = document.querySelectorAll('.btn-code');
-      codeButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          const section = e.target.closest('.demo-section');
-          const codePanel = section.querySelector('.code-reveal-panel');
-          const isOpen = codePanel.classList.contains('is-open');
-          
-          if (isOpen) {
-            codePanel.classList.remove('is-open');
-            e.target.textContent = 'View Code';
-            e.target.classList.remove('sui-btn-primary');
-            e.target.classList.add('sui-btn-outline');
-          } else {
-            codePanel.classList.add('is-open');
-            e.target.textContent = 'Hide Code';
-            e.target.classList.remove('sui-btn-outline');
-            e.target.classList.add('sui-btn-primary');
-          }
+      // 2. Magnetic Glow Effect for Bento Cards
+      document.querySelectorAll('.u-card').forEach(item => {
+        item.addEventListener('mousemove', e => {
+          const rect = item.getBoundingClientRect();
+          item.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+          item.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
         });
       });
 
+      // 3. Scroll Reveal Engine
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: "0px 0px -50px 0px" });
+
+      document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
+      
     });
   </script>
 </body>
