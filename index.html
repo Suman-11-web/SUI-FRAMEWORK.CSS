@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sui.css - The Luxury CSS Architecture</title>
+  
+  <link rel="stylesheet" href="dist/sui.min.css">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" /> -->
+
+  <style>
+    /* --------------------------------------------------------------------------
+       PREMIUM LANDING PAGE STYLES
+       -------------------------------------------------------------------------- */
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background-color: var(--sui-bg);
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .hero-section {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: var(--sui-space-20) var(--sui-space-6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-mesh-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: 
+        radial-gradient(circle at 15% 50%, oklch(from var(--sui-color-primary-500) l c h / 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, oklch(from var(--sui-color-accent-500) l c h / 0.15), transparent 25%);
+      filter: blur(60px);
+      animation: sui-pulse-glow 8s infinite alternate;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background-image: radial-gradient(var(--sui-border-strong) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.4;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+    }
+
+    .hero-content { position: relative; z-index: 10; width: 100%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+    
+    .floating-ui-left { position: absolute; left: 0; top: 20%; transform: rotate(-10deg) scale(0.9); opacity: 0.8; }
+    .floating-ui-right { position: absolute; right: 0; bottom: 20%; transform: rotate(10deg) scale(0.9); opacity: 0.8; }
+    @media (max-width: 992px) { .floating-ui-left, .floating-ui-right { display: none; } }
+
+    /* --------------------------------------------------------------------------
+       BULLETPROOF FLOATING ISLAND NAVBAR (FIXED ALIGNMENT)
+       -------------------------------------------------------------------------- */
+    .sui-floating-nav {
+      position: fixed;
+      top: 1.5rem;
+      /* Perfect Centering completely immune to animation overrides */
+      left: 0;
+      right: 0;
+      margin-inline: auto; 
+      z-index: 100;
+      
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      
+      box-sizing: border-box;
+      /* Shrink-wraps the content but never exceeds screen width */
+      width: max-content;
+      max-width: calc(100vw - 2rem);
+      padding: 0.5rem 0.5rem 0.5rem 1rem;
+      
+      background: oklch(from var(--sui-surface) l c h / 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--sui-border);
+      border-radius: 9999px;
+      box-shadow: 0 20px 40px -10px oklch(0% 0 0 / 0.15);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--sui-text);
+      flex-shrink: 0;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .nav-pill-link {
+      position: relative;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--sui-text-muted);
+      text-decoration: none;
+      border-radius: 999px;
+      transition: color 0.3s ease;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    
+    .nav-pill-link:hover { color: var(--sui-text); background: var(--sui-surface-hover); }
+
+    /* Desktop vs Mobile Breakpoint */
+    .nav-desktop-menu { display: none; }
+    .nav-mobile-btn { display: flex; align-items: center; justify-content: center; background: var(--sui-surface-hover); border: 1px solid var(--sui-border); padding: 0.5rem; border-radius: 50%; cursor: pointer; color: var(--sui-text); transition: background 0.2s ease; }
+    .nav-mobile-btn:hover { background: var(--sui-border); }
+    .nav-github-btn { display: none !important; }
+    
+    @media (min-width: 992px) {
+      .nav-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
+      .nav-mobile-btn { display: none !important; }
+      .nav-github-btn { display: flex !important; text-decoration: none; }
+    }
+
+    /* Mobile Drawer Engine */
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      justify-content: flex-end;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mobile-drawer.is-open {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .drawer-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklch(0% 0 0 / 0.5);
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+    }
+    .drawer-panel {
+      position: relative;
+      width: 280px;
+      height: 100%;
+      background: var(--sui-surface);
+      border-left: 1px solid var(--sui-border);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      box-shadow: -10px 0 30px oklch(0% 0 0 / 0.2);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-drawer.is-open .drawer-panel {
+      transform: translateX(0);
+    }
+
+    /* Bento Box Grid */
+    .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(300px, auto); gap: var(--sui-space-6); max-width: 1200px; margin: 0 auto; padding: var(--sui-space-12) var(--sui-space-6); position: relative; z-index: 10; }
+    .bento-item { background: var(--sui-surface); border: 1px solid var(--sui-border); border-radius: var(--sui-radius-2xl); padding: var(--sui-space-8); display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: var(--sui-shadow-sm); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; --mouse-x: 50%; --mouse-y: 50%; }
+    .bento-item::before { content: ""; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), oklch(from var(--sui-color-primary-500) l c h / 0.08), transparent 40%); z-index: 0; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+    .bento-item:hover { transform: translateY(-4px); box-shadow: var(--sui-shadow-lg); border-color: var(--sui-border-strong); }
+    .bento-item:hover::before { opacity: 1; }
+    .bento-item > * { position: relative; z-index: 1; }
+    .bento-span-2 { grid-column: span 2; } .bento-span-3 { grid-column: span 3; } .bento-span-4 { grid-column: span 4; }
+    
+    @media (max-width: 992px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } .bento-span-2, .bento-span-3, .bento-span-4 { grid-column: span 1; } }
+
+    /* Scroll Reveal Engine */
+    .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body class="sui-bg">
+
+  <!-- =======================================================================
+       1. FLOATING DYNAMIC ISLAND NAVBAR (PERFECTLY CENTERED)
+       ======================================================================= -->
+  <nav class="sui-floating-nav sui-animate-slide-up">
+    
+    <!-- Left: Brand -->
+    <a href="index.html" class="nav-brand">
+      <div class="sui-avatar sui-animate-glow" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
+      <strong style="font-size: 0.95rem;">Sui.css</strong>
+    </a>
+    
+    <!-- Center: Links (Hidden on Mobile) -->
+    <div class="nav-desktop-menu">
+      <a href="how-to-use.html" class="nav-pill-link">How to Use</a>
+      <a href="docs/index.html" class="nav-pill-link">Docs</a>
+      <a href="example/buttons.html" class="nav-pill-link">Modules</a>
+      <a href="example/animations.html" class="nav-pill-link">Animations</a>
+      <a href="example/advanced.html" class="nav-pill-link">Engine</a>
+    </div>
+    
+    <!-- Right: Actions & Mobile Toggle -->
+    <div class="nav-actions">
+      <a href="https://github.com" class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full nav-github-btn" style="padding: 0.4rem 1rem; font-size: 0.85rem;">GitHub</a>
+      
+      <!-- Hamburger Button for Mobile -->
+      <button id="mobileMenuBtn" class="nav-mobile-btn" aria-label="Open Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+
+  </nav>
+
+  <!-- =======================================================================
+       MOBILE MENU DRAWER
+       ======================================================================= -->
+  <div id="mobileDrawer" class="mobile-drawer">
+    <div class="drawer-backdrop js-drawer-close"></div>
+    <div class="drawer-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 1.1rem; color: var(--sui-text);">Navigation</strong>
+        <button class="nav-mobile-btn js-drawer-close" aria-label="Close Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <a href="how-to-use.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">How to Use Guide</a>
+        <a href="docs/index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Documentation</a>
+        <a href="example/buttons.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">UI Modules</a>
+        <a href="example/animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations Engine</a>
+        <a href="example/advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Advanced Logic</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       2. HERO SECTION
+       ======================================================================= -->
+  <main class="hero-section">
+    <div class="hero-mesh-bg"></div>
+    <div class="hero-grid-bg"></div>
+    
+    <div class="hero-content">
+      
+      <div class="floating-ui-left sui-animate-float" style="animation-delay: 0.5s;">
+        <div class="sui-glass sui-p-4 sui-rounded-xl sui-shadow-xl">
+          <div class="sui-flex sui-gap-3 sui-items-center">
+            <div class="sui-avatar sui-bg-success sui-text-inverse">✓</div>
+            <div class="sui-text-left">
+              <strong class="sui-block sui-text-sm">Engine Active</strong>
+              <span class="sui-text-xs sui-text-muted">Variables compiled successfully</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="floating-ui-right sui-animate-float" style="animation-delay: 1.2s;">
+        <div class="sui-glass sui-p-4 sui-rounded-xl sui-shadow-xl sui-flex sui-flex-col sui-gap-2">
+          <div class="sui-skeleton sui-rounded-md" style="width: 150px; height: 12px;"></div>
+          <div class="sui-skeleton sui-rounded-md" style="width: 100px; height: 12px;"></div>
+        </div>
+      </div>
+
+      <span class="sui-badge sui-badge-primary sui-mb-6 sui-animate-spring-up">v2.0 Architecture</span>
+      
+      <h1 class="sui-text-hero sui-mb-6 sui-max-w-4xl sui-text-balance sui-animate-spring-up sui-delay-1 sui-tracking-tighter">
+        The CSS Engine built for <br />
+        <span class="sui-text-transparent" style="background: linear-gradient(135deg, var(--sui-color-primary-500), var(--sui-color-accent-500)); -webkit-background-clip: text; background-clip: text;">Modern Web Apps.</span>
+      </h1>
+      
+      <p class="sui-text-xl sui-text-muted sui-max-w-prose sui-mb-10 sui-text-balance sui-animate-spring-up sui-delay-2">
+        A zero-specificity, hardware-accelerated framework designed to power modern web applications. Built entirely on OKLCH, CSS Subgrid, and seamless relational logic.
+      </p>
+      
+      <div class="sui-flex sui-flex-wrap sui-justify-center sui-gap-4 sui-animate-spring-up sui-delay-3">
+        <a href="how-to-use.html" class="sui-btn sui-btn-primary sui-btn-lg sui-hover-lift sui-active-push sui-rounded-full sui-px-8">
+          How to Use Framework
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem;"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+        </a>
+        <a href="example/buttons.html" class="sui-btn sui-btn-outline sui-btn-lg sui-hover-lift sui-rounded-full sui-px-8 sui-bg-surface">
+          Explore Modules
+        </a>
+      </div>
+      
+      <div class="sui-flex sui-items-center sui-gap-8 sui-mt-12 sui-animate-blur-in sui-delay-4 sui-opacity-60">
+        <div class="sui-text-sm sui-font-medium">★ Zero Dependencies</div>
+        <div class="sui-text-sm sui-font-medium">★ 60fps Motion</div>
+        <div class="sui-text-sm sui-font-medium">★ Native CSS Variables</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- =======================================================================
+       3. BENTO BOX FEATURE GRID
+       ======================================================================= -->
+  <section class="sui-bg-surface-hover sui-py-20 sui-border-t sui-border-subtle">
+    <div class="sui-text-center sui-mb-12 reveal-on-scroll">
+      <h2 class="sui-text-3xl sui-mb-4">Everything you need to build faster.</h2>
+      <p class="sui-text-lg sui-text-muted">A modular ecosystem mapping directly to standard UI engineering principles.</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento-item bento-span-2 reveal-on-scroll" style="background: linear-gradient(135deg, var(--sui-surface), var(--sui-surface-hover));">
+        <div class="sui-mb-auto">
+          <h3 class="sui-text-2xl sui-mb-2">OKLCH Perceptual Engine</h3>
+          <p class="sui-text-muted sui-mb-6">Change one master hue, and the entire framework mathematically recalculates every tint, shade, and shadow for perfect contrast.</p>
+        </div>
+        <div class="sui-flex sui-gap-2 sui-w-full sui-mt-4">
+          <div class="sui-h-12 sui-flex-1 sui-rounded-md" style="background: var(--sui-color-primary-100);"></div>
+          <div class="sui-h-12 sui-flex-1 sui-rounded-md" style="background: var(--sui-color-primary-300);"></div>
+          <div class="sui-h-12 sui-flex-1 sui-rounded-md" style="background: var(--sui-color-primary-500);"></div>
+          <div class="sui-h-12 sui-flex-1 sui-rounded-md" style="background: var(--sui-color-primary-700);"></div>
+          <div class="sui-h-12 sui-flex-1 sui-rounded-md" style="background: var(--sui-color-primary-900);"></div>
+        </div>
+      </div>
+
+      <div class="bento-item reveal-on-scroll">
+        <div class="sui-avatar sui-bg-primary sui-text-inverse sui-mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        </div>
+        <h3 class="sui-text-xl sui-mb-2">Subgrid</h3>
+        <p class="sui-text-sm sui-text-muted">Complex forms and holy grail layouts that wrap perfectly without writing media queries.</p>
+        <a href="example/layout.html" class="sui-text-sm sui-text-link sui-mt-auto sui-pt-4">View Layouts &rarr;</a>
+      </div>
+
+      <div class="bento-item reveal-on-scroll">
+        <div class="sui-avatar sui-bg-accent sui-text-inverse sui-mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        </div>
+        <h3 class="sui-text-xl sui-mb-2">Spring Motion</h3>
+        <p class="sui-text-sm sui-text-muted">Hardware-accelerated micro-interactions, blur reveals, and seamless entry transitions.</p>
+        <a href="example/animations.html" class="sui-text-sm sui-text-link sui-mt-auto sui-pt-4">View Animations &rarr;</a>
+      </div>
+
+      <div class="bento-item bento-span-4 sui-p-0 sui-flex sui-flex-row sui-flex-wrap md:sui-flex-nowrap reveal-on-scroll">
+        <div class="sui-p-8 sui-w-full md:sui-w-1/2 sui-flex sui-flex-col sui-justify-center">
+          <span class="sui-badge sui-badge-warning sui-mb-4 sui-w-fit">Developer Experience</span>
+          <h3 class="sui-text-2xl sui-mb-4">Write HTML, Not CSS.</h3>
+          <p class="sui-text-muted sui-mb-6">The framework provides an exhaustive utility layer alongside highly intelligent relational components. If a card contains a primary button, it automatically styles itself on hover.</p>
+          <div class="sui-flex sui-gap-4">
+            <a href="example/buttons.html" class="sui-btn sui-btn-outline">Buttons</a>
+            <a href="example/forms.html" class="sui-btn sui-btn-outline">Forms</a>
+            <a href="example/cards.html" class="sui-btn sui-btn-outline">Cards</a>
+          </div>
+        </div>
+        
+        <div class="sui-w-full md:sui-w-1/2 sui-bg-neutral md:sui-border-l sui-border-subtle sui-overflow-hidden">
+<pre><code class="language-html" style="background: transparent; margin: 0; padding: 2rem;">&lt;!-- Relational Logic via :has() --&gt;
+&lt;article class="sui-card"&gt;
+  &lt;h3&gt;Smart Container&lt;/h3&gt;
+  
+  &lt;!-- Card elevates because this exists --&gt;
+  &lt;button class="sui-btn sui-btn-primary"&gt;
+    Action
+  &lt;/button&gt;
+&lt;/article&gt;
+
+&lt;!-- Glassmorphism Engine --&gt;
+&lt;div class="sui-glass sui-p-6"&gt;
+  &lt;p class="sui-text-inverse"&gt;Frosted&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       4. COMPREHENSIVE FOOTER ROUTING
+       ======================================================================= -->
+  <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
+    <div class="sui-container">
+      <div class="sui-grid sui-gap-8 sui-text-left" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        
+        <!-- Brand -->
+        <div class="sui-flex sui-flex-col sui-gap-4">
+          <div class="sui-flex sui-items-center sui-gap-2">
+            <div class="sui-avatar" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
+            <strong class="sui-text-lg">Sui.css</strong>
+          </div>
+          <p class="sui-text-sm sui-text-muted">The ultra pro max CSS architecture for modern web applications.</p>
+        </div>
+
+        <!-- Component Routes -->
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Modules</strong>
+          <a href="example/buttons.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Buttons & Badges</a>
+          <a href="example/cards.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Cards & Matrices</a>
+          <a href="example/forms.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Form Controls</a>
+        </div>
+
+        <!-- Foundation Routes -->
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Architecture</strong>
+          <a href="example/layout.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Layout Engine</a>
+          <a href="example/animations.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Motion & Spring</a>
+          <a href="example/advanced.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Advanced Engine</a>
+        </div>
+
+        <!-- Documentation Routes -->
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Resources</strong>
+          <a href="how-to-use.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Setup Guide</a>
+          <a href="docs/index.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">Documentation</a>
+          <a href="https://github.com" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-transition sui-no-underline">GitHub Repository</a>
+        </div>
+
+      </div>
+      
+      <div class="sui-border-t sui-border-subtle sui-mt-12 sui-pt-8 sui-flex sui-justify-between sui-items-center sui-flex-wrap sui-gap-4">
+        <p class="sui-text-sm sui-text-muted">&copy; 2026 Sui.css Framework. Built for developers. Free and open source.</p>
+        <div class="sui-flex sui-gap-4">
+          <span class="sui-badge sui-badge-success">Status: All Systems Operational</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Bulletproof Mobile Menu Drawer Logic
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const closeTriggers = document.querySelectorAll('.js-drawer-close');
+
+      function openDrawer() {
+        if (mobileDrawer) mobileDrawer.classList.add('is-open');
+      }
+
+      function closeDrawer() {
+        if (mobileDrawer) mobileDrawer.classList.remove('is-open');
+      }
+
+      if (menuBtn) menuBtn.addEventListener('click', openDrawer);
+      closeTriggers.forEach(trigger => trigger.addEventListener('click', closeDrawer));
+
+      // 2. Premium Magnetic Glow Effect for Bento Boxes
+      const bentoItems = document.querySelectorAll('.bento-item');
+      bentoItems.forEach(item => {
+        item.addEventListener('mousemove', e => {
+          const rect = item.getBoundingClientRect();
+          item.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+          item.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        });
+      });
+
+      // 3. Scroll Reveal Animation Engine
+      const revealElements = document.querySelectorAll('.reveal-on-scroll');
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    });
+  </script>
+</body>
+</html>

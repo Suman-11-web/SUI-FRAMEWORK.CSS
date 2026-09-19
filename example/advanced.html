@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- View Transitions API Enabled -->
+  <meta name="view-transition" content="same-origin" />
+  
+  <title>Sui.css - Ultra Pro Max Logic Engine</title>
+  
+  <!-- Core Framework -->
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  
+  <!-- Prism.js for Syntax Highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+  <style>
+    /* Documentation Layout Styles */
+    .docs-section {
+      padding-block: var(--sui-space-12);
+      border-bottom: 1px solid var(--sui-border-subtle);
+    }
+    
+    .demo-canvas {
+      background: var(--sui-bg);
+      background-image: radial-gradient(var(--sui-border-strong) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-xl) var(--sui-radius-xl) 0 0;
+      padding: var(--sui-space-8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 250px;
+      position: relative;
+    }
+
+    .code-reveal-panel {
+      display: none;
+      border: 1px solid var(--sui-border);
+      border-top: none;
+      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl);
+      position: relative;
+    }
+    .code-reveal-panel.is-open {
+      display: block;
+      animation: sui-slide-up 0.25s var(--sui-ease-smooth);
+    }
+
+    .btn-copy-code {
+      position: absolute;
+      top: 0.75rem; right: 0.75rem;
+      z-index: 10;
+      background: var(--sui-surface);
+      border: 1px solid var(--sui-border-strong);
+      color: var(--sui-text);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--sui-radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-code:hover {
+      background: var(--sui-color-primary-500);
+      color: white;
+      border-color: var(--sui-color-primary-500);
+    }
+    .btn-copy-code.copied {
+      background: var(--sui-color-success-600) !important;
+      color: white !important;
+      border-color: var(--sui-color-success-600) !important;
+    }
+
+    pre[class*="language-"] {
+      margin: 0 !important;
+      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
+      font-size: 0.85rem !important;
+      padding: 2.75rem 1rem 1rem !important;
+    }
+    
+    /* Highlight API demo setup */
+    .custom-highlight::highlight(sui-search-result) {
+      background-color: var(--sui-color-warning-500);
+      color: black;
+    }
+  </style>
+</head>
+<body class="sui-bg">
+
+  <!-- 1. Scroll-Driven Progress Bar -->
+  <div class="sui-scroll-progress"></div>
+
+  <!-- 2. Scroll-Linked Sticky Header -->
+  <nav class="sui-header-dynamic sui-navbar">
+    <div class="sui-container sui-flex sui-items-center sui-w-full">
+      <div class="sui-flex sui-items-center sui-gap-3">
+        <div class="sui-avatar sui-bg-primary sui-text-inverse" style="width: 2.5rem; height: 2.5rem;">S</div>
+        <strong class="sui-text-lg">Sui.css Logic Engine</strong>
+      </div>
+      <a href="/index.html" class="sui-btn sui-btn-outline sui-ml-auto">Back to Home</a>
+    </div>
+  </nav>
+
+  <main class="sui-container" style="padding-top: 4rem; padding-bottom: 8rem; max-width: 1000px;">
+    
+    <header class="sui-text-center sui-mb-16 sui-view-reveal">
+      <span class="sui-badge sui-badge-warning sui-mb-4">Advanced Architecture</span>
+      <h1 class="sui-text-hero sui-mb-4">Zero JS. Pure CSS Compute.</h1>
+      <p class="sui-text-lg sui-text-muted sui-mx-auto">
+        This entire documentation page operates without a single line of JavaScript logic for its components. Anchor positioning, trigonometry, masonry grids, and height transitions are rendered purely by the GPU.
+      </p>
+    </header>
+
+    <!-- =======================================================================
+         MODULE 1: ANCHOR POSITIONING & POPOVERS
+         ======================================================================= -->
+    <section class="docs-section sui-view-reveal">
+      <div class="sui-flex sui-items-center sui-justify-between sui-mb-4">
+        <div>
+          <h2 class="sui-text-3xl sui-mb-2">1. Command Menus (Anchor Positioning)</h2>
+          <p class="sui-text-muted">Popovers dynamically calculate their X/Y coordinates to stay attached to their trigger, flipping automatically if they hit the screen edge.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline btn-code">View Code</button>
+      </div>
+
+      <div class="demo-canvas">
+        <button popovertarget="demo-dropdown" class="sui-btn sui-btn-primary sui-btn-lg sui-anchor" style="width: 250px;">
+          Open Settings Menu
+        </button>
+        
+        <div id="demo-dropdown" popover class="sui-popover sui-dropdown-menu">
+          <ul class="sui-flex sui-flex-col sui-gap-2" style="list-style: none; padding: 0; margin: 0;">
+            <li class="sui-p-2 sui-hover-bg-subtle sui-cursor-pointer sui-rounded-md">Profile & Visibility</li>
+            <li class="sui-p-2 sui-hover-bg-subtle sui-cursor-pointer sui-rounded-md">Twilio API Config</li>
+            <li class="sui-p-2 sui-text-danger sui-hover-bg-subtle sui-cursor-pointer sui-rounded-md">Logout</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- HTML5 popover target links the button to the menu natively --&gt;
+&lt;button popovertarget="dropdown" class="sui-anchor"&gt;Open Menu&lt;/button&gt;
+
+&lt;!-- CSS 'position-anchor' keeps this bound to the button --&gt;
+&lt;div id="dropdown" popover class="sui-popover sui-dropdown-menu"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Profile Settings&lt;/li&gt;
+    &lt;li&gt;Logout&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         MODULE 2: TRIGONOMETRY
+         ======================================================================= -->
+    <section class="docs-section sui-view-reveal">
+      <div class="sui-flex sui-items-center sui-justify-between sui-mb-4">
+        <div>
+          <h2 class="sui-text-3xl sui-mb-2">2. CSS Trigonometry (sin/cos)</h2>
+          <p class="sui-text-muted">By passing the total item count to the CSS variables, the framework calculates perfect circular layouts using native sine and cosine math functions.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline btn-code">View Code</button>
+      </div>
+
+      <div class="demo-canvas">
+        <div class="sui-circle-cluster" style="--total: 6;">
+          <div class="sui-avatar sui-bg-primary sui-circle-item" style="--index: 1;">1</div>
+          <div class="sui-avatar sui-bg-accent sui-circle-item" style="--index: 2;">2</div>
+          <div class="sui-avatar sui-bg-warning sui-circle-item" style="--index: 3;">3</div>
+          <div class="sui-avatar sui-bg-success sui-circle-item" style="--index: 4;">4</div>
+          <div class="sui-avatar sui-bg-danger sui-circle-item" style="--index: 5;">5</div>
+          <div class="sui-avatar sui-bg-neutral sui-circle-item" style="--index: 6;">6</div>
+          <div class="sui-avatar sui-bg-surface sui-shadow-lg sui-text-primary" style="width: 4.5rem; height: 4.5rem;">Core</div>
+        </div>
+      </div>
+      
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- CSS Engine uses calc(sin(angle) * radius) for exact placement --&gt;
+&lt;div class="sui-circle-cluster" style="--total: 4;"&gt;
+  &lt;div class="sui-circle-item" style="--index: 1;"&gt;A&lt;/div&gt;
+  &lt;div class="sui-circle-item" style="--index: 2;"&gt;B&lt;/div&gt;
+  &lt;div class="sui-circle-item" style="--index: 3;"&gt;C&lt;/div&gt;
+  &lt;div class="sui-circle-item" style="--index: 4;"&gt;D&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         MODULE 3: CONTAINER STYLE QUERIES
+         ======================================================================= -->
+    <section class="docs-section sui-view-reveal">
+      <div class="sui-flex sui-items-center sui-justify-between sui-mb-4">
+        <div>
+          <h2 class="sui-text-3xl sui-mb-2">3. Container Style Queries</h2>
+          <p class="sui-text-muted">Components now read the CSS variables of their parent wrapper, allowing a single component to restructure itself based on contextual logic.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline btn-code">View Code</button>
+      </div>
+
+      <div class="demo-canvas sui-flex-col sui-gap-6 sui-items-stretch sui-px-12">
+        <!-- Parent defines Light Theme -->
+        <div class="sui-logic-container" style="--theme: light;">
+          <div class="sui-smart-card sui-card">
+            <strong>Light Mode Context</strong><br>
+            <span class="sui-text-sm">I inherited `--theme: light` from my wrapper.</span>
+          </div>
+        </div>
+
+        <!-- Parent defines Dark Theme -->
+        <div class="sui-logic-container" style="--theme: dark;">
+          <div class="sui-smart-card sui-card">
+            <strong>Dark Mode Context</strong><br>
+            <span class="sui-text-sm">I inherited `--theme: dark` from my wrapper and re-styled myself automatically.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-css">/* In advanced.css: */
+@container style(--theme: dark) {
+  .sui-smart-card {
+    background: #1a1a1a;
+    color: white;
+  }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         MODULE 4: FIELD SIZING & NEXT-GEN FORMS
+         ======================================================================= -->
+    <section class="docs-section sui-view-reveal">
+      <div class="sui-flex sui-items-center sui-justify-between sui-mb-4">
+        <div>
+          <h2 class="sui-text-3xl sui-mb-2">4. Field Sizing (Auto-expand Forms)</h2>
+          <p class="sui-text-muted">The `field-sizing: content` specification allows textareas and inputs to natively grow as the user types. Type a long paragraph below to test it.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline btn-code">View Code</button>
+      </div>
+
+      <div class="demo-canvas sui-items-start">
+        <div class="sui-w-full sui-max-w-xl">
+          <label class="sui-label">Bio (Max 10 lines)</label>
+          <textarea class="sui-input sui-textarea-auto sui-w-full" placeholder="Start typing... Watch the box grow without any JavaScript calculating the scrollHeight."></textarea>
+        </div>
+      </div>
+
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- No JS required. field-sizing handles exact pixel height natively --&gt;
+&lt;textarea class="sui-input sui-textarea-auto"&gt;&lt;/textarea&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         MODULE 5: THE HEIGHT AUTO HOLY GRAIL
+         ======================================================================= -->
+    <section class="docs-section sui-view-reveal">
+      <div class="sui-flex sui-items-center sui-justify-between sui-mb-4">
+        <div>
+          <h2 class="sui-text-3xl sui-mb-2">5. Interpolate Size (Height: Auto)</h2>
+          <p class="sui-text-muted">After 25 years, CSS can finally animate smoothly from `height: 0` to `height: auto`. Click the native `<details>` accordion below.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline btn-code">View Code</button>
+      </div>
+
+      <div class="demo-canvas">
+        <div class="sui-w-full sui-max-w-xl">
+          <details class="sui-accordion sui-card">
+            <summary class="sui-font-medium sui-cursor-pointer sui-outline-none">Advanced CSS Interpolation</summary>
+            <div class="sui-accordion-content sui-pt-4">
+              <p class="sui-text-muted sui-mb-2">This transition is hardware accelerated.</p>
+              <p class="sui-text-muted">The browser computes the height required for the content inside, and smoothly animates to that exact keyword value.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- CSS uses 'interpolate-size: allow-keywords' for the magic --&gt;
+&lt;details class="sui-accordion"&gt;
+  &lt;summary&gt;Click to expand&lt;/summary&gt;
+  &lt;div class="sui-accordion-content"&gt;
+    &lt;p&gt;Smooth height: auto animation!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/details&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         MODULE 6: NATIVE MASONRY & CAROUSEL
+         ======================================================================= -->
+    <section class="docs-section sui-view-reveal">
+      <div class="sui-flex sui-items-center sui-justify-between sui-mb-4">
+        <div>
+          <h2 class="sui-text-3xl sui-mb-2">6. Masonry & Carousels</h2>
+          <p class="sui-text-muted">Scroll the carousel below. The dots are generated by `::scroll-marker`, updating automatically based on scroll-snap position.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline btn-code">View Code</button>
+      </div>
+
+      <div class="demo-canvas sui-block">
+        <div class="sui-carousel sui-w-full">
+          <div class="sui-carousel-slide">
+            <div class="sui-card sui-bg-primary sui-text-inverse sui-h-64 sui-flex sui-justify-center sui-items-center">Slide 1</div>
+          </div>
+          <div class="sui-carousel-slide">
+            <div class="sui-card sui-bg-accent sui-text-inverse sui-h-64 sui-flex sui-justify-center sui-items-center">Slide 2</div>
+          </div>
+          <div class="sui-carousel-slide">
+            <div class="sui-card sui-bg-neutral sui-h-64 sui-flex sui-justify-center sui-items-center">Slide 3</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- CSS ::scroll-marker-group natively builds the pagination dots --&gt;
+&lt;div class="sui-carousel"&gt;
+  &lt;div class="sui-carousel-slide"&gt;...&lt;/div&gt;
+  &lt;div class="sui-carousel-slide"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Logic for the Docs Page -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Code Panel Toggle
+      const codeButtons = document.querySelectorAll('.btn-code');
+      codeButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const section = e.target.closest('.docs-section');
+          const codePanel = section.querySelector('.code-reveal-panel');
+          const isOpen = codePanel.classList.contains('is-open');
+          
+          if (isOpen) {
+            codePanel.classList.remove('is-open');
+            e.target.textContent = 'View Code';
+            e.target.classList.remove('sui-btn-primary');
+            e.target.classList.add('sui-btn-outline');
+          } else {
+            codePanel.classList.add('is-open');
+            e.target.textContent = 'Hide Code';
+            e.target.classList.remove('sui-btn-outline');
+            e.target.classList.add('sui-btn-primary');
+          }
+        });
+      });
+
+      // 2. Clipboard Copy
+      const copyButtons = document.querySelectorAll('.btn-copy-code');
+      copyButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+          const panel = e.target.closest('.code-reveal-panel');
+          const codeElement = panel.querySelector('code');
+          const rawCode = codeElement.textContent;
+
+          try {
+            await navigator.clipboard.writeText(rawCode);
+            const originalText = button.textContent;
+            button.textContent = '✓ Copied!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('Copy failed: ', err);
+          }
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>

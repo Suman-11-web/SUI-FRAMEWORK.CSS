@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sui.css - Premium Form Controls</title>
+  
+  <!-- Core Framework -->
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  
+  
+
+  <style>
+    /* Documentation Specific Layout */
+    .showcase-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sui-space-12);
+    }
+    
+    .demo-section {
+      background: var(--sui-surface);
+      border: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-xl);
+      overflow: hidden;
+      box-shadow: var(--sui-shadow-sm);
+    }
+
+    .demo-header {
+      padding: var(--sui-space-6);
+      border-bottom: 1px solid var(--sui-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .demo-canvas {
+      padding: var(--sui-space-10) var(--sui-space-6);
+      background: var(--sui-bg-canvas);
+      background-image: radial-gradient(var(--sui-border-subtle) 1px, transparent 1px);
+      background-size: 20px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sui-space-8);
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .demo-canvas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      width: 100%;
+    }
+
+    .code-reveal-panel {
+      display: none;
+      border-top: 1px solid var(--sui-border);
+      position: relative;
+    }
+    
+    .code-reveal-panel.is-open {
+      display: block;
+      animation: sui-fade-in 0.3s ease;
+    }
+    
+    pre[class*="language-"] {
+      margin: 0 !important;
+      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
+      font-size: 0.85rem !important;
+      padding: var(--sui-space-6) !important;
+    }
+
+    /* Custom Copy Button inside Code Block */
+    .btn-copy-code {
+      position: absolute;
+      top: var(--sui-space-4);
+      right: var(--sui-space-4);
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+    }
+    .btn-copy-code:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="sui-bg-surface sui-p-6 sui-py-12">
+
+  <header class="sui-text-center sui-mb-12 sui-animate-blur-in">
+    <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
+    <h1 class="sui-text-hero sui-mb-4">Form Architecture</h1>
+    <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
+      Comprehensive input primitives and complex layout grids. Featuring custom toggles, file uploads, and native form validation states.
+    </p>
+  </header>
+
+  <main class="showcase-container">
+
+    <!-- 1. Standard Inputs & States -->
+    <section class="demo-section sui-animate-spring-up sui-delay-1">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">Standard Inputs & States</h2>
+          <p class="sui-text-sm sui-text-muted">Text fields, textareas, and validation feedback loops.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas demo-canvas-grid">
+        
+        <div class="sui-card sui-w-full">
+          <div class="sui-form-group">
+            <label class="sui-label">Default Input</label>
+            <input type="text" class="sui-input" placeholder="e.g. Suman M.">
+          </div>
+          
+          <div class="sui-form-group">
+            <label class="sui-label">Valid State</label>
+            <input type="email" class="sui-input" style="border-color: var(--sui-color-success-500); box-shadow: 0 0 0 1px var(--sui-color-success-500);" value="admin@novasocial.app">
+            <span class="sui-text-xs sui-text-success sui-mt-1">Email is available.</span>
+          </div>
+
+          <div class="sui-form-group">
+            <label class="sui-label">Error State</label>
+            <input type="password" class="sui-input" style="border-color: var(--sui-color-danger-500); box-shadow: 0 0 0 1px var(--sui-color-danger-500);" value="12345">
+            <span class="sui-text-xs sui-text-danger sui-mt-1">Password must be at least 8 characters.</span>
+          </div>
+
+          <div class="sui-form-group">
+            <label class="sui-label">Disabled Input</label>
+            <input type="text" class="sui-input" value="System Generated ID" disabled style="opacity: 0.6; cursor: not-allowed; background: var(--sui-surface-hover);">
+          </div>
+        </div>
+
+        <div class="sui-card sui-w-full">
+          <div class="sui-form-group">
+            <label class="sui-label">Description (Textarea)</label>
+            <textarea class="sui-textarea" placeholder="Write a brief bio..." rows="4"></textarea>
+          </div>
+          
+          <div class="sui-form-group">
+            <label class="sui-label">System Select</label>
+            <select class="sui-select">
+              <option>India (IST)</option>
+              <option>United States (EST)</option>
+              <option>United Kingdom (GMT)</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+      <div class="code-reveal-panel">
+        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- SUI Standard Form Inputs --&gt;
+&lt;div class="sui-form-group"&gt;
+  &lt;label class="sui-label"&gt;Default Input&lt;/label&gt;
+  &lt;input type="text" class="sui-input" placeholder="e.g. Suman M."&gt;
+&lt;/div&gt;
+
+&lt;!-- Validation States (Controlled via utility styles or inline for JS) --&gt;
+&lt;div class="sui-form-group"&gt;
+  &lt;label class="sui-label"&gt;Error State&lt;/label&gt;
+  &lt;input type="password" class="sui-input" style="border-color: var(--sui-color-danger-500);" value="12345"&gt;
+  &lt;span class="sui-text-xs sui-text-danger sui-mt-1"&gt;Password too short.&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;div class="sui-form-group"&gt;
+  &lt;label class="sui-label"&gt;System Select&lt;/label&gt;
+  &lt;select class="sui-select"&gt;
+    &lt;option&gt;India (IST)&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- 2. Selection Controls & Advanced Inputs -->
+    <section class="demo-section sui-animate-spring-up sui-delay-2">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">Selection & Advanced Types</h2>
+          <p class="sui-text-sm sui-text-muted">Custom checkboxes, iOS-style toggles, and rich native inputs.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas demo-canvas-grid">
+        
+        <!-- Selection Controls -->
+        <div class="sui-card sui-w-full sui-flex-col sui-gap-6">
+          
+          <div class="sui-flex sui-items-center sui-justify-between sui-bg-surface-hover sui-p-4 sui-rounded-md">
+            <div>
+              <strong class="sui-block sui-text-sm">Two-Factor Auth</strong>
+              <span class="sui-text-xs sui-text-muted">Require OTP on login</span>
+            </div>
+            <!-- iOS Style Toggle -->
+            <input type="checkbox" class="sui-toggle" checked>
+          </div>
+
+          <div class="sui-flex sui-items-center sui-gap-3">
+            <input type="checkbox" class="sui-checkbox" id="terms" checked>
+            <label for="terms" class="sui-text-sm sui-cursor-pointer">I agree to the Terms & Conditions</label>
+          </div>
+
+          <div class="sui-flex sui-items-center sui-gap-3">
+            <!-- Native radio styling with SUI utilities -->
+            <input type="radio" name="plan" id="plan1" checked style="width: 1.25rem; height: 1.25rem; accent-color: var(--sui-color-primary-500);">
+            <label for="plan1" class="sui-text-sm sui-cursor-pointer">Free Plan</label>
+            
+            <input type="radio" name="plan" id="plan2" style="width: 1.25rem; height: 1.25rem; accent-color: var(--sui-color-primary-500); margin-left: var(--sui-space-4);">
+            <label for="plan2" class="sui-text-sm sui-cursor-pointer">Pro Plan</label>
+          </div>
+        </div>
+
+        <!-- Advanced Native Inputs -->
+        <div class="sui-card sui-w-full sui-flex-col sui-gap-4">
+          <div class="sui-form-group">
+            <label class="sui-label">Upload Profile Picture (File)</label>
+            <input type="file" class="sui-input sui-p-2">
+          </div>
+
+          <div class="sui-form-group">
+            <label class="sui-label">Brand Hue (Color)</label>
+            <div class="sui-flex sui-items-center sui-gap-4">
+              <input type="color" value="#3b82f6" class="sui-shrink-0">
+              <span class="sui-text-sm sui-text-muted">#3b82f6</span>
+            </div>
+          </div>
+
+          <div class="sui-form-group">
+            <label class="sui-label">Volume (Range)</label>
+            <input type="range" min="0" max="100" value="75" style="width: 100%; accent-color: var(--sui-color-primary-500);">
+          </div>
+        </div>
+
+      </div>
+      <div class="code-reveal-panel">
+        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- iOS Style Toggle --&gt;
+&lt;div class="sui-flex sui-items-center sui-justify-between sui-bg-surface-hover sui-p-4 sui-rounded-md"&gt;
+  &lt;div&gt;
+    &lt;strong class="sui-block sui-text-sm"&gt;Two-Factor Auth&lt;/strong&gt;
+  &lt;/div&gt;
+  &lt;input type="checkbox" class="sui-toggle" checked&gt;
+&lt;/div&gt;
+
+&lt;!-- Custom Checkbox --&gt;
+&lt;div class="sui-flex sui-items-center sui-gap-3"&gt;
+  &lt;input type="checkbox" class="sui-checkbox" id="terms" checked&gt;
+  &lt;label for="terms" class="sui-text-sm"&gt;I agree to Terms&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Modern Native File Input --&gt;
+&lt;div class="sui-form-group"&gt;
+  &lt;label class="sui-label"&gt;Upload File&lt;/label&gt;
+  &lt;input type="file" class="sui-input sui-p-2"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- 3. Complex Layout Grid (The Pro Max View) -->
+    <section class="demo-section sui-animate-spring-up sui-delay-3">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">Complex Grid Forms</h2>
+          <p class="sui-text-sm sui-text-muted">Multi-column layouts utilizing CSS Subgrid for perfect alignment across viewports.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas">
+        
+        <form class="sui-card sui-w-full sui-max-w-4xl">
+          <div class="sui-mb-6 sui-pb-4 sui-border-b sui-border-subtle">
+            <h3 class="sui-text-xl">Checkout Details</h3>
+            <p class="sui-text-sm sui-text-muted">Enter your billing information.</p>
+          </div>
+          
+          <div class="sui-grid sui-gap-6" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+            
+            <div class="sui-form-group">
+              <label class="sui-label">First Name</label>
+              <input type="text" class="sui-input" placeholder="Suman">
+            </div>
+            
+            <div class="sui-form-group">
+              <label class="sui-label">Last Name</label>
+              <input type="text" class="sui-input" placeholder="M.">
+            </div>
+            
+            <!-- Spans full width on small screens, 2 cols on wide screens -->
+            <div class="sui-form-group" style="grid-column: 1 / -1;">
+              <label class="sui-label">Email Address</label>
+              <input type="email" class="sui-input" placeholder="admin@novasocial.app">
+            </div>
+
+            <div class="sui-form-group" style="grid-column: 1 / -1;">
+              <label class="sui-label">Street Address</label>
+              <input type="text" class="sui-input" placeholder="123 Developer Lane">
+            </div>
+
+            <div class="sui-form-group">
+              <label class="sui-label">City</label>
+              <input type="text" class="sui-input" placeholder="Mysuru">
+            </div>
+
+            <div class="sui-form-group">
+              <label class="sui-label">State / Province</label>
+              <select class="sui-select">
+                <option>Karnataka</option>
+                <option>Maharashtra</option>
+                <option>Delhi</option>
+              </select>
+            </div>
+
+            <div class="sui-form-group">
+              <label class="sui-label">ZIP / Postal Code</label>
+              <input type="text" class="sui-input" placeholder="570001">
+            </div>
+          </div>
+
+          <div class="sui-mt-8 sui-pt-6 sui-border-t sui-border-subtle sui-flex sui-justify-end sui-gap-4">
+            <button type="button" class="sui-btn sui-btn-ghost">Cancel</button>
+            <button type="submit" class="sui-btn sui-btn-primary sui-active-push">Complete Purchase</button>
+          </div>
+        </form>
+
+      </div>
+      <div class="code-reveal-panel">
+        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Complex Auto-Fitting Grid Form --&gt;
+&lt;form class="sui-card sui-w-full sui-max-w-4xl"&gt;
+  &lt;div class="sui-grid sui-gap-6" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));"&gt;
+    
+    &lt;div class="sui-form-group"&gt;
+      &lt;label class="sui-label"&gt;First Name&lt;/label&gt;
+      &lt;input type="text" class="sui-input" placeholder="Suman"&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="sui-form-group"&gt;
+      &lt;label class="sui-label"&gt;Last Name&lt;/label&gt;
+      &lt;input type="text" class="sui-input" placeholder="M."&gt;
+    &lt;/div&gt;
+    
+    &lt;!-- grid-column: 1 / -1 forces full width spanning --&gt;
+    &lt;div class="sui-form-group" style="grid-column: 1 / -1;"&gt;
+      &lt;label class="sui-label"&gt;Email Address&lt;/label&gt;
+      &lt;input type="email" class="sui-input" placeholder="admin@novasocial.app"&gt;
+    &lt;/div&gt;
+    
+  &lt;/div&gt;
+  &lt;div class="sui-mt-8 sui-flex sui-justify-end"&gt;
+    &lt;button type="submit" class="sui-btn sui-btn-primary"&gt;Complete Purchase&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Code View Toggle Logic
+      const codeButtons = document.querySelectorAll('.btn-code');
+
+      codeButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const section = e.target.closest('.demo-section');
+          const codePanel = section.querySelector('.code-reveal-panel');
+          
+          const isOpen = codePanel.classList.contains('is-open');
+          
+          if (isOpen) {
+            codePanel.classList.remove('is-open');
+            e.target.textContent = 'View Code';
+            e.target.classList.remove('sui-btn-primary');
+            e.target.classList.add('sui-btn-outline');
+          } else {
+            codePanel.classList.add('is-open');
+            e.target.textContent = 'Hide Code';
+            e.target.classList.remove('sui-btn-outline');
+            e.target.classList.add('sui-btn-primary');
+          }
+        });
+      });
+
+      // Copy to Clipboard Logic
+      const copyButtons = document.querySelectorAll('.btn-copy-code');
+
+      copyButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          // Find the <code> block right next to this button inside the panel
+          const codeBlock = e.target.nextElementSibling.innerText;
+          
+          navigator.clipboard.writeText(codeBlock).then(() => {
+            const originalText = e.target.textContent;
+            e.target.textContent = 'Copied!';
+            e.target.style.background = 'var(--sui-color-success-500)';
+            e.target.style.borderColor = 'var(--sui-color-success-500)';
+            
+            setTimeout(() => {
+              e.target.textContent = originalText;
+              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            }, 2000);
+          }).catch(err => {
+            console.error('Failed to copy code: ', err);
+          });
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>

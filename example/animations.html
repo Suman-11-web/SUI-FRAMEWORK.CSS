@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sui.css - Hardware Accelerated Animations (Ultra Pro Max)</title>
+  
+  <!-- Core Framework -->
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  
+  <style>
+    /* Documentation Specific Layout (Not Framework Core) */
+    .anim-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--sui-space-8);
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    
+    .anim-demo-box {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sui-bg);
+      background-image: radial-gradient(var(--sui-border-strong) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border-bottom: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-lg) var(--sui-radius-lg) 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .code-reveal-panel {
+      display: none;
+      border-top: 1px solid var(--sui-border);
+      position: relative;
+    }
+    .code-reveal-panel.is-open {
+      display: block;
+      animation: sui-slide-up 0.25s var(--sui-ease-smooth);
+    }
+    
+    .btn-copy-code {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      z-index: 10;
+      background: var(--sui-surface);
+      border: 1px solid var(--sui-border-strong);
+      color: var(--sui-text);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--sui-radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-code:hover {
+      background: var(--sui-color-primary-500);
+      color: white;
+      border-color: var(--sui-color-primary-500);
+    }
+    .btn-copy-code.copied {
+      background: var(--sui-color-success-600) !important;
+      color: white !important;
+      border-color: var(--sui-color-success-600) !important;
+    }
+
+    pre[class*="language-"] {
+      margin: 0 !important;
+      border-radius: 0 0 var(--sui-radius-lg) var(--sui-radius-lg) !important;
+      font-size: 0.82rem !important;
+      padding: 2.75rem 1rem 1rem !important;
+    }
+  </style>
+</head>
+<body class="sui-bg sui-p-6 sui-py-12">
+
+  <!-- Header -->
+  <header class="sui-text-center sui-mb-12 sui-animate-blur-in">
+    <div class="sui-flex sui-justify-center sui-gap-2 sui-mb-4">
+      <span class="sui-badge sui-badge-primary">GPU Accelerated (60fps)</span>
+      <span class="sui-badge sui-badge-success">16 Motion Primitives</span>
+    </div>
+    <h1 class="sui-text-hero sui-mb-4">Animation & Motion Engine</h1>
+    <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
+      Zero-dependency, composite-layer CSS animations with cubic-bezier spring physics. Click <strong>Replay</strong> to re-trigger entry states or <strong>View Code</strong> to inspect and copy snippets.
+    </p>
+  </header>
+
+  <main class="anim-showcase-grid">
+
+    <!-- 1. Blur Reveal -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-card sui-shadow-md js-anim-target sui-animate-blur-in" data-anim="sui-animate-blur-in">
+          <h3 class="sui-text-base">Blur Reveal</h3>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-blur-in</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Entry</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Smooth lens focus simulation transitioning from 12px blur to crystal clarity.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Smooth lens blur entry --&gt;
+&lt;div class="sui-animate-blur-in"&gt;
+  &lt;h3&gt;Blur Reveal&lt;/h3&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 2. Spring Up -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-avatar sui-shadow-md js-anim-target sui-animate-spring-up" data-anim="sui-animate-spring-up" style="width: 4rem; height: 4rem; background: var(--sui-color-primary-500); color: white;">SM</div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-spring-up</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Spring Physics</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Natural physical overshoot curve using custom cubic-bezier spring values.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Pops up with spring overshoot --&gt;
+&lt;div class="sui-avatar sui-animate-spring-up"&gt;
+  SM
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 3. Scale Fade -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-card sui-shadow-md js-anim-target sui-animate-scale-fade" data-anim="sui-animate-scale-fade">
+          <span class="sui-text-sm">Dialog Window</span>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-scale-fade</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Modal / Card</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Subtle zoom from 92% to 100% scale. Standard for dialog modals and alerts.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Zoom-fade for dialogs and popovers --&gt;
+&lt;div class="sui-animate-scale-fade"&gt;
+  &lt;p&gt;Dialog Window&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 4. Hover Lift & Push -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <button class="sui-btn sui-btn-primary sui-btn-lg sui-hover-lift sui-active-push">
+          Click & Hover
+        </button>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-hover-lift & push</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Interactive</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Lifts -6px on hover with deep shadow; compresses to 95% scale on active click.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Tactile interactive button --&gt;
+&lt;button class="sui-btn sui-btn-primary sui-hover-lift sui-active-push"&gt;
+  Click &amp; Hover
+&lt;/button&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 5. Pulse Glow Ring -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-avatar sui-animate-pulse-glow" style="width: 3.5rem; height: 3.5rem; background: var(--sui-color-accent-500); color: white;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-pulse-glow</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Continuous</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Continuous breathing ring aura. Designed for live alerts, status dots, and recordings.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Pulsating radar ring indicator --&gt;
+&lt;div class="sui-avatar sui-animate-pulse-glow"&gt;
+  &lt;!-- SVG Icon --&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 6. Shimmer Skeleton -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box sui-flex sui-flex-col sui-items-start sui-p-6 sui-gap-3 sui-w-full">
+        <div class="sui-skeleton sui-rounded-full" style="width: 2.75rem; height: 2.75rem;"></div>
+        <div class="sui-skeleton sui-w-3/4" style="height: 0.9rem;"></div>
+        <div class="sui-skeleton sui-w-1/2" style="height: 0.9rem;"></div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-skeleton</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Loading State</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Dynamic gradient sweep across placeholder geometry during async API fetch calls.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Skeleton shimmer placeholder --&gt;
+&lt;div class="sui-skeleton sui-rounded-full" style="width: 2.5rem; height: 2.5rem;"&gt;&lt;/div&gt;
+&lt;div class="sui-skeleton sui-w-3/4" style="height: 1rem;"&gt;&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 7. Float Levitation -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-avatar sui-animate-float sui-shadow-lg" style="width: 3.5rem; height: 3.5rem; background: var(--sui-color-primary-500); color: white;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-float</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Idle Levitation</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">3-second harmonic vertical oscillation. Ideal for hero visuals, badges, and FABs.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Idle levitating element --&gt;
+&lt;div class="sui-avatar sui-animate-float"&gt;
+  &lt;!-- Content --&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 8. Slide In Right (Drawer entry) -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-card sui-shadow-md js-anim-target sui-animate-slide-right" data-anim="sui-animate-slide-right">
+          <span class="sui-text-sm">Drawer Entry &rarr;</span>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-slide-right</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Drawer / Slide</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Enters smoothly from the horizontal axis. Used for side drawers and toast alerts.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Side navigation drawer entry --&gt;
+&lt;aside class="sui-animate-slide-right"&gt;
+  &lt;p&gt;Drawer Content&lt;/p&gt;
+&lt;/aside&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 9. Slide Up Fade (Toast / Bottom Sheet) -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-card sui-shadow-md js-anim-target sui-animate-slide-up" data-anim="sui-animate-slide-up">
+          <span class="sui-text-sm">&uarr; Toast Notification</span>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-slide-up</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Toast / Sheet</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Rises up from +30px with smooth opacity transition. Built for bottom sheets.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Toast alert / Mobile bottom sheet --&gt;
+&lt;div class="sui-toast sui-animate-slide-up"&gt;
+  &lt;p&gt;Notification message&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 10. Jelly Squash & Stretch -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <button class="sui-btn sui-btn-primary js-anim-target sui-animate-jelly" data-anim="sui-animate-jelly">
+          Rubber Jelly Pop
+        </button>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-jelly</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Elastic Pop</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Multi-stage squash and stretch keyframes mimicking organic rubber elasticity.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Playful squash &amp; stretch button --&gt;
+&lt;button class="sui-btn sui-animate-jelly"&gt;
+  Rubber Jelly Pop
+&lt;/button&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 11. Shake Warning -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-card sui-shadow-sm js-anim-target sui-animate-shake" data-anim="sui-animate-shake" style="border-color: var(--sui-color-danger-500);">
+          <span class="sui-text-sm" style="color: var(--sui-color-danger-500);">Incorrect Password</span>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-shake</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Form Validation</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Immediate horizontal shake feedback triggered upon rejected input or 401 response.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Form field rejection error shake --&gt;
+&lt;input class="sui-input sui-animate-shake" type="password" /&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 12. Heartbeat Reaction Burst -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-avatar js-anim-target sui-animate-heartbeat" data-anim="sui-animate-heartbeat" style="width: 3.5rem; height: 3.5rem; background: #ec4899; color: white;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-heartbeat</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Social Feed</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Dual scale-burst curve designed specifically for like reactions and post favorites.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Social post like / favorite reaction --&gt;
+&lt;button class="sui-btn-icon sui-animate-heartbeat"&gt;
+  &lt;svg&gt;&lt;!-- Heart SVG --&gt;&lt;/svg&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 13. 3D Perspective Card Flip -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box" style="perspective: 800px;">
+        <div class="sui-card sui-shadow-md js-anim-target sui-animate-flip-3d" data-anim="sui-animate-flip-3d" style="background: var(--sui-surface);">
+          <span class="sui-text-sm">3D Card Flip</span>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-flip-3d</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">3D Perspective</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Rotates on the Y-axis using perspective projection. Ideal for profile flips and badge reveals.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-secondary sui-btn-sm sui-w-full btn-replay">Replay</button>
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- 3D perspective flip entry --&gt;
+&lt;div class="sui-card sui-animate-flip-3d"&gt;
+  &lt;p&gt;Front of Card&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 14. Rotating Border Glow -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-p-6 sui-rounded-xl sui-animate-border-glow">
+          <span class="sui-text-sm sui-font-medium">Conic Border Glow</span>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-border-glow</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">CSS @property</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Uses modern `@property` angle interpolation to continuously rotate a conic gradient ring.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Rotating neon gradient border --&gt;
+&lt;div class="sui-card sui-animate-border-glow"&gt;
+  &lt;p&gt;Pro Feature Badge&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 15. Aurora Gradient Flow -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-animate-gradient-flow sui-p-4 sui-rounded-xl sui-text-inverse sui-shadow-md">
+          <strong class="sui-text-base">Aurora Canvas</strong>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-gradient-flow</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Dynamic Canvas</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Slow 6-second diagonal mesh gradient shift. Perfect for hero banners and story rings.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Shifting multi-color aurora flow --&gt;
+&lt;div class="sui-animate-gradient-flow sui-p-6"&gt;
+  &lt;h2&gt;Hero Gradient&lt;/h2&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </article>
+
+    <!-- 16. Ripple Click Aura -->
+    <article class="sui-card sui-p-0 sui-hover-lift">
+      <div class="anim-demo-box">
+        <div class="sui-avatar sui-animate-ripple" style="width: 3.5rem; height: 3.5rem; background: var(--sui-color-primary-500); color: white;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+        </div>
+      </div>
+      <div class="sui-p-6">
+        <div class="sui-flex sui-items-center sui-justify-between sui-mb-3">
+          <strong class="sui-block">sui-animate-ripple</strong>
+          <span class="sui-badge sui-badge-outline sui-text-xs">Radar Ripple</span>
+        </div>
+        <p class="sui-text-sm sui-text-muted sui-mb-4">Continuous pseudo-element expanding ring. Excellent for play buttons and active calls.</p>
+        <div class="sui-flex sui-gap-2">
+          <button class="sui-btn sui-btn-outline sui-btn-sm sui-w-full btn-code">View Code</button>
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- Radar ripple broadcast ring --&gt;
+&lt;button class="sui-avatar sui-animate-ripple"&gt;
+  &lt;!-- Play Icon --&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Script for Syntax, Replay, Code Toggle, and Clipboard Copy -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Replay Animation Logic
+      const replayButtons = document.querySelectorAll('.btn-replay');
+      replayButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const card = e.target.closest('.sui-card');
+          const target = card.querySelector('.js-anim-target');
+          if (!target) return;
+          const animClass = target.getAttribute('data-anim');
+          
+          target.classList.remove(animClass);
+          void target.offsetWidth; // Force reflow
+          target.classList.add(animClass);
+        });
+      });
+
+      // 2. Code Panel Toggle (View/Hide)
+      const codeButtons = document.querySelectorAll('.btn-code');
+      codeButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const card = e.target.closest('.sui-card');
+          const codePanel = card.querySelector('.code-reveal-panel');
+          const isOpen = codePanel.classList.contains('is-open');
+          
+          if (isOpen) {
+            codePanel.classList.remove('is-open');
+            e.target.textContent = 'View Code';
+            e.target.classList.remove('sui-btn-primary');
+            e.target.classList.add('sui-btn-outline');
+          } else {
+            codePanel.classList.add('is-open');
+            e.target.textContent = 'Hide Code';
+            e.target.classList.remove('sui-btn-outline');
+            e.target.classList.add('sui-btn-primary');
+          }
+        });
+      });
+
+      // 3. One-Click Copy to Clipboard with Feedback
+      const copyButtons = document.querySelectorAll('.btn-copy-code');
+      copyButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+          const panel = e.target.closest('.code-reveal-panel');
+          const codeElement = panel.querySelector('code');
+          const rawCode = codeElement.textContent;
+
+          try {
+            await navigator.clipboard.writeText(rawCode);
+            const originalText = button.textContent;
+            button.textContent = '✓ Copied!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy snippet: ', err);
+          }
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>

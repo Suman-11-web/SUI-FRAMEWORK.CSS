@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sui.css - Premium Layout Architecture</title>
+  
+  <!-- Core Framework -->
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  
+  
+
+  <style>
+    /* Documentation Specific Layout */
+    .showcase-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sui-space-12);
+    }
+    
+    .demo-section {
+      background: var(--sui-surface);
+      border: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-xl);
+      overflow: hidden;
+      box-shadow: var(--sui-shadow-sm);
+    }
+
+    .demo-header {
+      padding: var(--sui-space-6);
+      border-bottom: 1px solid var(--sui-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .demo-canvas {
+      padding: var(--sui-space-8);
+      background: var(--sui-bg-canvas);
+      background-image: radial-gradient(var(--sui-border-subtle) 1px, transparent 1px);
+      background-size: 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Pro-Max Feature: Interactive Resizer */
+    .resize-container {
+      width: 100%;
+      max-width: 100%;
+      min-width: 320px;
+      resize: horizontal;
+      overflow: hidden;
+      border: 2px dashed var(--sui-border-strong);
+      border-radius: var(--sui-radius-lg);
+      background: var(--sui-bg);
+      position: relative;
+    }
+    
+    .resize-handle-hint {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 6px;
+      background: var(--sui-color-primary-500);
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .resize-container:hover .resize-handle-hint {
+      opacity: 0.8;
+    }
+
+    /* Mock styling for layout blocks */
+    .mock-block {
+      display: grid;
+      place-items: center;
+      padding: var(--sui-space-4);
+      border-radius: var(--sui-radius-md);
+      font-weight: 600;
+      color: var(--sui-text-muted);
+      border: 1px solid var(--sui-border-strong);
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+    .mock-header { background: oklch(from var(--sui-color-primary-500) 0.95 c h); color: var(--sui-color-primary-700); border-color: var(--sui-color-primary-200); }
+    .mock-sidebar { background: var(--sui-surface-hover); }
+    .mock-main { background: var(--sui-surface); min-height: 200px; }
+    .mock-aside { background: oklch(from var(--sui-color-accent-500) 0.95 c h); color: var(--sui-color-accent-700); border-color: var(--sui-color-accent-200); }
+
+    .code-reveal-panel {
+      display: none;
+      border-top: 1px solid var(--sui-border);
+      position: relative;
+    }
+    
+    .code-reveal-panel.is-open {
+      display: block;
+      animation: sui-fade-in 0.3s ease;
+    }
+    
+    pre[class*="language-"] {
+      margin: 0 !important;
+      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
+      font-size: 0.85rem !important;
+      padding: var(--sui-space-6) !important;
+    }
+
+    .btn-copy-code {
+      position: absolute;
+      top: var(--sui-space-4);
+      right: var(--sui-space-4);
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+    }
+    .btn-copy-code:hover { background: rgba(255, 255, 255, 0.2); }
+  </style>
+</head>
+<body class="sui-bg-surface sui-p-6 sui-py-12">
+
+  <header class="sui-text-center sui-mb-12 sui-animate-blur-in">
+    <span class="sui-badge sui-badge-success sui-mb-4">Structural Engine</span>
+    <h1 class="sui-text-hero sui-mb-4">Layout Architecture</h1>
+    <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
+      Container query driven, responsive structures using CSS Grid and Subgrid. 
+      <strong>Drag the right edge of the preview boxes below to test mobile responsiveness live.</strong>
+    </p>
+  </header>
+
+  <main class="showcase-container">
+
+    <!-- 1. The Holy Grail / App Layout -->
+    <section class="demo-section sui-animate-spring-up sui-delay-1">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">App Dashboard (Holy Grail)</h2>
+          <p class="sui-text-sm sui-text-muted">A complex application shell that folds sidebars automatically on mobile viewports.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas">
+        
+        <!-- Interactive Resizable Container -->
+        <div class="resize-container">
+          <div class="resize-handle-hint"></div>
+          
+          <!-- SUI LAYOUT COMPONENT -->
+          <div class="sui-layout-app" style="min-height: 400px;">
+            <header class="sui-layout-nav mock-block mock-header sui-border-b-0 sui-rounded-none">
+              Global Navigation (Stays Top)
+            </header>
+            
+            <div class="sui-layout-app-body">
+              <aside class="mock-block mock-sidebar sui-rounded-none sui-border-r-0 sui-border-l-0">
+                Left Menu
+              </aside>
+              
+              <main class="sui-layout-main mock-block mock-main sui-rounded-none sui-border-t-0 sui-border-b-0">
+                <h3 class="sui-text-xl sui-mb-4">Main Content Area</h3>
+                <p class="sui-text-muted">Drag the container edge to simulate mobile screens. The sidebars will fold/hide according to framework rules.</p>
+              </main>
+              
+              <aside class="sui-layout-app-aside mock-block mock-aside sui-rounded-none sui-border-l-0 sui-border-r-0">
+                Right Panel (Hides on Tablet)
+              </aside>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- SUI App Layout Engine --&gt;
+&lt;div class="sui-layout-app"&gt;
+  
+  &lt;!-- Sticky Top Navigation --&gt;
+  &lt;header class="sui-layout-nav sui-sticky-header"&gt;
+    Global Navigation
+  &lt;/header&gt;
+  
+  &lt;!-- 3-Column Body (Auto folds on mobile) --&gt;
+  &lt;div class="sui-layout-app-body"&gt;
+    
+    &lt;aside class="sui-layout-app-sidebar"&gt;
+      Left Menu
+    &lt;/aside&gt;
+    
+    &lt;main class="sui-layout-main"&gt;
+      Main Content Area
+    &lt;/main&gt;
+    
+    &lt;!-- Hides automatically below 1024px --&gt;
+    &lt;aside class="sui-layout-app-aside"&gt;
+      Right Panel
+    &lt;/aside&gt;
+    
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- 2. Fluid Auto-Fitting Grid -->
+    <section class="demo-section sui-animate-spring-up sui-delay-2">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">Fluid Card Grid</h2>
+          <p class="sui-text-sm sui-text-muted">Cards wrap perfectly without media queries using native grid auto-fit mathematics.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas">
+        
+        <div class="resize-container sui-p-6">
+          <div class="resize-handle-hint"></div>
+          
+          <!-- SUI LAYOUT COMPONENT -->
+          <div class="sui-grid-auto-fit" style="--sui-min-col: 220px;">
+            <div class="mock-block mock-main">Card 1</div>
+            <div class="mock-block mock-main">Card 2</div>
+            <div class="mock-block mock-main">Card 3</div>
+            <div class="mock-block mock-main">Card 4</div>
+            <div class="mock-block mock-main">Card 5</div>
+          </div>
+          
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- SUI Auto-Fitting Grid --&gt;
+&lt;!-- Adjust --sui-min-col to change when the cards wrap --&gt;
+&lt;div class="sui-grid-auto-fit" style="--sui-min-col: 220px;"&gt;
+  &lt;article class="sui-card"&gt;Card 1&lt;/article&gt;
+  &lt;article class="sui-card"&gt;Card 2&lt;/article&gt;
+  &lt;article class="sui-card"&gt;Card 3&lt;/article&gt;
+  &lt;article class="sui-card"&gt;Card 4&lt;/article&gt;
+  &lt;article class="sui-card"&gt;Card 5&lt;/article&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- 3. Split Layout (Login/Onboarding) -->
+    <section class="demo-section sui-animate-spring-up sui-delay-3">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">Split View Layout</h2>
+          <p class="sui-text-sm sui-text-muted">Perfect for authentication screens. 50/50 on desktop, stacked on mobile.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas">
+        
+        <div class="resize-container">
+          <div class="resize-handle-hint"></div>
+          
+          <!-- SUI LAYOUT COMPONENT -->
+          <div class="sui-layout-split" style="min-height: 400px;">
+            <div class="sui-layout-split-pane mock-header sui-border-0 sui-rounded-none">
+              <h2 class="sui-text-3xl sui-mb-2">Novasocial Platform</h2>
+              <p class="sui-opacity-80">Connect with developers worldwide.</p>
+            </div>
+            
+            <div class="sui-layout-split-pane sui-bg-surface sui-items-center">
+              <div class="sui-w-full sui-max-w-sm">
+                <h3 class="sui-text-2xl sui-mb-6">Sign In</h3>
+                <div class="sui-flex-col sui-gap-4">
+                  <input type="text" class="sui-input" placeholder="Email Address">
+                  <button class="sui-btn sui-btn-primary sui-w-full">Continue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <div class="code-reveal-panel">
+        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
+<pre><code class="language-html">&lt;!-- SUI Split View --&gt;
+&lt;div class="sui-layout-split" style="min-height: 100vh;"&gt;
+  
+  &lt;!-- Left Side (Usually Image/Branding) --&gt;
+  &lt;div class="sui-layout-split-pane sui-bg-primary sui-text-inverse"&gt;
+    &lt;h2&gt;Novasocial Platform&lt;/h2&gt;
+  &lt;/div&gt;
+  
+  &lt;!-- Right Side (Usually Form) --&gt;
+  &lt;div class="sui-layout-split-pane sui-bg-surface sui-items-center"&gt;
+    &lt;div class="sui-w-full sui-max-w-sm"&gt;
+      &lt;h3&gt;Sign In&lt;/h3&gt;
+      &lt;input type="text" class="sui-input" placeholder="Email Address"&gt;
+      &lt;button class="sui-btn sui-btn-primary sui-w-full"&gt;Continue&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Code View Toggle Logic
+      const codeButtons = document.querySelectorAll('.btn-code');
+
+      codeButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const section = e.target.closest('.demo-section');
+          const codePanel = section.querySelector('.code-reveal-panel');
+          
+          const isOpen = codePanel.classList.contains('is-open');
+          
+          if (isOpen) {
+            codePanel.classList.remove('is-open');
+            e.target.textContent = 'View Code';
+            e.target.classList.remove('sui-btn-primary');
+            e.target.classList.add('sui-btn-outline');
+          } else {
+            codePanel.classList.add('is-open');
+            e.target.textContent = 'Hide Code';
+            e.target.classList.remove('sui-btn-outline');
+            e.target.classList.add('sui-btn-primary');
+          }
+        });
+      });
+
+      // Copy to Clipboard Logic
+      const copyButtons = document.querySelectorAll('.btn-copy-code');
+
+      copyButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const codeBlock = e.target.nextElementSibling.innerText;
+          
+          navigator.clipboard.writeText(codeBlock).then(() => {
+            const originalText = e.target.textContent;
+            e.target.textContent = 'Copied!';
+            e.target.style.background = 'var(--sui-color-success-500)';
+            e.target.style.borderColor = 'var(--sui-color-success-500)';
+            
+            setTimeout(() => {
+              e.target.textContent = originalText;
+              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            }, 2000);
+          }).catch(err => {
+            console.error('Failed to copy code: ', err);
+          });
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>

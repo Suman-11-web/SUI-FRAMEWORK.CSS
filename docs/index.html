@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sui.css - Premium Documentation</title>
+  
+  <!-- Core Framework -->
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  
+  <style>
+    /* ==========================================================================
+       PREMIUM DOCS ARCHITECTURE (ULTRA PRO MAX)
+       ========================================================================== */
+    body { 
+      margin: 0; 
+      overflow: hidden; 
+      background-color: var(--sui-bg); 
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    /* --- LAYOUT SHELL --- */
+    .docs-layout {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* --- MOBILE APP BAR --- */
+    .docs-mobile-header {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      padding: 0 var(--sui-space-4);
+      background: oklch(from var(--sui-surface) l c h / 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sui-border);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 80;
+    }
+
+    /* --- PREMIUM SIDEBAR --- */
+    .docs-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      height: 100vh;
+      background: var(--sui-surface);
+      border-right: 1px solid var(--sui-border-subtle);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .docs-sidebar-header {
+      padding: var(--sui-space-6);
+      border-bottom: 1px solid var(--sui-border-subtle);
+    }
+
+    .docs-sidebar-scroll {
+      padding: var(--sui-space-4);
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* --- SIDEBAR NAVIGATION LINKS --- */
+    .nav-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sui-text-muted);
+      margin: 1.5rem 0 0.5rem 1rem;
+      font-weight: 700;
+    }
+    
+    .docs-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1rem;
+      margin-bottom: 0.25rem;
+      border-radius: var(--sui-radius-md);
+      color: var(--sui-text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Hover Nudge Effect */
+    .docs-nav-link:hover {
+      background: var(--sui-surface-hover);
+      transform: translateX(4px);
+    }
+    
+    /* Premium Active State (Glowing Pill) */
+    .docs-nav-link.active {
+      background: var(--sui-color-primary-500);
+      color: white;
+      box-shadow: 0 4px 12px oklch(from var(--sui-color-primary-500) l c h / 0.35);
+      transform: translateX(4px);
+    }
+    
+    /* SVG Icon Styling */
+    .docs-nav-link svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      opacity: 0.6;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .docs-nav-link:hover svg { opacity: 1; transform: scale(1.1); }
+    .docs-nav-link.active svg { opacity: 1; }
+
+    /* --- MAIN CONTENT & IFRAME --- */
+    .docs-main {
+      flex: 1;
+      height: 100vh;
+      padding: var(--sui-space-6);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .docs-iframe {
+      width: 100%;
+      flex: 1;
+      border: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-xl);
+      background-color: var(--sui-bg);
+      box-shadow: var(--sui-shadow-md);
+    }
+
+    /* --- MOBILE BACKDROP OVERLAY --- */
+    .docs-overlay {
+      position: fixed;
+      inset: 0;
+      background: oklch(0% 0 0 / 0.4);
+      backdrop-filter: blur(6px);
+      z-index: 90;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS (< 768px)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .docs-mobile-header { display: flex; }
+      
+      .docs-main {
+        padding-top: calc(70px + var(--sui-space-4));
+        padding-inline: var(--sui-space-4);
+        padding-bottom: var(--sui-space-4);
+      }
+
+      /* Glassmorphism Mobile Drawer */
+      .docs-sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        transform: translateX(-100%);
+        background: oklch(from var(--sui-surface) l c h / 0.7);
+        backdrop-filter: blur(24px); /* Ultra premium Apple-style blur */
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: var(--sui-shadow-2xl);
+      }
+      
+      /* Active Mobile States */
+      .docs-sidebar.is-open { transform: translateX(0); }
+      .docs-overlay.is-open { opacity: 1; pointer-events: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOBILE BACKDROP OVERLAY -->
+  <div id="mobile-overlay" class="docs-overlay"></div>
+
+  <!-- MOBILE APP BAR -->
+  <header class="docs-mobile-header sui-animate-slide-up">
+    <div class="sui-flex sui-items-center sui-gap-3">
+      <div class="sui-avatar sui-bg-primary sui-text-inverse sui-animate-pulse-glow" style="width: 2.25rem; height: 2.25rem; box-shadow: 0 0 10px var(--sui-color-primary-500);">S</div>
+      <strong class="sui-text-lg">Sui.css</strong>
+    </div>
+    <button id="menu-toggle" class="sui-btn sui-btn-outline sui-btn-icon" style="border: none; padding: 0.5rem; background: transparent;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </header>
+
+  <div class="docs-layout">
+    
+    <!-- SIDEBAR DRAWER -->
+    <aside id="sidebar" class="docs-sidebar">
+      
+      <div class="docs-sidebar-header sui-flex sui-items-center sui-gap-3">
+        <div class="sui-avatar sui-bg-primary sui-text-inverse sui-animate-pulse-glow" style="width: 2.5rem; height: 2.5rem; box-shadow: 0 0 15px var(--sui-color-primary-500);">S</div>
+        <div>
+          <strong class="sui-text-lg sui-block" style="line-height: 1;">Sui.css</strong>
+          <span class="sui-text-xs sui-text-muted">Pro Max Edition v2.0</span>
+        </div>
+      </div>
+      
+      <nav class="docs-sidebar-scroll">
+        
+        <div class="nav-category">Components</div>
+        
+        <a href="../example/buttons.html" target="preview-frame" class="docs-nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M9 12h6"></path></svg>
+          Buttons
+        </a>
+        
+        <a href="../example/cards.html" target="preview-frame" class="docs-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><rect x="7" y="7" width="3" height="9"></rect><rect x="14" y="7" width="3" height="5"></rect></svg>
+          Cards & Panels
+        </a>
+        
+        <a href="../example/forms.html" target="preview-frame" class="docs-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Form Controls
+        </a>
+        
+        <div class="nav-category" style="margin-top: 2rem;">Architecture</div>
+        
+        <a href="../example/layout.html" target="preview-frame" class="docs-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          Layout Engine
+        </a>
+        
+        <a href="../example/animations.html" target="preview-frame" class="docs-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Animations
+        </a>
+        
+        <a href="../example/advanced.html" target="preview-frame" class="docs-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          Advanced Features
+        </a>
+        
+      </nav>
+    </aside>
+    
+    <!-- MAIN CONTENT AREA -->
+    <main class="docs-main sui-animate-blur-in">
+      <iframe 
+        name="preview-frame" 
+        src="../example/buttons.html" 
+        class="docs-iframe" 
+        title="Component Preview Window">
+      </iframe>
+    </main>
+    
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuToggle = document.getElementById('menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobile-overlay');
+      const navLinks = document.querySelectorAll('.docs-nav-link');
+
+      // Toggle drawer and overlay
+      function toggleMenu() {
+        const isOpen = sidebar.classList.toggle('is-open');
+        overlay.classList.toggle('is-open');
+        
+        // Transform hamburger to "X" natively
+        if (isOpen) {
+          menuToggle.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+        } else {
+          menuToggle.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+        }
+      }
+
+      menuToggle.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+
+      // Manage active states and auto-close drawer on mobile
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          
+          if (sidebar.classList.contains('is-open')) {
+            toggleMenu();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
