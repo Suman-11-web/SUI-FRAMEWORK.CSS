@@ -1,6 +1,6 @@
 {
   "name": "sui-css",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "build": "lightningcss --minify --bundle --targets \">= 0.25%\" src/sui.css -o dist/sui.min.css"
   },
