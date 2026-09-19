@@ -628,3 +628,91 @@
 @keyframes sui-spin {
   to { transform: rotate(360deg); }
 }
+
+
+/* =========================================================
+   SUI.CSS - NATIVE SYNTAX HIGHLIGHTING (Replaces Prism CSS)
+   ========================================================= */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #e2e8f0;
+  background: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.6;
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* Tokens */
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #64748b; /* Slate */
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #94a3b8; /* Muted */
+}
+
+.token.tag,
+.token.attr-name,
+.token.namespace,
+.token.deleted {
+  color: #fb7185; /* Soft Red/Pink */
+}
+
+.token.function-name {
+  color: #6196cc; /* Blue */
+}
+
+.token.boolean,
+.token.number,
+.token.function {
+  color: #fb923c; /* Orange */
+}
+
+.token.property,
+.token.class-name,
+.token.constant,
+.token.symbol {
+  color: #fbbf24; /* Yellow */
+}
+
+.token.selector,
+.token.important,
+.token.atrule,
+.token.keyword,
+.token.builtin {
+  color: #c084fc; /* Purple */
+}
+
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.variable {
+  color: #34d399; /* Green */
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+  color: #22d3ee; /* Cyan */
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
