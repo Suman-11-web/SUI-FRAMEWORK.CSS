@@ -459,5 +459,5 @@ For the complete legal terms, see the [`LICENSE`](./LICENSE) file included in th
 
 ```text
 SUI.css
-Copyright (c) 2026 Suman M.
+Copyright (c) © 2026 Sui.css Framework
 Released under the MIT License.
