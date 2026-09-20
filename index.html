@@ -26,17 +26,72 @@
       height: 40px;
       background: #2d2d2d;
       border-bottom: 1px solid #333;
+      flex-shrink: 0;
     }
-    .macos-dots {
-      display: flex;
-      gap: 8px;
-    }
-    .macos-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-    }
+    .macos-dots { display: flex; gap: 8px; }
+    .macos-dot { width: 12px; height: 12px; border-radius: 50%; }
     .macos-dot.red { background-color: #ff5f56; }
     .macos-dot.yellow { background-color: #ffbd2e; }
     .macos-dot.green { background-color: #27c93f; }
+
+    /* ----------------------------------------------------------------------
+       PLAYGROUND & LIVE EDITOR LAYOUT
+       ---------------------------------------------------------------------- */
+    .playground-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 992px) {
+      .playground-wrapper {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .playground-preview {
+      background: var(--sui-bg-canvas);
+      background-image: radial-gradient(var(--sui-border) 1px, transparent 1px);
+      background-size: 24px 24px;
+      border: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-lg);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+    .live-editor-container {
+      position: relative;
+      flex: 1;
+      min-height: 300px;
+      background: #1e1e1e;
+      overflow: hidden;
+    }
+    .live-editor-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 1.5rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-y: auto;
+      overflow-x: hidden;
+      border: none;
+      tab-size: 2;
+    }
+    .live-editor-textarea {
+      color: transparent;
+      background: transparent;
+      caret-color: #ededed;
+      -webkit-text-fill-color: transparent;
+      z-index: 10;
+      resize: none;
+      outline: none;
+    }
   </style>
 </head>
 <body class="sui-bg">
@@ -136,7 +191,7 @@
   </main>
 
   <!-- =======================================================================
-       3. QUICK CODE / CDN
+       3. QUICK CODE / CDN (HARDCODED COLORS - BULLETPROOF)
        ======================================================================= -->
   <section class="section-wrapper sui-bg-surface-hover">
     <div class="section-container reveal-on-scroll">
@@ -150,10 +205,9 @@
             <div class="macos-dot yellow"></div>
             <div class="macos-dot green"></div>
           </div>
-          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="navigator.clipboard.writeText(document.getElementById('quickCode').innerText)">Copy</button>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="navigator.clipboard.writeText('<link rel=\'stylesheet\' href=\'https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css\'>\n\n<button class=\'sui-btn sui-btn-primary\'>\n  Get Started\n</button>')">Copy</button>
         </div>
-        <!-- Hardcoded syntax colors for 100% bug-free rendering -->
-<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code id="quickCode"><span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
+<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
 
 <span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span><span class="sui-hl-tag">&gt;</span>
   Get Started
@@ -243,7 +297,7 @@
   </section>
 
   <!-- =======================================================================
-       6. SUBGRID & SCROLL REVEAL SHOWCASE
+       6. SUBGRID & SCROLL REVEAL SHOWCASE 
        ======================================================================= -->
   <section class="section-wrapper">
     <div class="section-container">
@@ -285,7 +339,7 @@
   </section>
 
   <!-- =======================================================================
-       7. UTILITY SHOWCASE
+       7. UTILITY SHOWCASE (HARDCODED COLORS - BULLETPROOF)
        ======================================================================= -->
   <section class="section-wrapper">
     <div class="section-container reveal-on-scroll">
@@ -305,7 +359,6 @@
             <div class="macos-dot green"></div>
           </div>
         </div>
-        <!-- Hardcoded syntax colors -->
 <pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-comment">&lt;!-- Flexbox Utilities --&gt;</span>
 <span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-items-center sui-gap-4"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span>
 
@@ -409,7 +462,7 @@
   </section>
 
   <!-- =======================================================================
-       10. DESIGN TOKENS
+       10. DESIGN TOKENS (HARDCODED COLORS - BULLETPROOF)
        ======================================================================= -->
   <section class="section-wrapper sui-bg-surface-hover">
     <div class="section-container reveal-on-scroll">
@@ -424,7 +477,6 @@
             <div class="macos-dot green"></div>
           </div>
         </div>
-        <!-- Hardcoded syntax colors -->
 <pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-tag">:root</span> {
   <span class="sui-hl-attr">--sui-primary</span>: <span class="sui-hl-string">oklch(60% 0.2 250)</span>;
   <span class="sui-hl-attr">--sui-radius</span>: <span class="sui-hl-string">0.5rem</span>;
@@ -436,7 +488,7 @@
   </section>
 
   <!-- =======================================================================
-       11. LIVE PLAYGROUND (FIXED - Layout perfectly restored)
+       11. LIVE PLAYGROUND (FLAWLESS OVERLAY ENGINE)
        ======================================================================= -->
   <section class="section-wrapper section-playground">
     <div class="section-container reveal-on-scroll">
@@ -449,8 +501,8 @@
       </div>
       
       <div class="playground-wrapper">
-        <!-- Re-added playground-editor class exactly where it belongs for the grid layout -->
-        <div class="playground-editor" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; background: #1e1e1e; border: 1px solid var(--sui-border); border-radius: var(--sui-radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+        <!-- Live Editor Block -->
+        <div style="display: flex; flex-direction: column; overflow: hidden; background: #1e1e1e; border: 1px solid var(--sui-border); border-radius: var(--sui-radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
           
           <div class="macos-header">
             <div class="macos-dots">
@@ -461,21 +513,28 @@
             <span style="color: #666; font-size: 0.75rem; font-family: monospace;">Live Editor</span>
           </div>
           
-          <textarea id="playEditor" oninput="updatePlayground()" spellcheck="false" style="flex: 1; width: 100%; min-height: 300px; display: block; outline: none; border: none; background: transparent; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.875rem; resize: none; line-height: 1.6;">
-<article class="sui-card sui-hover-lift">
-  <h3 class="sui-mb-2">Hello SUI</h3>
-  <p class="sui-text-muted sui-mb-4">Edit this code to see live changes.</p>
-  <button class="sui-btn sui-btn-primary">Test Button</button>
-</article></textarea>
+          <div class="live-editor-container">
+            <!-- Syntax Colored Layer -->
+            <pre id="highlightLayer" class="live-editor-layer" style="color: #ededed; pointer-events: none; z-index: 1;" aria-hidden="true"></pre>
+            
+            <!-- Typing Layer (Transparent text, visible cursor) -->
+            <textarea id="playEditor" class="live-editor-layer live-editor-textarea" oninput="updatePlayground()" onscroll="syncScroll()" spellcheck="false">&lt;article class="sui-card sui-hover-lift"&gt;
+  &lt;h3 class="sui-mb-2"&gt;Hello SUI&lt;/h3&gt;
+  &lt;p class="sui-text-muted sui-mb-4"&gt;Edit this code to see live changes.&lt;/p&gt;
+  &lt;button class="sui-btn sui-btn-primary"&gt;Test Button&lt;/button&gt;
+&lt;/article&gt;</textarea>
+          </div>
+
         </div>
         
+        <!-- Live Preview Block -->
         <div id="playPreview" class="playground-preview"></div>
       </div>
     </div>
   </section>
 
   <!-- =======================================================================
-       12. GETTING STARTED
+       12. GETTING STARTED (HARDCODED COLORS - BULLETPROOF)
        ======================================================================= -->
   <section id="getting-started" class="section-wrapper sui-bg-surface-hover">
     <div class="section-container reveal-on-scroll sui-text-center">
@@ -489,7 +548,6 @@
             <div class="macos-dot green"></div>
           </div>
         </div>
-        <!-- Hardcoded syntax colors -->
 <pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-comment">&lt;!-- CSS CDN --&gt;</span>
 <span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
 
@@ -545,7 +603,7 @@
   </section>
 
   <!-- =======================================================================
-       16. FOOTER (Fully Restored to original 700+ line version format)
+       16. FOOTER 
        ======================================================================= -->
   <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
     <div class="section-container" style="padding-inline: var(--sui-space-6);">
@@ -598,13 +656,72 @@
   <!-- SUI Javascript Core -->
   <script src="dist/sui.min.js"></script>
 
-  <!-- Clean, safe Playground logic -->
+  <!-- =======================================================================
+       BULLETPROOF SYNTAX ENGINE FOR LIVE PLAYGROUND ONLY
+       ======================================================================= -->
   <script>
+    // Robust, non-destructive HTML Syntax Highlighter
+    function highlightHTML(code) {
+      // 1. Convert actual brackets to HTML entities to render as text
+      let text = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      
+      // 2. Safely highlight tags that are strictly bounded by &lt; and &gt;
+      // This prevents the regex from EVER eating actual <span class="..."> tags injected into the DOM
+      text = text.replace(/(&lt;)(.*?)(&gt;)/g, function(match, p1, p2, p3) {
+        
+        // Handle HTML Comments safely
+        if (p2.startsWith('!--')) {
+          return '<span class="sui-hl-comment">' + match + '</span>';
+        }
+        
+        // Split tag name from its attributes securely
+        let parts = p2.split(/^(\/?[\w\-]+)/);
+        if (parts.length > 1) {
+            let tagName = parts[1];
+            let attrs = parts.slice(2).join('');
+            
+            // Highlight attributes and strings inside the tag
+            attrs = attrs.replace(/([a-zA-Z\-]+)(?=\=)/g, '<span class="sui-hl-attr">$1</span>');
+            attrs = attrs.replace(/(&quot;.*?&quot;|\'.*?\')/g, '<span class="sui-hl-string">$1</span>');
+            
+            return '<span class="sui-hl-tag">' + p1 + tagName + '</span>' + attrs + '<span class="sui-hl-tag">' + p3 + '</span>';
+        }
+        
+        return match; // Return unmodified if regex parsing fails
+      });
+      
+      return text;
+    }
+
+    // Process Live Editor Overlay
     function updatePlayground() {
       const editor = document.getElementById('playEditor');
       const preview = document.getElementById('playPreview');
-      if (editor && preview) {
-        preview.innerHTML = editor.value;
+      const highlightLayer = document.getElementById('highlightLayer');
+      
+      if (editor && preview && highlightLayer) {
+        const rawCode = editor.value;
+        preview.innerHTML = rawCode; // Update the real UI container
+        
+        // Apply the bulletproof regex
+        let colored = highlightHTML(rawCode);
+
+        // Required hack to ensure vertical scroll sync perfectly matches the bottom line
+        if(rawCode.endsWith("\n")) { 
+            colored += " "; 
+        }
+        
+        highlightLayer.innerHTML = colored;
+      }
+    }
+
+    // Scroll Sync for Textarea over Pre Layer
+    function syncScroll() {
+      const editor = document.getElementById('playEditor');
+      const highlightLayer = document.getElementById('highlightLayer');
+      if (editor && highlightLayer) {
+        highlightLayer.scrollTop = editor.scrollTop;
+        highlightLayer.scrollLeft = editor.scrollLeft;
       }
     }
     
@@ -617,7 +734,10 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', updatePlayground);
+    // Boot Everything on DOM Load
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePlayground();
+    });
   </script>
 
 </body>
