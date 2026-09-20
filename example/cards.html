@@ -8,13 +8,94 @@
   <!-- Core Framework -->
   <link rel="stylesheet" href="../dist/sui.min.css">
   
-  
-
   <style>
-    /* Documentation Specific Layout */
+    /* ==========================================================================
+       PREMIUM GLOBAL STYLES & LAYOUT
+       ========================================================================== */
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background-color: var(--sui-bg);
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    /* --------------------------------------------------------------------------
+       BULLETPROOF FLOATING ISLAND NAVBAR
+       -------------------------------------------------------------------------- */
+    .sui-floating-nav {
+      position: fixed;
+      top: 1.5rem;
+      left: 0;
+      right: 0;
+      margin-inline: auto; 
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-sizing: border-box;
+      width: max-content;
+      max-width: calc(100vw - 2rem);
+      padding: 0.5rem 0.5rem 0.5rem 1rem;
+      background: oklch(from var(--sui-surface) l c h / 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--sui-border);
+      border-radius: 9999px;
+      box-shadow: 0 20px 40px -10px oklch(0% 0 0 / 0.15);
+    }
+
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--sui-text); flex-shrink: 0; }
+    .nav-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .nav-pill-link { position: relative; padding: 0.4rem 0.9rem; font-size: 0.85rem; font-weight: 500; color: var(--sui-text-muted); text-decoration: none; border-radius: 999px; transition: color 0.3s ease; z-index: 1; white-space: nowrap; }
+    .nav-pill-link:hover { color: var(--sui-text); background: var(--sui-surface-hover); }
+    .nav-pill-link.active { color: var(--sui-text); background: var(--sui-border-subtle); }
+
+    .nav-desktop-menu { display: none; }
+    .nav-mobile-btn { display: flex; align-items: center; justify-content: center; background: var(--sui-surface-hover); border: 1px solid var(--sui-border); padding: 0.5rem; border-radius: 50%; cursor: pointer; color: var(--sui-text); transition: background 0.2s ease; }
+    .nav-mobile-btn:hover { background: var(--sui-border); }
+    
+    @media (min-width: 992px) {
+      .nav-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
+      .nav-mobile-btn { display: none !important; }
+    }
+
+    /* Global Mobile Drawer */
+    .mobile-drawer { position: fixed; inset: 0; z-index: 9999; display: flex; justify-content: flex-end; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease; }
+    .mobile-drawer.is-open { visibility: visible; opacity: 1; pointer-events: auto; }
+    .drawer-backdrop { position: absolute; inset: 0; background: oklch(0% 0 0 / 0.5); backdrop-filter: blur(4px); cursor: pointer; }
+    .drawer-panel { position: relative; width: 280px; height: 100%; background: var(--sui-surface); border-left: 1px solid var(--sui-border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: -10px 0 30px oklch(0% 0 0 / 0.2); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+    .mobile-drawer.is-open .drawer-panel { transform: translateX(0); }
+
+    /* --------------------------------------------------------------------------
+       HERO SECTION WITH MESH BACKGROUND
+       -------------------------------------------------------------------------- */
+    .hero-section {
+      padding: 10rem var(--sui-space-6) 6rem;
+      position: relative;
+      text-align: center;
+      border-bottom: 1px solid var(--sui-border-subtle);
+    }
+    
+    .hero-mesh-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: 
+        radial-gradient(circle at 80% 20%, oklch(from var(--sui-color-primary-500) l c h / 0.1), transparent 30%),
+        radial-gradient(circle at 20% 80%, oklch(from var(--sui-color-accent-500) l c h / 0.1), transparent 30%);
+      filter: blur(60px);
+    }
+
+    .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
+
+    /* --------------------------------------------------------------------------
+       COMPONENT SHOWCASE SPECIFIC STYLES
+       -------------------------------------------------------------------------- */
     .showcase-container {
       max-width: 1200px;
       margin: 0 auto;
+      padding: var(--sui-space-12) var(--sui-space-6);
       display: flex;
       flex-direction: column;
       gap: var(--sui-space-12);
@@ -38,7 +119,7 @@
 
     .demo-canvas {
       padding: var(--sui-space-10) var(--sui-space-6);
-      background: var(--sui-bg-canvas);
+      background: var(--sui-bg);
       background-image: radial-gradient(var(--sui-border-subtle) 1px, transparent 1px);
       background-size: 20px 20px;
       display: grid;
@@ -58,26 +139,85 @@
     
     .code-reveal-panel.is-open {
       display: block;
-      animation: sui-fade-in 0.3s ease;
+      animation: sui-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
     pre[class*="language-"] {
       margin: 0 !important;
       border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
       font-size: 0.85rem !important;
+      background: #1e1e1e !important;
+      color: #d4d4d4 !important;
+      padding: 2rem !important;
     }
   </style>
 </head>
-<body class="sui-bg-surface sui-p-6 sui-py-12">
+<body class="sui-bg">
 
-  <header class="sui-text-center sui-mb-12 sui-animate-blur-in">
-    <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
-    <h1 class="sui-text-hero sui-mb-4">Cards & Data Matrices</h1>
-    <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
-      Structural containers for content, media, and data. Featuring relational hover states, glassmorphism, and responsive table integrations.
-    </p>
+  <!-- =======================================================================
+       GLOBAL NAVBAR
+       ======================================================================= -->
+  <nav class="sui-floating-nav sui-animate-slide-up">
+    <a href="../index.html" class="nav-brand">
+      <div class="sui-avatar sui-animate-glow" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
+      <strong style="font-size: 0.95rem;">SUI.css</strong>
+    </a>
+    
+    <div class="nav-desktop-menu">
+      <a href="../index.html" class="nav-pill-link">Home</a>
+      <a href="../docs/index.html" class="nav-pill-link">Docs</a>
+      <a href="buttons.html" class="nav-pill-link active">Components</a>
+      <a href="utilities.html" class="nav-pill-link">Utilities</a>
+      <a href="animations.html" class="nav-pill-link">Animations</a>
+      <a href="advanced.html" class="nav-pill-link">Examples</a>
+    </div>
+    
+    <div class="nav-actions">
+      <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full nav-github-btn" style="padding: 0.4rem 1rem; font-size: 0.85rem;">GitHub &rarr;</a>
+      <button id="globalMenuBtn" class="nav-mobile-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- GLOBAL MOBILE DRAWER -->
+  <div id="globalMobileDrawer" class="mobile-drawer">
+    <div class="drawer-backdrop" id="globalCloseBackdrop"></div>
+    <div class="drawer-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 1.1rem; color: var(--sui-text);">SUI.css</strong>
+        <button id="globalCloseBtn" class="nav-mobile-btn" style="border: none; background: transparent;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <a href="../index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Home</a>
+        <a href="../docs/index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Docs</a>
+        <a href="buttons.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Components</a>
+        <a href="utilities.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Utilities</a>
+        <a href="animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations</a>
+        <a href="advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Examples</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       HERO SECTION
+       ======================================================================= -->
+  <header class="hero-section">
+    <div class="hero-mesh-bg"></div>
+    <div class="hero-content sui-animate-blur-in">
+      <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
+      <h1 class="sui-text-hero sui-mb-4" style="font-size: clamp(2.5rem, 6vw, 4rem);">Cards & Data Matrices</h1>
+      <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
+        Structural containers for content, media, and data. Featuring relational hover states, glassmorphism, and responsive table integrations[cite: 5].
+      </p>
+    </div>
   </header>
 
+  <!-- =======================================================================
+       COMPONENT SHOWCASE
+       ======================================================================= -->
   <main class="showcase-container">
 
     <!-- 1. Interactive & Relational Cards -->
@@ -85,7 +225,7 @@
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Interactive Containers</h2>
-          <p class="sui-text-sm sui-text-muted">Cards that react dynamically to cursor proximity and internal button states using CSS :has().</p>
+          <p class="sui-text-sm sui-text-muted">Cards that react dynamically to cursor proximity and internal button states using CSS :has()[cite: 5].</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
@@ -98,7 +238,7 @@
             <span class="sui-badge sui-badge-warning">Pending</span>
           </div>
           <p class="sui-text-sm sui-text-muted sui-mb-6">
-            This card automatically elevates and glows when you hover over it because it contains a primary button inside its DOM tree.
+            This card automatically elevates and glows when you hover over it because it contains a primary button inside its DOM tree[cite: 5].
           </p>
           <div class="sui-flex sui-gap-3">
             <button class="sui-btn sui-btn-primary sui-w-full">Deploy Now</button>
@@ -113,7 +253,7 @@
           </div>
           <h3 class="sui-text-lg sui-mb-2">API Documentation</h3>
           <p class="sui-text-sm sui-text-muted sui-mb-4">
-            Explore the complete API reference for integrating the framework into your backend.
+            Explore the complete API reference for integrating the framework into your backend[cite: 5].
           </p>
           <span class="sui-text-sm sui-text-link sui-font-medium">Read Docs &rarr;</span>
         </a>
@@ -147,7 +287,7 @@
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Media & Profiles</h2>
-          <p class="sui-text-sm sui-text-muted">Complex compositional cards for social feeds and user directories.</p>
+          <p class="sui-text-sm sui-text-muted">Complex compositional cards for social feeds and user directories[cite: 5].</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
@@ -163,7 +303,7 @@
             </div>
             <h3 class="sui-text-xl sui-leading-none sui-mb-1">Suman M.</h3>
             <p class="sui-text-sm sui-text-muted sui-mb-4">@suman_dev &middot; Mysuru</p>
-            <p class="sui-text-sm sui-mb-4">Building Novasocial and the ultimate CSS framework architecture. Python & Frontend Developer.</p>
+            <p class="sui-text-sm sui-mb-4">Building Novasocial and the ultimate CSS framework architecture. Python & Frontend Developer[cite: 5].</p>
             <div class="sui-flex sui-gap-4 sui-text-sm">
               <div><strong class="sui-text-strong">1.2k</strong> <span class="sui-text-muted">Following</span></div>
               <div><strong class="sui-text-strong">14.5k</strong> <span class="sui-text-muted">Followers</span></div>
@@ -181,7 +321,7 @@
               <h3 class="sui-text-base">Modern CSS Architecture</h3>
               <span class="sui-text-xs sui-text-muted">2h ago</span>
             </div>
-            <p class="sui-text-sm sui-text-muted sui-line-clamp-2">Exploring the boundaries of OKLCH, Cascade Layers, and Container Queries in 2026.</p>
+            <p class="sui-text-sm sui-text-muted sui-line-clamp-2">Exploring the boundaries of OKLCH, Cascade Layers, and Container Queries in 2026[cite: 5].</p>
           </div>
         </article>
 
@@ -212,7 +352,7 @@
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Glassmorphism Panels</h2>
-          <p class="sui-text-sm sui-text-muted">Backdrop filter surfaces that dynamically adjust to underlying content and themes.</p>
+          <p class="sui-text-sm sui-text-muted">Backdrop filter surfaces that dynamically adjust to underlying content and themes[cite: 5].</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
@@ -227,7 +367,7 @@
             </div>
           </div>
           <p class="sui-text-inverse sui-opacity-90 sui-mb-6">
-            Your glassmorphism card seamlessly blurs the vibrant gradient background while maintaining perfect readability.
+            Your glassmorphism card seamlessly blurs the vibrant gradient background while maintaining perfect readability[cite: 5].
           </p>
           <button class="sui-btn sui-bg-inverse sui-text-inverse sui-w-full">Manage Billing</button>
         </article>
@@ -255,7 +395,7 @@
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Data Matrices</h2>
-          <p class="sui-text-sm sui-text-muted">Premium dashboard tables wrapped seamlessly within card containers.</p>
+          <p class="sui-text-sm sui-text-muted">Premium dashboard tables wrapped seamlessly within card containers[cite: 5].</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
@@ -357,17 +497,75 @@
 
   </main>
 
-  <script src="../src/sui.js"></script>
+  <!-- =======================================================================
+       GLOBAL ULTRA PRO MAX FOOTER
+       ======================================================================= -->
+  <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 var(--sui-space-6);">
+      <div class="sui-grid sui-gap-8 sui-text-left" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        
+        <div class="sui-flex sui-flex-col sui-gap-4">
+          <div class="sui-flex sui-items-center sui-gap-2">
+            <div class="sui-avatar" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
+            <strong class="sui-text-lg">Sui.css</strong>
+          </div>
+          <p class="sui-text-sm sui-text-muted">The ultra pro max CSS architecture for modern web applications.</p>
+        </div>
+
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Modules</strong>
+          <a href="buttons.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Buttons & Badges</a>
+          <a href="cards.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Cards & Matrices</a>
+          <a href="forms.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Form Controls</a>
+        </div>
+
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Architecture</strong>
+          <a href="layout.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Layout Engine</a>
+          <a href="animations.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Motion & Spring</a>
+          <a href="advanced.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Advanced Engine</a>
+        </div>
+
+        <div class="sui-flex sui-flex-col sui-gap-3">
+          <strong class="sui-text-sm">Resources</strong>
+          <a href="../how-to-use.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Setup Guide</a>
+          <a href="../docs/index.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Documentation</a>
+          <a href="https://github.com/Suman-11-web" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">GitHub Repository</a>
+        </div>
+
+      </div>
+      
+      <div class="sui-border-t sui-border-subtle sui-mt-12 sui-pt-8 sui-flex sui-justify-between sui-items-center sui-flex-wrap sui-gap-4">
+        <p class="sui-text-sm sui-text-muted">&copy; 2026 Sui.css Framework. Built for developers. Free and open source.</p>
+        <span class="sui-badge sui-badge-outline">SUI.css v2.0.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../dist/sui.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Code Toggle Logic
-      const codeButtons = document.querySelectorAll('.btn-code');
+      
+      // 1. GLOBAL MOBILE DRAWER LOGIC
+      const globalMenuBtn = document.getElementById('globalMenuBtn');
+      const globalDrawer = document.getElementById('globalMobileDrawer');
+      
+      function closeGlobal() {
+        if(globalDrawer) globalDrawer.classList.remove('is-open');
+      }
+      if (globalMenuBtn) {
+        globalMenuBtn.addEventListener('click', () => globalDrawer.classList.add('is-open'));
+      }
+      document.getElementById('globalCloseBtn')?.addEventListener('click', closeGlobal);
+      document.getElementById('globalCloseBackdrop')?.addEventListener('click', closeGlobal);
 
+      // 2. CODE TOGGLE LOGIC
+      const codeButtons = document.querySelectorAll('.btn-code');
       codeButtons.forEach(button => {
         button.addEventListener('click', (e) => {
           const section = e.target.closest('.demo-section');
           const codePanel = section.querySelector('.code-reveal-panel');
-          
           const isOpen = codePanel.classList.contains('is-open');
           
           if (isOpen) {
@@ -383,6 +581,7 @@
           }
         });
       });
+
     });
   </script>
 </body>

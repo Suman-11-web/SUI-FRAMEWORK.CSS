@@ -9,13 +9,21 @@
 
   <style>
     /* --------------------------------------------------------------------------
-       PREMIUM LANDING PAGE STYLES
+       GLOBAL RESET & PREMIUM LANDING PAGE STYLES
        -------------------------------------------------------------------------- */
+    /* This global reset ensures no elements expand past the viewport width, 
+       fixing the left/right overflow issue on mobile devices. */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       overflow-x: hidden;
       background-color: var(--sui-bg);
       font-family: system-ui, -apple-system, sans-serif;
+      width: 100vw;
+      max-width: 100%;
     }
 
     .hero-section {
@@ -63,7 +71,7 @@
       left: 0;
       right: 0;
       margin-inline: auto; 
-      z-index: 100;
+      z-index: 200;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -72,7 +80,7 @@
       width: max-content;
       max-width: calc(100vw - 2rem);
       padding: 0.5rem 0.5rem 0.5rem 1rem;
-      background: oklch(from var(--sui-surface) l c h / 0.8);
+      background: oklch(from var(--sui-surface) l c h / 0.85);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--sui-border);
@@ -114,8 +122,8 @@
     @media (max-width: 768px) { .bento-grid { grid-template-columns: 1fr; } }
 
     /* Section Spacing */
-    .section-wrapper { padding: var(--sui-space-20) var(--sui-space-6); border-top: 1px solid var(--sui-border-subtle); position: relative; }
-    .section-container { max-width: 1200px; margin: 0 auto; width: 100%; }
+    .section-wrapper { padding: var(--sui-space-20) var(--sui-space-6); border-top: 1px solid var(--sui-border-subtle); position: relative; width: 100%; box-sizing: border-box; }
+    .section-container { max-width: 1200px; margin: 0 auto; width: 100%; padding-inline: var(--sui-space-6); box-sizing: border-box; } 
 
     /* Live Playground Desktop Only */
     .playground-wrapper { display: flex; height: 500px; border: 1px solid var(--sui-border); border-radius: var(--sui-radius-xl); overflow: hidden; }
@@ -128,6 +136,18 @@
     .code-block { background: #1e1e1e; color: #d4d4d4; padding: 2rem; margin: 0; font-family: monospace; overflow-x: auto; font-size: 0.9rem; border-radius: 0 0 var(--sui-radius-lg) var(--sui-radius-lg); }
     .code-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: #2d2d2d; border-bottom: 1px solid #444; border-radius: var(--sui-radius-lg) var(--sui-radius-lg) 0 0; }
     .sui-input { width: 100%; box-sizing: border-box; }
+
+    /* SUI Syntax Highlighting Tokens (VS Code Dark Theme Inspired) */
+    .token.comment { color: #6a9955; font-style: italic; }
+    .token.tag { color: #569cd6; }
+    .token.attr-name { color: #9cdcfe; }
+    .token.attr-value { color: #ce9178; }
+    .token.punctuation { color: #808080; }
+    .token.property { color: #9cdcfe; }
+    .token.selector { color: #d7ba7d; }
+    .token.function { color: #dcdcaa; }
+    .token.value { color: #b5cea8; }
+    pre code { display: block; }
 
     /* Scroll Reveal Engine */
     .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -206,13 +226,13 @@
         </button>
       </div>
       <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
-        <a href="index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start">Home</a>
+        <a href="index.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Home</a>
         <a href="docs/index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Docs</a>
         <a href="example/buttons.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Components</a>
         <a href="example/utilities.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Utilities</a>
         <a href="example/animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations</a>
         <a href="example/advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Examples</a>
-        <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-primary sui-w-full sui-justify-center sui-mt-4">GitHub &rarr;</a>
+        <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-outline sui-w-full sui-justify-center sui-mt-4">GitHub &rarr;</a>
       </nav>
     </div>
   </div>
@@ -264,11 +284,11 @@
           <span class="sui-text-xs sui-text-muted">index.html</span>
           <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc;" onclick="navigator.clipboard.writeText(document.getElementById('quickCode').innerText)">Copy Code</button>
         </div>
-<pre id="quickCode" class="code-block">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v1.0.0/dist/sui.min.css"&gt;
+<pre id="quickCode" class="code-block"><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"&gt;
 
 &lt;button class="sui-btn sui-btn-primary"&gt;
   Get Started
-&lt;/button&gt;</pre>
+&lt;/button&gt;</code></pre>
       </div>
     </div>
   </section>
@@ -371,14 +391,14 @@
       </div>
       
       <div class="sui-card sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-<pre class="code-block">&lt;!-- Flexbox Utilities --&gt;
+<pre class="code-block"><code>&lt;!-- Flexbox Utilities --&gt;
 &lt;div class="sui-flex sui-items-center sui-gap-4"&gt;...&lt;/div&gt;
 
 &lt;!-- Spacing Utilities --&gt;
 &lt;div class="sui-p-4 sui-mt-8"&gt;...&lt;/div&gt;
 
 &lt;!-- Grid Layout Utilities --&gt;
-&lt;div class="sui-grid sui-grid-cols-3"&gt;...&lt;/div&gt;</pre>
+&lt;div class="sui-grid sui-grid-cols-3"&gt;...&lt;/div&gt;</code></pre>
       </div>
     </div>
   </section>
@@ -406,26 +426,72 @@
   </section>
 
   <!-- =======================================================================
-       9. RESPONSIVE
+       9. RESPONSIVE (ULTRA PRO MAX DEVICE SHOWCASE)
        ======================================================================= -->
   <section class="section-wrapper">
     <div class="section-container reveal-on-scroll sui-text-center">
-      <h2 class="sui-text-3xl sui-mb-4">One Framework. Every Screen.</h2>
-      <p class="sui-text-muted sui-max-w-2xl sui-mx-auto sui-mb-10">Build responsive layouts using flexible layout utilities and responsive styles.</p>
+      <span class="sui-badge sui-badge-accent sui-mb-4">Fluid Architecture</span>
+      <h2 class="sui-text-4xl sui-mb-4">One Framework. Every Screen.</h2>
+      <p class="sui-text-muted sui-max-w-2xl sui-mx-auto sui-mb-12">Build perfectly responsive layouts that adapt from ultra-wide monitors down to the smallest mobile devices without writing endless media queries.</p>
       
-      <div class="sui-flex sui-justify-center sui-items-end sui-gap-4">
-        <!-- Mobile shape -->
-        <div class="sui-border sui-border-strong sui-rounded-xl sui-bg-surface sui-flex sui-items-center sui-justify-center" style="width: 80px; height: 160px;">
-          <span class="sui-text-xs sui-text-muted">Mobile</span>
+      <!-- Premium CSS UI Device Mockups -->
+      <div class="sui-flex sui-justify-center sui-items-end sui-gap-6 sui-flex-wrap">
+        
+        <!-- Mobile -->
+        <div class="sui-animate-float" style="animation-delay: 0s;">
+          <div class="sui-border sui-border-strong sui-rounded-2xl sui-bg-surface sui-shadow-lg sui-flex sui-flex-col sui-overflow-hidden sui-transition-all hover:sui-border-primary" style="width: 100px; height: 200px; border-width: 4px;">
+            <div class="sui-w-full sui-bg-surface-hover sui-border-b sui-border-subtle" style="height: 12px;"></div>
+            <div class="sui-flex-1 sui-p-2 sui-flex sui-flex-col sui-gap-2">
+              <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 20px;"></div>
+              <div class="sui-skeleton sui-w-3/4 sui-rounded-sm" style="height: 8px;"></div>
+              <div class="sui-skeleton sui-w-1/2 sui-rounded-sm" style="height: 8px;"></div>
+            </div>
+          </div>
+          <span class="sui-block sui-mt-4 sui-text-sm sui-font-medium sui-text-muted">Mobile</span>
         </div>
-        <!-- Tablet shape -->
-        <div class="sui-border sui-border-strong sui-rounded-xl sui-bg-surface sui-flex sui-items-center sui-justify-center" style="width: 140px; height: 200px;">
-          <span class="sui-text-xs sui-text-muted">Tablet</span>
+
+        <!-- Tablet -->
+        <div class="sui-animate-float" style="animation-delay: 0.5s;">
+          <div class="sui-border sui-border-strong sui-rounded-2xl sui-bg-surface sui-shadow-lg sui-flex sui-flex-col sui-overflow-hidden sui-transition-all hover:sui-border-accent" style="width: 180px; height: 240px; border-width: 6px;">
+            <div class="sui-w-full sui-bg-surface-hover sui-border-b sui-border-subtle" style="height: 16px;"></div>
+            <div class="sui-flex-1 sui-p-3 sui-flex sui-flex-col sui-gap-3">
+              <div class="sui-skeleton sui-w-full sui-rounded-md" style="height: 40px;"></div>
+              <div class="sui-grid sui-grid-cols-2 sui-gap-2">
+                <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 60px;"></div>
+                <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 60px;"></div>
+              </div>
+            </div>
+          </div>
+          <span class="sui-block sui-mt-4 sui-text-sm sui-font-medium sui-text-muted">Tablet</span>
         </div>
-        <!-- Desktop shape -->
-        <div class="sui-border sui-border-strong sui-rounded-xl sui-bg-surface sui-flex sui-items-center sui-justify-center sui-hidden md:sui-flex" style="width: 300px; height: 240px;">
-          <span class="sui-text-sm sui-text-muted">Desktop</span>
+
+        <!-- Desktop -->
+        <div class="sui-animate-float" style="animation-delay: 1s;">
+          <div class="sui-border sui-border-strong sui-rounded-2xl sui-bg-surface sui-shadow-xl sui-flex sui-flex-col sui-overflow-hidden sui-transition-all hover:sui-border-success" style="width: 320px; height: 280px; border-width: 8px; border-bottom-width: 16px;">
+            <div class="sui-w-full sui-bg-surface-hover sui-border-b sui-border-subtle sui-flex sui-items-center sui-px-2 sui-gap-1" style="height: 20px;">
+              <div class="sui-rounded-full sui-bg-danger" style="width: 6px; height: 6px;"></div>
+              <div class="sui-rounded-full sui-bg-warning" style="width: 6px; height: 6px;"></div>
+              <div class="sui-rounded-full sui-bg-success" style="width: 6px; height: 6px;"></div>
+            </div>
+            <div class="sui-flex-1 sui-flex">
+              <div class="sui-w-1/4 sui-border-r sui-border-subtle sui-p-2 sui-flex sui-flex-col sui-gap-2">
+                <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 10px;"></div>
+                <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 10px;"></div>
+                <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 10px;"></div>
+              </div>
+              <div class="sui-flex-1 sui-p-4 sui-flex sui-flex-col sui-gap-4">
+                <div class="sui-skeleton sui-w-full sui-rounded-md" style="height: 60px;"></div>
+                <div class="sui-grid sui-grid-cols-3 sui-gap-3">
+                  <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 80px;"></div>
+                  <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 80px;"></div>
+                  <div class="sui-skeleton sui-w-full sui-rounded-sm" style="height: 80px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="sui-block sui-mt-4 sui-text-sm sui-font-medium sui-text-muted">Desktop</span>
         </div>
+
       </div>
     </div>
   </section>
@@ -439,12 +505,12 @@
       <p class="sui-text-muted sui-max-w-2xl sui-mb-8">Customize SUI.css to match your own design system.</p>
       
       <div class="sui-card sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-<pre class="code-block">:root {
+<pre class="code-block"><code>:root {
   --sui-primary: oklch(60% 0.2 250);
   --sui-radius: 0.5rem;
   --sui-spacing: 1rem;
   --sui-font-family: system-ui, -apple-system, sans-serif;
-}</pre>
+}</code></pre>
       </div>
     </div>
   </section>
@@ -483,16 +549,16 @@
       <h2 class="sui-text-3xl sui-mb-8">Start Building in Seconds.</h2>
       
       <div class="sui-card sui-max-w-3xl sui-mx-auto sui-p-0 sui-overflow-hidden sui-text-left sui-mb-8" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-<pre class="code-block">&lt;!-- CSS CDN --&gt;
-&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v1.0.0/dist/sui.min.css"&gt;
+<pre class="code-block"><code>&lt;!-- CSS CDN --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"&gt;
 
 &lt;!-- Optional JS CDN (for animations/interactions) --&gt;
-&lt;script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v1.0.0/dist/sui.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"&gt;&lt;/script&gt;
 
 &lt;!-- Usage --&gt;
 &lt;button class="sui-btn sui-btn-primary"&gt;
   Hello SUI.css
-&lt;/button&gt;</pre>
+&lt;/button&gt;</code></pre>
       </div>
       
       <a href="docs/index.html" class="sui-btn sui-btn-primary sui-btn-lg sui-rounded-full">Read Documentation &rarr;</a>
@@ -541,7 +607,8 @@
        16. FOOTER (ULTRA PRO MAX ARCHITECTURE)
        ======================================================================= -->
   <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
-    <div class="section-container">
+    <!-- The padding-inline attribute fixes the mobile horizontal overflow bug -->
+    <div class="section-container" style="padding-inline: var(--sui-space-6);">
       <div class="sui-grid sui-gap-8 sui-text-left" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
         
         <!-- Brand -->
