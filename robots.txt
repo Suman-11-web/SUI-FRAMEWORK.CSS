@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/sitemap.xml
