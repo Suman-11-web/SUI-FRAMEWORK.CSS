@@ -1,5 +1,5 @@
 <div align="center">
-  <div style="width: 80px; height: 80px; background: #6366f1; color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; margin: 0 auto 20px auto;">S</div>
+  <img src="./logosui.png" alt="Sui.css Logo" width="120" style="margin-bottom: 20px;">
   <h1>Sui.css Architecture</h1>
   <p><strong>The Ultra Pro Max CSS Framework for Modern Web Applications.</strong></p>
   <p>Version 2.0.0 • Built with OKLCH • Zero Dependencies • Hardware Accelerated</p>
@@ -8,362 +8,406 @@
 ---
 
 ## 📖 Table of Contents
-1. [Introduction](#1-introduction)
-2. [Installation & Setup](#2-installation--setup)
-3. [Design Tokens (CSS Variables)](#3-design-tokens)
-4. [Layout Engine](#4-layout-engine)
-5. [Utility Classes](#5-utility-classes)
-6. [Component Library](#6-component-library)
-7. [Hardware-Accelerated Animations](#7-animation-engine)
-8. [JavaScript Core (`sui.min.js`)](#8-javascript-core)
-9. [Advanced Customization](#9-advanced-customization)
-10. [Starter Templates](#10-starter-templates)
-11. [Author & Credits](#11-author--credits)
+1. Introduction
+2. Installation & Setup
+3. Design Tokens (CSS Variables)
+4. Layout Engine
+5. Utility Classes
+6. Component Library
+7. Hardware-Accelerated Animations
+8. JavaScript Core (sui.min.js)
+9. Advanced Customization
+10. Starter Templates
+11. Author & Credits
 
 ---
 
 ## 1. Introduction
 
-**Sui.css** is a lightweight, hybrid CSS framework that combines the speed of utility-first CSS with the consistency of pre-built components. Engineered specifically to solve the layout and performance challenges of modern web applications (like social media feeds, dashboards, and interactive portals), it strictly uses modern web standards.
+Sui.css is an advanced, lightweight, hybrid CSS framework that bridges the gap between the rapid development speed of utility-first CSS and the strict consistency of pre-built component libraries. Engineered to solve layout, performance, and scaling challenges for modern web applications, Sui.css strictly adheres to the latest web standards.
 
-### Core Philosophy
-*   **OKLCH Perceptual Colors:** Flawless contrast, mathematically perfect color scaling, and native dark mode support.
-*   **CSS Subgrid Matrices:** Perfect vertical alignment across complex card grids regardless of content length.
-*   **Physics-Based Motion:** Native 60fps CSS springs and transitions, eliminating the need for heavy JS animation libraries like GSAP or Framer Motion.
-*   **Zero Dependencies:** No PostCSS plugins, no Tailwind compilers, no Node modules required for the end user. Just one CSS file and one optional JS file.
+### The Core Philosophy
+* OKLCH Perceptual Colors: Traditional RGB and HSL color spaces often result in muddy gradients and uneven contrast. Sui.css utilizes the modern OKLCH color space, guaranteeing mathematically perfect color scaling, flawless contrast, and native dark mode support without manual hex code tweaking.
+* CSS Subgrid Matrices: Building complex card grids where headers and footers align perfectly has historically required JavaScript. Sui.css leverages native CSS Subgrid to ensure perfect vertical alignment across dynamic content lengths.
+* Physics-Based Motion: Sui.css includes native 60fps CSS springs and transitions. By utilizing the browser's compositor thread (GPU acceleration), it eliminates the need for heavy JavaScript animation libraries.
+* Zero Dependencies: There are no PostCSS plugins, no Tailwind compilers to configure, and no Node modules required for the end user. Sui.css is delivered as a single CSS file and one optional JS file.
 
 ---
 
 ## 2. Installation & Setup
 
-Integrate Sui.css into your project in seconds. We provide global CDNs for production and local files for offline development.
+Integrating Sui.css into your project is designed to be frictionless. We provide globally distributed CDNs for production environments and local files for offline development.
 
 ### Global CDN (Recommended)
-Served via jsDelivr for maximum edge-caching speed. Add these to your `index.html`.
+Served via jsDelivr for maximum edge-caching speed and lowest latency. You can include these directly in your HTML files.
 
-```html
-<!-- 1. Place this in the <head> -->
-<link rel="stylesheet" href="[https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css](https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css)">
+CSS Stylesheet URL:
+https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css
 
-<!-- 2. Place this right before the closing </body> tag -->
-<script src="[https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js](https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js)"></script>
-```
+JavaScript Core URL:
+https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js
 
-### Legacy GitHub Pages CDN
-If you are maintaining older v1.x prototypes:
-```html
-<link rel="stylesheet" href="[https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css](https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css)">
-```
+HTML Implementation:
+    <!-- 1. Place the CSS in your <head> tag -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css">
+
+    <!-- 2. Place the JS right before your closing </body> tag -->
+    <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"></script>
+
+### Legacy CDN
+If you are maintaining older prototypes utilizing the original routing, you can use this URL:
+https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css
 
 ### Local Project Setup
-Download the `/dist` folder from the repository and link it relatively:
-```html
-<link rel="stylesheet" href="./dist/sui.min.css">
-<script src="./dist/sui.min.js"></script>
-```
+For offline development, download the /dist folder directly from the repository and link it relatively in your project directory:
+    <link rel="stylesheet" href="./dist/sui.min.css">
+    <script src="./dist/sui.min.js"></script>
 
 ---
 
-## 3. Design Tokens
+## 3. Design Tokens (CSS Variables)
 
-Sui.css is powered by a central `:root` variable system. By leveraging OKLCH, the framework generates its entire color palette from a single `hue` variable. 
+Sui.css is powered by a central :root variable system. By leveraging OKLCH, the framework calculates its entire color palette from a single hue variable, making global theming instantaneous.
 
 ### Core Palette Variables
-These variables control the entire look and feel of the framework. You can overwrite them in your own CSS to instantly re-theme the app.
+These variables control the semantic meaning and visual hierarchy of your application. Overwriting these in your own stylesheet instantly re-themes the framework.
 
-| Variable Name | Default Value | Description |
-| :--- | :--- | :--- |
-| `--sui-brand-hue` | `250` (Blue/Indigo) | The master hue. Changing this (0-360) shifts the entire primary color scheme. |
-| `--sui-color-primary-500` | `oklch(60% 0.2 var(--sui-brand-hue))` | The main brand color used for buttons, active states, and focus rings. |
-| `--sui-color-accent-500` | `oklch(65% 0.22 300)` | Used for gradients, badges, and secondary attention elements. |
-| `--sui-color-success-500` | `oklch(65% 0.15 150)` | Green semantic color. |
-| `--sui-color-danger-500` | `oklch(60% 0.2 25)` | Red semantic color for errors/deletions. |
-| `--sui-color-warning-500` | `oklch(75% 0.15 80)` | Yellow/Orange semantic color. |
+* --sui-brand-hue : 250 (Indigo) - The master hue. Adjusting this (0-360) shifts the entire primary scheme.
+* --sui-color-primary-500 : oklch(60% 0.2 var(--sui-brand-hue)) - Primary actions, buttons, active states, and focus rings.
+* --sui-color-accent-500 : oklch(65% 0.22 300) - Gradients, badges, and secondary call-to-action elements.
+* --sui-color-success-500 : oklch(65% 0.15 150) - Positive semantic actions (saving, completing, verifying).
+* --sui-color-danger-500 : oklch(60% 0.2 25) - Destructive semantic actions (errors, deletions, warnings).
+* --sui-color-warning-500 : oklch(75% 0.15 80) - Cautionary semantic elements (pending states, alerts).
 
 ### Surface & Background Tokens
-Sui.css uses layered surfaces to create depth, particularly in dark mode.
-
-*   `--sui-bg`: The deepest background layer (used on `<body>`).
-*   `--sui-bg-canvas`: A slightly elevated background for main content areas.
-*   `--sui-surface`: The default background for Cards, Modals, and Dropdowns.
-*   `--sui-surface-hover`: A slightly lighter surface used for hover states on rows and buttons.
-*   `--sui-border`: Default subtle border color for structural lines.
-*   `--sui-border-strong`: High-contrast border for form inputs.
+Sui.css uses layered surfaces to create depth and visual hierarchy.
+* --sui-bg: The deepest background layer, applied to the <body>.
+* --sui-bg-canvas: An elevated background used for main content areas and complex layouts.
+* --sui-surface: The default background for interactive components like Cards, Modals, and Dropdowns.
+* --sui-surface-hover: A slightly lighter surface for hover states on data rows and ghost buttons.
+* --sui-border: Default subtle border color for structural dividers.
+* --sui-border-strong: High-contrast border for active form inputs and focused elements.
 
 ### Spacing & Radius Tokens
-Based on a 4px/8px modular scale.
-
-*   **Spacing:** `--sui-space-1` (0.25rem) up to `--sui-space-12` (3rem).
-*   **Radius:** `--sui-radius-sm` (4px), `--sui-radius-md` (8px), `--sui-radius-lg` (12px), `--sui-radius-xl` (16px), `--sui-radius-full` (9999px).
+Built on a mathematical 4px/8px modular scale to ensure rhythmic consistency.
+* Spacing: --sui-space-1 (0.25rem) scaling sequentially up to --sui-space-12 (3rem).
+* Radius: --sui-radius-sm (4px), --sui-radius-md (8px), --sui-radius-lg (12px), --sui-radius-xl (16px), and --sui-radius-full (9999px) for pill shapes and avatars.
 
 ---
 
 ## 4. Layout Engine
 
-The layout engine eliminates the need for custom CSS media queries. It provides Flexbox and Grid utilities that handle responsive scaling automatically.
+The Sui.css layout engine drastically reduces the need for custom CSS media queries. It provides robust Flexbox and Grid utilities that handle responsive scaling automatically.
 
 ### Flexbox Primitives
-*   `.sui-flex` - Activates flexbox.
-*   `.sui-flex-col` - Stacks children vertically.
-*   `.sui-flex-row` - Aligns children horizontally.
-*   `.sui-flex-wrap` - Allows children to wrap to the next line.
-*   `.sui-flex-1` - Forces a child to take up remaining available space (`flex: 1`).
+Flexbox utilities are ideal for one-dimensional layouts (rows or columns).
+* .sui-flex - Initializes a flexbox container.
+* .sui-flex-col - Orients children vertically (column).
+* .sui-flex-row - Orients children horizontally (row).
+* .sui-flex-wrap - Allows children to wrap to the next line when space is constrained.
+* .sui-flex-1 - Forces a child element to absorb all remaining available space.
 
 ### Grid Primitives
-*   `.sui-grid` - Activates CSS Grid.
-*   `.sui-grid-cols-1`, `.sui-grid-cols-2`, `.sui-grid-cols-3`, `.sui-grid-cols-4`, `.sui-grid-cols-12` - Defines explicit columns.
-*   `.sui-subgrid-matrix` - Activates the advanced subgrid layout for complex card alignment.
-*   `.sui-subgrid-item` - A child of the matrix that aligns its internal header, body, and footer across the entire row.
+Grid utilities are designed for two-dimensional layouts and complex page structures.
+* .sui-grid - Initializes a CSS Grid container.
+* .sui-grid-cols-1 through .sui-grid-cols-12 - Defines strict, explicit column counts.
+* .sui-subgrid-matrix - Activates the advanced subgrid layout, allowing nested children to inherit the parent grid's sizing.
+* .sui-subgrid-item - A specific child element designed to align its internal header, body, and footer across an entire grid row flawlessly.
 
-### Alignment & Spacing
-*   `.sui-items-start`, `.sui-items-center`, `.sui-items-end` - Cross-axis alignment (`align-items`).
-*   `.sui-justify-start`, `.sui-justify-center`, `.sui-justify-between`, `.sui-justify-end` - Main-axis alignment (`justify-content`).
-*   `.sui-gap-1` to `.sui-gap-8` - Controls the space between flex/grid children.
+### Alignment & Spacing Utilities
+* .sui-items-start, .sui-items-center, .sui-items-end - Controls cross-axis alignment.
+* .sui-justify-start, .sui-justify-center, .sui-justify-between, .sui-justify-end - Controls main-axis alignment.
+* .sui-gap-1 through .sui-gap-8 - Injects precise spacing between flex or grid children without margin collapsing issues.
 
-### Responsive Modifiers
-Sui.css is mobile-first. By default, classes apply to all screen sizes. Prefixing a class with a breakpoint changes its behavior at that specific screen width.
+### Responsive Modifiers (Mobile-First)
+Sui.css adheres strictly to a mobile-first philosophy. Base classes apply to all screen sizes, while breakpoint prefixes apply styles from that specific width and above.
+* md: (Medium devices / Tablets / > 768px)
+* lg: (Large devices / Desktops / > 1024px)
 
-*   `md:` (Medium / Tablet / > 768px)
-*   `lg:` (Large / Desktop / > 1024px)
-
-**Example Layout:**
-```html
-<!-- Stacks vertically on mobile, switches to 3 columns on desktop -->
-<div class="sui-grid sui-grid-cols-1 md:sui-grid-cols-3 sui-gap-6">
-  <div>Column 1</div>
-  <div>Column 2</div>
-  <div>Column 3</div>
-</div>
-```
+Comprehensive Layout Example:
+    <!-- On mobile: 1 column, stacked. On tablets and above: 3 equal columns -->
+    <div class="sui-grid sui-grid-cols-1 md:sui-grid-cols-3 sui-gap-6 sui-items-start">
+      <div class="sui-p-4 sui-bg-surface">Column 1 Content</div>
+      <div class="sui-p-4 sui-bg-surface">Column 2 Content</div>
+      <div class="sui-p-4 sui-bg-surface">Column 3 Content</div>
+    </div>
 
 ---
 
 ## 5. Utility Classes
 
-Utilities are single-purpose classes designed to quickly style elements without touching CSS.
+Utilities are single-purpose, highly specific CSS classes designed to style elements directly in your HTML, allowing for rapid iteration.
 
-### Typography
-*   **Scale:** `.sui-text-xs`, `.sui-text-sm`, `.sui-text-base`, `.sui-text-lg`, `.sui-text-xl`, `.sui-text-2xl`, `.sui-text-3xl`, `.sui-text-4xl`, `.sui-text-hero`
-*   **Weights:** `.sui-font-normal`, `.sui-font-medium`, `.sui-font-bold`, `.sui-font-black`
-*   **Alignment:** `.sui-text-left`, `.sui-text-center`, `.sui-text-right`
-*   **Colors:** 
-    *   `.sui-text` (Primary high-contrast text)
-    *   `.sui-text-muted` (Secondary low-contrast text)
-    *   `.sui-text-inverse` (Text color for dark backgrounds)
-    *   `.sui-text-primary`, `.sui-text-danger`, `.sui-text-success`
+### Typography Utilities
+* Scale: .sui-text-xs, .sui-text-sm, .sui-text-base, .sui-text-lg, .sui-text-xl, .sui-text-2xl, .sui-text-3xl, .sui-text-4xl, .sui-text-hero (A massive, responsive headline size).
+* Weights: .sui-font-normal (400), .sui-font-medium (500), .sui-font-bold (700), .sui-font-black (900).
+* Alignment: .sui-text-left, .sui-text-center, .sui-text-right.
+* Colors: 
+  * .sui-text (Primary high-contrast text for readability).
+  * .sui-text-muted (Secondary low-contrast text for descriptions and timestamps).
+  * .sui-text-inverse (Text color guaranteed to contrast against dark backgrounds).
+  * .sui-text-primary, .sui-text-danger, .sui-text-success (Semantic text colors).
 
 ### Spacing (Margin & Padding)
-Uses standard shorthand: `p` (padding), `m` (margin), `x` (horizontal), `y` (vertical), `t/b/l/r` (top, bottom, left, right).
-*   `.sui-p-4` - 1rem padding on all sides.
-*   `.sui-px-6` - 1.5rem padding left and right.
-*   `.sui-my-8` - 2rem margin top and bottom.
-*   `.sui-mt-4` - 1rem margin top.
-*   `.sui-mx-auto` - Centers a block-level element horizontally.
+Sui.css uses standard industry shorthand for spacing: p (padding), m (margin), x (horizontal left/right), y (vertical top/bottom), t/b/l/r (top, bottom, left, right).
+* .sui-p-4 - Applies 1rem padding to all four sides.
+* .sui-px-6 - Applies 1.5rem padding to the left and right.
+* .sui-my-8 - Applies 2rem margin to the top and bottom.
+* .sui-mt-4 - Applies 1rem margin to the top only.
+* .sui-mx-auto - Automatically calculates left/right margins to center a block-level element.
 
 ### Backgrounds & Borders
-*   `.sui-bg-surface` - Applies the default surface background color.
-*   `.sui-bg-primary`, `.sui-bg-danger`, `.sui-bg-success` - Semantic backgrounds.
-*   `.sui-border` - Adds a 1px solid border using the token color.
-*   `.sui-border-t`, `.sui-border-b` - Adds top/bottom borders only.
-*   `.sui-rounded-sm`, `.sui-rounded-md`, `.sui-rounded-lg`, `.sui-rounded-full` - Border radius control.
+* .sui-bg-surface - Applies the default card/container background color.
+* .sui-bg-primary, .sui-bg-danger, .sui-bg-success - Applies solid semantic backgrounds.
+* .sui-border - Adds a 1px solid border utilizing the global subtle border token.
+* .sui-border-t, .sui-border-b - Applies top or bottom borders exclusively (great for list items).
+* .sui-rounded-sm, .sui-rounded-md, .sui-rounded-lg, .sui-rounded-full - Precise border radius control.
 
 ---
 
 ## 6. Component Library
 
-Sui.css provides highly intelligent relational components. Unlike raw utilities, these components adapt to their surroundings.
+While utilities handle the micro-level styling, the Component Library provides highly intelligent, pre-constructed relational UI patterns. These components automatically manage their own internal spacing, typography, and interaction states.
 
 ### Buttons
-Buttons include built-in focus rings, active compression states, and hover transitions.
-*   `.sui-btn` (Base class required for all buttons)
-*   **Variants:** `.sui-btn-primary`, `.sui-btn-outline`, `.sui-btn-subtle`, `.sui-btn-danger`
-*   **Sizes:** `.sui-btn-sm`, `.sui-btn-lg`
-*   **Icon Buttons:** `.sui-btn-icon` (Perfectly squares the button for SVG icons)
+Buttons feature built-in focus rings for accessibility, active compression states for tactile feedback, and smooth hover transitions.
+* .sui-btn (The required base class that handles structure, padding, and font).
+* Semantic Variants: .sui-btn-primary, .sui-btn-outline, .sui-btn-subtle, .sui-btn-ghost, .sui-btn-danger.
+* Size Modifiers: .sui-btn-sm (Compact), .sui-btn-lg (Prominent).
+* Icon Support: .sui-btn-icon (Perfectly squares the button dimensions to wrap SVG icons cleanly).
 
-```html
-<button class="sui-btn sui-btn-primary sui-active-push">
-  Save Changes
-</button>
-```
+    <button class="sui-btn sui-btn-primary sui-active-push">
+      <svg width="16" height="16" viewBox="0 0 24 24"><!-- Icon --></svg>
+      Save Configuration
+    </button>
 
 ### Cards
-Cards are the structural backbone of dashboards and feeds.
-*   `.sui-card` - Applies surface background, borders, radius, padding, and subtle shadows.
-*   **Relational Logic:** If a `.sui-card` contains a `.sui-btn-primary`, the card will automatically enhance its own border on hover using CSS `:has()` logic.
+Cards are the structural foundation of modern web interfaces, used for dashboards, profiles, and data displays.
+* .sui-card - Automatically applies the surface background, structural borders, border radius, internal padding (1.5rem), and premium soft shadows.
+* Relational Logic: Sui.css heavily utilizes modern CSS :has() pseudo-classes. For example, if a .sui-card contains a .sui-btn-primary, the card can automatically adapt its hover states to emphasize the primary action.
 
-```html
-<article class="sui-card sui-hover-lift">
-  <h3 class="sui-text-xl sui-mb-2">Card Title</h3>
-  <p class="sui-text-muted sui-mb-4">Card content goes here.</p>
-  <button class="sui-btn sui-btn-outline">Action</button>
-</article>
-```
+    <article class="sui-card sui-hover-lift">
+      <h3 class="sui-text-xl sui-font-bold sui-mb-2">System Architecture</h3>
+      <p class="sui-text-muted sui-mb-6">Review the latest deployment logs and server metrics.</p>
+      <button class="sui-btn sui-btn-outline sui-w-full">View Logs</button>
+    </article>
 
-### Forms
-Form inputs are styled for maximum accessibility, featuring proper OKLCH focus rings.
-*   `.sui-input` - Styles `<input>`, `<textarea>`, and `<select>` elements.
-*   `.sui-label` - Styles `<label>` tags with proper weight and spacing.
+### Forms & Inputs
+Form elements are notoriously difficult to style consistently across browsers. Sui.css normalizes them with clean, modern aesthetics and proper OKLCH focus rings that scale with your brand color.
+* .sui-input - Styles standard <input>, <textarea>, and <select> elements, handling padding, borders, and focus states.
+* .sui-label - Styles <label> tags with proper font weight, color, and bottom spacing.
+* .sui-form-group - A wrapper class that perfectly spaces a label and its corresponding input.
 
-```html
-<form class="sui-flex sui-flex-col sui-gap-2">
-  <label class="sui-label" for="username">Username</label>
-  <input class="sui-input" id="username" type="text" placeholder="@suman">
-</form>
-```
+    <div class="sui-form-group">
+      <label class="sui-label" for="emailAddress">Email Address</label>
+      <input class="sui-input" id="emailAddress" type="email" placeholder="admin@example.com">
+    </div>
 
 ### Badges & Avatars
-*   `.sui-badge` - Base class for pill-shaped indicators.
-*   **Variants:** `.sui-badge-primary`, `.sui-badge-success`, `.sui-badge-warning`, `.sui-badge-danger`.
-*   `.sui-avatar` - Creates a perfect circle for profile pictures or initials.
+Small indicator components essential for data tables and user profiles.
+* .sui-badge - Base class for compact, pill-shaped indicators.
+* Variants: .sui-badge-primary, .sui-badge-success, .sui-badge-warning, .sui-badge-danger, .sui-badge-outline.
+* .sui-avatar - Creates a mathematically perfect circle, automatically centering text initials or scaling an <img> tag to fit within its bounds.
 
-```html
-<div class="sui-flex sui-gap-4 sui-items-center">
-  <div class="sui-avatar" style="background: var(--sui-color-primary-500); color: white;">SM</div>
-  <span class="sui-badge sui-badge-success">Online</span>
-</div>
-```
+    <div class="sui-flex sui-gap-4 sui-items-center">
+      <div class="sui-avatar" style="background: var(--sui-color-primary-500); color: white;">SM</div>
+      <div>
+        <strong class="sui-block">Suman M.</strong>
+        <span class="sui-badge sui-badge-success sui-mt-1">Active Now</span>
+      </div>
+    </div>
 
 ---
 
-## 7. Animation Engine
+## 7. Hardware-Accelerated Animations
 
-Sui.css abandons old `ease-in-out` transitions in favor of native CSS physics and hardware acceleration (GPU rendering).
+Sui.css moves beyond basic ease-in-out transitions. It provides a suite of native CSS physics animations. By strictly animating properties like transform and opacity, Sui.css forces the browser to hand the animation workload to the GPU compositor thread, guaranteeing 60fps performance without jank.
 
 ### Entry Transitions (Load States)
-Apply these to elements as they enter the DOM.
-*   `.sui-animate-blur-in` - The element fades in while unblurring (Apple-style reveal).
-*   `.sui-animate-slide-up` - Fades in while translating upward.
-*   `.sui-animate-spring-up` - Translates upward but slightly overshoots its target before bouncing back to rest.
+Apply these to elements to choreograph how they enter the DOM on page load.
+* .sui-animate-blur-in - The element fades from 0 to 1 opacity while simultaneously unblurring from a 10px radius. This creates a highly polished, Apple-style reveal.
+* .sui-animate-slide-up - Smoothly translates the element upward by 20px while fading it in.
+* .sui-animate-spring-up - Similar to slide-up, but utilizes a custom cubic-bezier curve to slightly overshoot its final position before snapping back, mimicking natural spring physics.
 
-### Micro-Interactions (Hover/Active)
-*   `.sui-hover-lift` - On cursor hover, the element scales up by `1.02` and increases its shadow depth.
-*   `.sui-active-push` - On mouse click (active state), the element compresses to `0.95` scale, providing tactile physical feedback.
-*   `.sui-hover-glow` - Emits an OKLCH colored box-shadow on hover.
+### Micro-Interactions (Hover & Active States)
+* .sui-hover-lift - On cursor hover, the element scales up seamlessly to 1.02 and increases its shadow depth, indicating interactivity.
+* .sui-active-push - On mouse click (the :active state), the element compresses to a 0.95 scale, providing satisfying tactile physical feedback to the user.
+* .sui-hover-glow - Emits a soft, OKLCH-colored box-shadow on hover, ideal for emphasizing primary buttons.
 
 ### Continuous Motion
-*   `.sui-animate-pulse-glow` - Creates a continuous, breathing radar-ring effect (perfect for "Live" indicators or recording buttons).
-*   `.sui-animate-float` - The element smoothly levitates up and down continuously on the Y-axis.
-*   `.sui-animate-spin` - Continuous 360-degree rotation (useful for loading spinners).
+* .sui-animate-pulse-glow - Creates a continuous, breathing radar-ring effect utilizing box-shadow expansion. Perfect for "Live" indicators, recording buttons, or critical alerts.
+* .sui-animate-float - The element smoothly levitates up and down continuously on the Y-axis (ideal for hero section illustrations or floating action buttons).
+* .sui-animate-spin - Continuous 360-degree linear rotation (used for loading spinners and sync icons).
 
 ---
 
-## 8. JavaScript Core (`sui.min.js`)
+## 8. JavaScript Core (sui.min.js)
 
-The `sui.min.js` file is extremely lightweight and strictly provides UI logic that CSS cannot handle alone. It does not manipulate the Virtual DOM or require a framework like React.
+While Sui.css is fundamentally a CSS architecture, the accompanying sui.min.js file provides critical UI logic that CSS cannot handle independently. It is dependency-free, operates entirely via event delegation, and does not manipulate the Virtual DOM.
 
 ### 1. Mobile Drawer Engine
-The JS listens for specific classes to manage the mobile navigation overlay.
-*   **Trigger:** Any button with `id="mobileMenuBtn"`.
-*   **Target:** The framework looks for `id="mobileDrawer"` and applies the `.is-open` class, sliding it into the viewport.
-*   **Close Triggers:** Clicking any element with `.js-drawer-close` (usually a close button or the backdrop overlay) will strip the `.is-open` class, dismissing the drawer.
+The script manages the complex state toggling required for the off-canvas mobile navigation drawer.
+* Trigger Mechanism: It listens for clicks on any element with id="mobileMenuBtn".
+* Target Execution: It locates the id="mobileDrawer" element and injects the .is-open class, triggering the CSS hardware-accelerated slide-in animation.
+* Dismissal Logic: Clicking any element with the .js-drawer-close class (which is applied to the close button and the dark backdrop overlay) strips the .is-open class, dismissing the drawer cleanly.
 
 ### 2. Live Playground Syntax Highlighter
-Included in the core is a custom, zero-dependency Regex Syntax engine designed specifically for the SUI documentation playground.
-*   **How it works:** It intercepts raw HTML inside textareas, escapes it safely, wraps attributes, strings, and tags in temporary placeholder strings, and finally converts them into colored `.sui-hl-*` spans.
-*   **Why:** It allows the live "Try Sui.css" editor to function smoothly without injecting a massive 500kb library like CodeMirror.
+Included directly in the JS core is a bespoke, zero-dependency Regex Syntax parser designed specifically for the SUI documentation's interactive code editor.
+* Architecture: It intercepts raw HTML typed into a <textarea>, escapes dangerous characters, and wraps attributes, strings, and tags in unique placeholder markers. It then safely converts these markers into beautifully colored .sui-hl-* spans.
+* Performance: By handling this natively, Sui.css avoids forcing users to download massive 500kb+ external libraries like CodeMirror or Prism.js just to view code documentation.
 
 ### 3. Scroll Synchronization
-For the Live Editor, the JS synchronizes the scroll position of the invisible `<textarea>` (where the user types) with the underlying `<pre>` layer (where the colored syntax is rendered).
+To make the Live Editor function flawlessly, the JavaScript precisely synchronizes the scroll position (both scrollTop and scrollLeft) of the invisible, writable <textarea> with the underlying, read-only <pre> layer where the colored syntax spans are rendered.
 
 ---
 
 ## 9. Advanced Customization
 
-### Overriding Tokens
-Because Sui.css relies heavily on CSS variables, you do not need to recompile the framework to change its appearance. Simply create a `styles.css` file, load it *after* `sui.min.css`, and redefine the `:root` scope.
+Sui.css is designed to be completely overridden without ever needing to edit the source code or recompile the framework. 
 
-```css
-/* Customizing the entire framework with one file */
-:root {
-  /* 1. Change the primary brand color to a deep red */
-  --sui-brand-hue: 15;
-  
-  /* 2. Make all buttons and cards perfectly square */
-  --sui-radius-sm: 0px;
-  --sui-radius-md: 0px;
-  --sui-radius-lg: 0px;
-  --sui-radius-xl: 0px;
-  --sui-radius-full: 0px;
+### Overriding Global Tokens
+By defining CSS variables in the :root pseudo-class in your own styles.css file (loaded after sui.min.css), you can fundamentally alter the framework's DNA.
 
-  /* 3. Change the base font to a serif */
-  --sui-font-family: 'Georgia', serif;
-}
-```
+    /* Your custom styles.css */
+    :root {
+      /* 1. Shift the primary brand color from Indigo to a deep Crimson */
+      --sui-brand-hue: 15;
+      
+      /* 2. Create a brutalist, sharp-edged aesthetic by removing all border radii */
+      --sui-radius-sm: 0px;
+      --sui-radius-md: 0px;
+      --sui-radius-lg: 0px;
+      --sui-radius-xl: 0px;
+      --sui-radius-full: 0px;
 
-### Theming / Dark Mode
-Sui.css utilizes semantic surface tokens. If you wish to implement a light mode or specific theme variants, target a data attribute on the `<html>` tag:
+      /* 3. Swap the typography system to a serif font */
+      --sui-font-family: 'Georgia', 'Times New Roman', serif;
+    }
 
-```css
-html[data-theme="light"] {
-  --sui-bg: #ffffff;
-  --sui-bg-canvas: #f8f9fa;
-  --sui-surface: #ffffff;
-  --sui-text: #111827;
-  --sui-text-muted: #6b7280;
-  --sui-border: #e5e7eb;
-}
-```
+### Implementing Theming / Light & Dark Modes
+Sui.css utilizes semantic surface tokens, making theme switching incredibly straightforward. By targeting a data-theme attribute on the <html> tag, you can define completely new surface colors for different environments.
+
+    /* Defining a specific Light Mode theme override */
+    html[data-theme="light"] {
+      --sui-bg: #ffffff;
+      --sui-bg-canvas: #f3f4f6;
+      --sui-surface: #ffffff;
+      --sui-surface-hover: #f9fafb;
+      --sui-text: #111827;
+      --sui-text-muted: #6b7280;
+      --sui-border: #e5e7eb;
+    }
 
 ---
 
 ## 10. Starter Templates
 
-### The 60-Second Landing Page
-Copy and paste this layout to see the framework in action. It utilizes the Flex layout, Fluid Typography, Spring Animations, and Relational Components.
+To accelerate your workflow, here are fully configured architectural templates demonstrating how Sui.css utility and component classes interlock.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Landing Page - Sui.css</title>
-  <link rel="stylesheet" href="[https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css](https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css)">
-</head>
-<body class="sui-bg">
+### The Marketing Landing Page
+A high-converting hero section utilizing fluid typography, flexbox navigation, and spring animations.
 
-  <!-- Navbar -->
-  <nav class="sui-flex sui-items-center sui-justify-between sui-p-6 sui-border-b sui-border-subtle">
-    <strong class="sui-text-xl">Brand.</strong>
-    <div class="sui-flex sui-gap-4">
-      <a href="#" class="sui-text-muted">Features</a>
-      <a href="#" class="sui-text-muted">Pricing</a>
-    </div>
-  </nav>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Product Launch - Sui.css</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css">
+    </head>
+    <body class="sui-bg">
 
-  <!-- Hero Section -->
-  <main class="sui-flex sui-flex-col sui-items-center sui-justify-center sui-text-center sui-p-8 sui-mt-12">
-    <span class="sui-badge sui-badge-primary sui-animate-spring-up sui-mb-6">Version 2.0 is Live</span>
-    
-    <h1 class="sui-text-hero sui-animate-blur-in sui-delay-1 sui-max-w-4xl sui-mb-6">
-      Design Faster. Build Better.
-    </h1>
-    
-    <p class="sui-text-xl sui-text-muted sui-animate-slide-up sui-delay-2 sui-max-w-2xl sui-mb-8">
-      The most advanced UI toolkit for modern web applications.
-    </p>
-    
-    <div class="sui-flex sui-gap-4 sui-animate-spring-up sui-delay-3">
-      <button class="sui-btn sui-btn-primary sui-btn-lg sui-active-push">Get Started</button>
-      <button class="sui-btn sui-btn-outline sui-btn-lg sui-hover-lift">Read Docs</button>
-    </div>
-  </main>
+      <!-- Application Navbar -->
+      <nav class="sui-flex sui-items-center sui-justify-between sui-p-6 sui-border-b sui-border-subtle sui-bg-surface">
+        <strong class="sui-text-xl sui-font-black">Platform.</strong>
+        <div class="sui-flex sui-gap-6 sui-items-center">
+          <a href="#" class="sui-text-muted sui-font-medium">Features</a>
+          <a href="#" class="sui-text-muted sui-font-medium">Pricing</a>
+          <button class="sui-btn sui-btn-sm sui-btn-primary">Sign In</button>
+        </div>
+      </nav>
 
-  <script src="[https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js](https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js)"></script>
-</body>
-</html>
-```
+      <!-- Animated Hero Section -->
+      <main class="sui-flex sui-flex-col sui-items-center sui-justify-center sui-text-center sui-px-6 sui-py-20 sui-mt-8">
+        <span class="sui-badge sui-badge-primary sui-badge-outline sui-animate-spring-up sui-mb-6">System v2.0 is Live</span>
+        
+        <h1 class="sui-text-hero sui-font-black sui-animate-blur-in sui-delay-1 sui-max-w-4xl sui-mb-6" style="line-height: 1.1;">
+          Design Faster.<br>Build Better Interfaces.
+        </h1>
+        
+        <p class="sui-text-xl sui-text-muted sui-animate-slide-up sui-delay-2 sui-max-w-2xl sui-mb-10">
+          The most advanced UI toolkit for modern web applications. Combine components, utilities, and raw CSS power seamlessly.
+        </p>
+        
+        <div class="sui-flex sui-gap-4 sui-animate-spring-up sui-delay-3">
+          <button class="sui-btn sui-btn-primary sui-btn-lg sui-active-push">Start Building Free</button>
+          <button class="sui-btn sui-btn-outline sui-btn-lg sui-hover-lift">Read Documentation</button>
+        </div>
+      </main>
+
+      <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"></script>
+    </body>
+    </html>
+
+### The Dashboard Interface Shell
+A complex, application-style layout featuring a fixed sidebar and a responsive grid dashboard.
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Dashboard - Sui.css</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css">
+    </head>
+    <body class="sui-bg sui-flex" style="min-height: 100vh;">
+
+      <!-- Sidebar (Hidden on Mobile) -->
+      <aside class="sui-hidden md:sui-flex sui-flex-col sui-w-64 sui-border-r sui-border-subtle sui-bg-surface sui-p-6">
+        <strong class="sui-text-xl sui-mb-8">Admin Panel</strong>
+        <nav class="sui-flex sui-flex-col sui-gap-2">
+          <a href="#" class="sui-btn sui-btn-subtle sui-justify-start">Overview</a>
+          <a href="#" class="sui-btn sui-btn-ghost sui-text-muted sui-justify-start">Analytics</a>
+          <a href="#" class="sui-btn sui-btn-ghost sui-text-muted sui-justify-start">Settings</a>
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="sui-flex-1 sui-flex sui-flex-col">
+        <header class="sui-flex sui-justify-between sui-items-center sui-p-6 sui-border-b sui-border-subtle">
+          <h2 class="sui-text-2xl sui-font-bold">System Overview</h2>
+          <div class="sui-avatar" style="background: var(--sui-color-accent-500); color: white;">Admin</div>
+        </header>
+
+        <div class="sui-p-6 sui-grid sui-grid-cols-1 md:sui-grid-cols-3 sui-gap-6">
+          <div class="sui-card">
+            <h3 class="sui-text-sm sui-text-muted sui-mb-2">Total Users</h3>
+            <p class="sui-text-3xl sui-font-black">14,205</p>
+          </div>
+          <div class="sui-card">
+            <h3 class="sui-text-sm sui-text-muted sui-mb-2">Revenue</h3>
+            <p class="sui-text-3xl sui-font-black">$84,392</p>
+          </div>
+          <div class="sui-card">
+            <h3 class="sui-text-sm sui-text-muted sui-mb-2">Server Status</h3>
+            <p class="sui-text-3xl sui-font-black sui-text-success">Healthy</p>
+          </div>
+        </div>
+      </main>
+
+    </body>
+    </html>
 
 ---
 
 ## 11. Author & Credits
 
-**Architected & Developed by:**  
-**Suman M.**  
-*Software Developer & UI Architect*
+Architected & Developed by:
+Suman M.
+Software Developer, UI Engineer & Architect
 
-**Project Origins:**  
-Sui.css was initially conceptualized and built as the proprietary UI engine for **Novasocial**, a modern social media web application. It was designed to solve the specific challenges of complex feed layouts, real-time animation performance, and mobile responsiveness. It has since been extracted and open-sourced as a standalone framework.
+Project Overview:
+Sui.css was engineered from the ground up to solve demanding layout, speed, and scaling challenges faced when building highly interactive, modern web applications. By completely discarding legacy CSS practices in favor of mathematical OKLCH color models, native subgrids, and GPU-accelerated motion, Sui.css provides developers with an elite toolkit that is both powerful and incredibly lightweight.
 
-**License:**  
-MIT License. Sui.css is free to use for both personal and commercial projects. Built in public, available on GitHub.
+License & Usage:
+Released under the MIT License. Sui.css is free and open-source for both personal hobby projects and large-scale commercial applications. It is built in public and continuously improved on GitHub.
