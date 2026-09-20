@@ -399,14 +399,65 @@ Features a multi-column application layout, static sidebars, and analytical metr
 
 ---
 
-## 11. Author & License
+# 11. Author & Credits
 
-**Architected, Designed, and Engineered by:**  
+## Author & License
+
+### Architected, Designed, and Engineered by
+
 **Suman M.**  
-*Software Developer, UI Engineer & Architecture Lead*
+*Software Developer • UI Engineer • Architecture Lead*
 
-**Project Origins:**  
-Sui.css was engineered from the ground up to solve the demanding layout, processing speed, and code-scaling challenges faced when building highly interactive, complex web applications. By completely discarding legacy CSS practices (like Float layouts and non-perceptual colors) in favor of mathematical OKLCH color models, native CSS subgrids, and GPU-accelerated motion layers, Sui.css provides UI engineers with an elite toolkit that is immensely powerful yet incredibly lightweight.
+SUI.css is an independent CSS framework designed and engineered from the ground up with a focus on modern web interfaces, reusable architecture, responsive layouts, performance-conscious styling, and scalable frontend development.
 
-**License:**  
-Released universally under the **MIT License**. Sui.css is completely free and open-source for both personal hobby projects and large-scale commercial enterprise applications. It is built in public, continuously maintained, and available on GitHub for community contribution.
+### Project Origins
+
+SUI.css was created to address common challenges encountered when building modern, highly interactive, and increasingly complex web applications.
+
+The framework focuses on reducing repetitive CSS work while providing a consistent system for:
+
+- Responsive layouts
+- Reusable UI components
+- Utility-based styling
+- Design tokens
+- Modern color systems
+- CSS Grid and Flexbox layouts
+- CSS Subgrid-based layout patterns
+- Motion and animation utilities
+- JavaScript-powered UI utilities
+- Scalable frontend architecture
+
+SUI.css uses modern CSS capabilities, including **OKLCH color definitions**, responsive layout utilities, CSS Grid, Flexbox, Subgrid patterns, and hardware-friendly animation techniques where appropriate.
+
+The goal is to provide developers with a lightweight and reusable toolkit for building modern interfaces without requiring a large collection of external dependencies.
+
+### Open Source
+
+SUI.css is developed as an open-source project and is publicly available on GitHub.
+
+Developers are welcome to:
+
+- Use SUI.css in personal projects
+- Use SUI.css in commercial projects
+- Modify the source code
+- Build applications using SUI.css
+- Fork the repository
+- Contribute improvements
+- Report bugs and issues
+- Suggest new features
+- Create projects based on the framework
+
+### License
+
+SUI.css is released under the **MIT License**.
+
+The MIT License permits free use, modification, distribution, and commercial use of the software, subject to the conditions stated in the license.
+
+**SUI.css is free and open-source for both personal and commercial projects.**
+
+For the complete legal terms, see the [`LICENSE`](./LICENSE) file included in this repository.
+
+```text
+SUI.css
+Copyright (c) 2026 Suman M.
+Released under the MIT License.
