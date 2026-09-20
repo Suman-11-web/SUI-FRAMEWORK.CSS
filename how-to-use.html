@@ -8,8 +8,6 @@
 
     <!-- Core Framework -->
     <link rel="stylesheet" href="dist/sui.min.css">
-    <!-- Prism for Syntax Highlighting -->
-    <!--<link rel="stylesheet" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css">-->
 
     <style>
         /* =========================================================
@@ -30,6 +28,15 @@
             margin: 0;
             min-height: 100vh;
         }
+
+        /* =========================================================
+           ZERO-DEPENDENCY SYNTAX COLORS (BULLETPROOF)
+        ========================================================== */
+        .sui-hl-comment { color: #8b949e; font-style: italic; }
+        .sui-hl-tag { color: #7ee787; font-weight: 500; }
+        .sui-hl-attr { color: #79c0ff; }
+        .sui-hl-string { color: #a5d6ff; }
+        .sui-hl-prop { color: #d2a8ff; }
 
         /* =========================================================
            TOP BAR
@@ -120,19 +127,14 @@
         .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; border-bottom: 1px solid var(--sui-border); background: oklch(from var(--sui-surface) l c h / 0.5); }
         .code-language { color: var(--sui-text-muted); font-family: monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Fix for overlapping Mac buttons and padding */
-        pre[class*="language-"] { 
+        /* Hardcoded padding for 100% bug-free rendering */
+        pre { 
             margin: 0 !important; 
             padding: 1.25rem 1.5rem !important; 
             border-radius: 0 !important; 
             background: transparent !important; 
             font-size: 0.85rem !important; 
-        }
-        /* Force hide rogue pseudo-elements injected by syntax themes */
-        pre[class*="language-"]::before, 
-        pre[class*="language-"]::after { 
-            display: none !important; 
-            content: none !important; 
+            overflow-x: auto;
         }
 
         /* Mobile Breakpoints */
@@ -283,14 +285,30 @@
                 </div>
             </div>
 
-            <h3 class="sui-text-xl sui-mb-2 sui-mt-8">CDN</h3>
-            <p class="sui-text-sm sui-text-muted sui-mb-4">Replace the placeholder URL with your published Sui.css CDN URL.</p>
+            <!-- New v2.0.0 CDN Links -->
+            <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Global CDN (v2.0.0 jsDelivr)</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">The new recommended CDN for maximum global delivery speeds.</p>
             <div class="code-block">
                 <div class="code-header">
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;link rel="stylesheet" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css"&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-comment">&lt;!-- CSS --&gt;</span>
+<span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
+
+<span class="sui-hl-comment">&lt;!-- JS Core --&gt;</span>
+<span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span></code></pre>
+            </div>
+
+            <!-- Old GitHub Pages CDN Link -->
+            <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Old GitHub Pages CDN</h3>
+            <p class="sui-text-sm sui-text-muted sui-mb-4">Legacy CDN link.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-language">HTML</span>
+                    <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
+                </div>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span></code></pre>
             </div>
 
             <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Local project</h3>
@@ -299,7 +317,7 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;link rel="stylesheet" href="./dist/sui.min.css"&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"./dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span></code></pre>
             </div>
         </section>
 
@@ -342,18 +360,23 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;title&gt;My Sui.css Project&lt;/title&gt;
-    &lt;link rel="stylesheet" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css"&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;h1&gt;Hello Sui.css&lt;/h1&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="sui-hl-tag">&lt;html</span> <span class="sui-hl-attr">lang</span>=<span class="sui-hl-string">"en"</span><span class="sui-hl-tag">&gt;</span>
+<span class="sui-hl-tag">&lt;head&gt;</span>
+    <span class="sui-hl-tag">&lt;meta</span> <span class="sui-hl-attr">charset</span>=<span class="sui-hl-string">"UTF-8"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;meta</span> <span class="sui-hl-attr">name</span>=<span class="sui-hl-string">"viewport"</span> <span class="sui-hl-attr">content</span>=<span class="sui-hl-string">"width=device-width, initial-scale=1.0"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;title&gt;</span>My Sui.css Project<span class="sui-hl-tag">&lt;/title&gt;</span>
+    
+    <span class="sui-hl-comment">&lt;!-- SUI CSS v2.0.0 --&gt;</span>
+    <span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
+<span class="sui-hl-tag">&lt;/head&gt;</span>
+<span class="sui-hl-tag">&lt;body&gt;</span>
+    <span class="sui-hl-tag">&lt;h1&gt;</span>Hello Sui.css<span class="sui-hl-tag">&lt;/h1&gt;</span>
+    
+    <span class="sui-hl-comment">&lt;!-- SUI JS v2.0.0 --&gt;</span>
+    <span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span>
+<span class="sui-hl-tag">&lt;/body&gt;</span>
+<span class="sui-hl-tag">&lt;/html&gt;</span></code></pre>
             </div>
         </section>
 
@@ -380,15 +403,15 @@
                     <span class="code-language">CSS</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-css">:root {
-    --sui-brand-hue: 250;
-    --sui-primary-500: oklch(60% 0.2 var(--sui-brand-hue));
-    --sui-success: oklch(65% 0.15 150);
-    --sui-danger: oklch(60% 0.2 25);
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">:root</span> {
+    <span class="sui-hl-attr">--sui-brand-hue</span>: <span class="sui-hl-string">250</span>;
+    <span class="sui-hl-attr">--sui-primary-500</span>: <span class="sui-hl-string">oklch(60% 0.2 var(--sui-brand-hue))</span>;
+    <span class="sui-hl-attr">--sui-success</span>: <span class="sui-hl-string">oklch(65% 0.15 150)</span>;
+    <span class="sui-hl-attr">--sui-danger</span>: <span class="sui-hl-string">oklch(60% 0.2 25)</span>;
     
-    --sui-space-2: 0.5rem;
-    --sui-space-4: 1rem;
-    --sui-radius-md: 0.5rem;
+    <span class="sui-hl-attr">--sui-space-2</span>: <span class="sui-hl-string">0.5rem</span>;
+    <span class="sui-hl-attr">--sui-space-4</span>: <span class="sui-hl-string">1rem</span>;
+    <span class="sui-hl-attr">--sui-radius-md</span>: <span class="sui-hl-string">0.5rem</span>;
 }</code></pre>
             </div>
         </section>
@@ -427,10 +450,10 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;div class="sui-flex sui-items-center sui-justify-between sui-gap-4"&gt;
-    &lt;div&gt;Brand&lt;/div&gt;
-    &lt;nav&gt;Navigation&lt;/nav&gt;
-&lt;/div&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-items-center sui-justify-between sui-gap-4"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;div&gt;</span>Brand<span class="sui-hl-tag">&lt;/div&gt;</span>
+    <span class="sui-hl-tag">&lt;nav&gt;</span>Navigation<span class="sui-hl-tag">&lt;/nav&gt;</span>
+<span class="sui-hl-tag">&lt;/div&gt;</span></code></pre>
             </div>
         </section>
 
@@ -472,10 +495,10 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;section class="sui-p-4"&gt;
-    &lt;h2 class="sui-text-center"&gt;Welcome&lt;/h2&gt;
-    &lt;p&gt;Build your interface with Sui.css.&lt;/p&gt;
-&lt;/section&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;section</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-p-4"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;h2</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-text-center"</span><span class="sui-hl-tag">&gt;</span>Welcome<span class="sui-hl-tag">&lt;/h2&gt;</span>
+    <span class="sui-hl-tag">&lt;p&gt;</span>Build your interface with Sui.css.<span class="sui-hl-tag">&lt;/p&gt;</span>
+<span class="sui-hl-tag">&lt;/section&gt;</span></code></pre>
             </div>
         </section>
 
@@ -499,7 +522,7 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;button class="sui-btn sui-btn-primary"&gt;Primary Button&lt;/button&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span><span class="sui-hl-tag">&gt;</span>Primary Button<span class="sui-hl-tag">&lt;/button&gt;</span></code></pre>
             </div>
 
             <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Card</h3>
@@ -508,10 +531,10 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;article class="sui-card"&gt;
-    &lt;h3&gt;Sui.css Card&lt;/h3&gt;
-    &lt;p&gt;Reusable interface component.&lt;/p&gt;
-&lt;/article&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;article</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-card"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;h3&gt;</span>Sui.css Card<span class="sui-hl-tag">&lt;/h3&gt;</span>
+    <span class="sui-hl-tag">&lt;p&gt;</span>Reusable interface component.<span class="sui-hl-tag">&lt;/p&gt;</span>
+<span class="sui-hl-tag">&lt;/article&gt;</span></code></pre>
             </div>
 
             <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Form</h3>
@@ -520,11 +543,11 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;form class="sui-flex sui-flex-col sui-gap-2"&gt;
-    &lt;label class="sui-label" for="email"&gt;Email&lt;/label&gt;
-    &lt;input class="sui-input" id="email" type="email" placeholder="you@example.com"&gt;
-    &lt;button class="sui-btn sui-btn-primary" type="submit"&gt;Submit&lt;/button&gt;
-&lt;/form&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;form</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-flex-col sui-gap-2"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;label</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-label"</span> <span class="sui-hl-attr">for</span>=<span class="sui-hl-string">"email"</span><span class="sui-hl-tag">&gt;</span>Email<span class="sui-hl-tag">&lt;/label&gt;</span>
+    <span class="sui-hl-tag">&lt;input</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-input"</span> <span class="sui-hl-attr">id</span>=<span class="sui-hl-string">"email"</span> <span class="sui-hl-attr">type</span>=<span class="sui-hl-string">"email"</span> <span class="sui-hl-attr">placeholder</span>=<span class="sui-hl-string">"you@example.com"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span> <span class="sui-hl-attr">type</span>=<span class="sui-hl-string">"submit"</span><span class="sui-hl-tag">&gt;</span>Submit<span class="sui-hl-tag">&lt;/button&gt;</span>
+<span class="sui-hl-tag">&lt;/form&gt;</span></code></pre>
             </div>
         </section>
 
@@ -558,9 +581,9 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;div class="sui-animate-blur-in"&gt;
-    &lt;h2&gt;Welcome to Sui.css&lt;/h2&gt;
-&lt;/div&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-animate-blur-in"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;h2&gt;</span>Welcome to Sui.css<span class="sui-hl-tag">&lt;/h2&gt;</span>
+<span class="sui-hl-tag">&lt;/div&gt;</span></code></pre>
             </div>
         </section>
 
@@ -587,11 +610,11 @@
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;!-- Stack on mobile, flex row on desktop --&gt;
-&lt;div class="sui-flex sui-flex-col md:sui-flex-row"&gt;
-    &lt;div&gt;Content&lt;/div&gt;
-    &lt;div&gt;Sidebar&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-comment">&lt;!-- Stack on mobile, flex row on desktop --&gt;</span>
+<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-flex-col md:sui-flex-row"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;div&gt;</span>Content<span class="sui-hl-tag">&lt;/div&gt;</span>
+    <span class="sui-hl-tag">&lt;div&gt;</span>Sidebar<span class="sui-hl-tag">&lt;/div&gt;</span>
+<span class="sui-hl-tag">&lt;/div&gt;</span></code></pre>
             </div>
         </section>
 
@@ -610,9 +633,9 @@
                     <span class="code-language">CSS</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-css">:root {
-    --sui-brand-hue: 280; /* Changes entire framework palette */
-    --sui-radius-md: 14px;
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">:root</span> {
+    <span class="sui-hl-attr">--sui-brand-hue</span>: <span class="sui-hl-string">280</span>; <span class="sui-hl-comment">/* Changes entire framework palette */</span>
+    <span class="sui-hl-attr">--sui-radius-md</span>: <span class="sui-hl-string">14px</span>;
 }</code></pre>
             </div>
 
@@ -671,13 +694,13 @@
                     <span class="code-language">TERMINAL</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-bash"># Install dependencies
+                <pre><code style="color: #ededed;"><span class="sui-hl-comment"># Install dependencies</span>
 npm install
 
-# Build Sui.css via Lightning CSS
+<span class="sui-hl-comment"># Build Sui.css via Lightning CSS</span>
 npm run build
 
-# Check generated files
+<span class="sui-hl-comment"># Check generated files</span>
 ls dist/</code></pre>
             </div>
         </section>
@@ -709,24 +732,29 @@ ls dist/</code></pre>
                     <span class="code-language">HTML</span>
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
-                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;title&gt;Sui.css Project&lt;/title&gt;
-    &lt;link rel="stylesheet" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/dist/sui.min.css"&gt;
-&lt;/head&gt;
-&lt;body class="sui-bg"&gt;
-    &lt;main class="sui-container sui-flex sui-items-center sui-justify-between sui-gap-4 sui-flex-wrap sui-py-12"&gt;
-        &lt;div&gt;
-            &lt;h1 class="sui-text-2xl"&gt;Build with Sui.css&lt;/h1&gt;
-            &lt;p class="sui-text-muted"&gt;Simple. Modern. Reusable.&lt;/p&gt;
-        &lt;/div&gt;
-        &lt;button class="sui-btn sui-btn-primary sui-hover-lift"&gt;Get Started&lt;/button&gt;
-    &lt;/main&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
+                <pre><code style="color: #ededed;"><span class="sui-hl-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="sui-hl-tag">&lt;html</span> <span class="sui-hl-attr">lang</span>=<span class="sui-hl-string">"en"</span><span class="sui-hl-tag">&gt;</span>
+<span class="sui-hl-tag">&lt;head&gt;</span>
+    <span class="sui-hl-tag">&lt;meta</span> <span class="sui-hl-attr">charset</span>=<span class="sui-hl-string">"UTF-8"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;meta</span> <span class="sui-hl-attr">name</span>=<span class="sui-hl-string">"viewport"</span> <span class="sui-hl-attr">content</span>=<span class="sui-hl-string">"width=device-width, initial-scale=1.0"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;title&gt;</span>Sui.css Project<span class="sui-hl-tag">&lt;/title&gt;</span>
+    
+    <span class="sui-hl-comment">&lt;!-- SUI CSS v2.0.0 --&gt;</span>
+    <span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
+<span class="sui-hl-tag">&lt;/head&gt;</span>
+<span class="sui-hl-tag">&lt;body</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-bg"</span><span class="sui-hl-tag">&gt;</span>
+    <span class="sui-hl-tag">&lt;main</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-container sui-flex sui-items-center sui-justify-between sui-gap-4 sui-flex-wrap sui-py-12"</span><span class="sui-hl-tag">&gt;</span>
+        <span class="sui-hl-tag">&lt;div&gt;</span>
+            <span class="sui-hl-tag">&lt;h1</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-text-2xl"</span><span class="sui-hl-tag">&gt;</span>Build with Sui.css<span class="sui-hl-tag">&lt;/h1&gt;</span>
+            <span class="sui-hl-tag">&lt;p</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-text-muted"</span><span class="sui-hl-tag">&gt;</span>Simple. Modern. Reusable.<span class="sui-hl-tag">&lt;/p&gt;</span>
+        <span class="sui-hl-tag">&lt;/div&gt;</span>
+        <span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary sui-hover-lift"</span><span class="sui-hl-tag">&gt;</span>Get Started<span class="sui-hl-tag">&lt;/button&gt;</span>
+    <span class="sui-hl-tag">&lt;/main&gt;</span>
+    
+    <span class="sui-hl-comment">&lt;!-- SUI JS v2.0.0 --&gt;</span>
+    <span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span>
+<span class="sui-hl-tag">&lt;/body&gt;</span>
+<span class="sui-hl-tag">&lt;/html&gt;</span></code></pre>
             </div>
 
             <div class="callout success">
@@ -752,7 +780,6 @@ ls dist/</code></pre>
 <!-- =============================================================
      JAVASCRIPT
 ============================================================== -->
-<script src="src/sui.js"></script>
 <script>
     // Sidebar Logic
     const menuBtn = document.getElementById("menuBtn");
