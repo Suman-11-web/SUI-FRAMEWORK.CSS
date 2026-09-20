@@ -727,3 +727,11 @@ pre[class*="language-"] {
 .sui-btn-subtle:hover {
   background-color: color-mix(in oklch, var(--sui-color-primary-500) 22%, transparent);
 }
+
+/* ==========================================================================
+   12. NATIVE SYNTAX HIGHLIGHTER (Zero Dependency)
+   ========================================================================== */
+.sui-hl-comment { color: oklch(60% 0.05 var(--sui-brand-hue)); font-style: italic; }
+.sui-hl-tag { color: oklch(75% 0.15 340); font-weight: 500; } 
+.sui-hl-attr { color: oklch(80% 0.15 150); } 
+.sui-hl-string { color: oklch(85% 0.15 80); }

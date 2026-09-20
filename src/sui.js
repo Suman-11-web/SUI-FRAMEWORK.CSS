@@ -654,3 +654,32 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePlayground();
       }
     }
+
+    /* ==========================================================================
+   SUI NATIVE SYNTAX HIGHLIGHTER
+   ========================================================================== */
+const suiSyntax = {
+    highlight(text) {
+        return text
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML
+            .replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="sui-hl-comment">$1</span>') // Comments
+            .replace(/(&lt;\/?)([a-zA-Z0-9\-]+)/g, '$1<span class="sui-hl-tag">$2</span>') // Tags
+            .replace(/([a-zA-Z\-]+)(?=\=)/g, '<span class="sui-hl-attr">$1</span>') // Attributes
+            .replace(/(&quot;.*?&quot;|\'.*?\')/g, '<span class="sui-hl-string">$1</span>'); // Strings
+    },
+    init() {
+        // Auto-highlight static code blocks on page load
+        document.querySelectorAll('.language-html').forEach(el => {
+            if (el.getAttribute('contenteditable') !== 'true') {
+                el.innerHTML = this.highlight(el.textContent);
+            }
+        });
+    }
+};
+
+// Expose global function for the contenteditable Live Editor onblur event
+window.suiHighlightElement = function(el) {
+    el.innerHTML = suiSyntax.highlight(el.innerText);
+};
+
+document.addEventListener('DOMContentLoaded', () => suiSyntax.init());

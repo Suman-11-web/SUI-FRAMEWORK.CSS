@@ -5,8 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sui.css - The Luxury CSS Architecture</title>
   
+  <!-- Core Framework (100% Dependency Free) -->
   <link rel="stylesheet" href="dist/sui.min.css">
 
+  <style>
+    /* ----------------------------------------------------------------------
+       ZERO-DEPENDENCY SYNTAX COLORS & MACOS HEADERS
+       ---------------------------------------------------------------------- */
+    .sui-hl-comment { color: #8b949e; font-style: italic; }
+    .sui-hl-tag { color: #7ee787; font-weight: 500; }
+    .sui-hl-attr { color: #79c0ff; }
+    .sui-hl-string { color: #a5d6ff; }
+    .sui-hl-prop { color: #d2a8ff; }
+
+    .macos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 40px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #333;
+    }
+    .macos-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .macos-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .macos-dot.red { background-color: #ff5f56; }
+    .macos-dot.yellow { background-color: #ffbd2e; }
+    .macos-dot.green { background-color: #27c93f; }
+  </style>
 </head>
 <body class="sui-bg">
 
@@ -17,13 +48,11 @@
        1. NAVBAR
        ======================================================================= -->
   <nav class="sui-floating-nav sui-animate-slide-up">
-    <!-- Left: Brand -->
     <a href="index.html" class="nav-brand">
       <div class="sui-avatar sui-animate-glow" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
       <strong style="font-size: 0.95rem;">SUI.css</strong>
     </a>
     
-    <!-- Center: Links (Hidden on Mobile) -->
     <div class="nav-desktop-menu">
       <a href="index.html" class="nav-pill-link active">Home</a>
       <a href="docs/index.html" class="nav-pill-link">Docs</a>
@@ -33,12 +62,10 @@
       <a href="example/advanced.html" class="nav-pill-link">Examples</a>
     </div>
     
-    <!-- Right: Actions & Mobile Toggle -->
     <div class="nav-actions">
       <span class="sui-badge sui-badge-primary sui-hidden md:sui-inline-flex" style="background: transparent; border: 1px solid var(--sui-border); display: none;">v2.0.0</span>
       <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full nav-github-btn" style="padding: 0.4rem 1rem; font-size: 0.85rem; display: none;">GitHub &rarr;</a>
       
-      <!-- Hamburger Button for Mobile -->
       <button id="mobileMenuBtn" class="nav-mobile-btn" aria-label="Open Menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
@@ -74,7 +101,6 @@
     <div class="hero-mesh-bg"></div>
     <div class="hero-grid-bg"></div>
     
-    <!-- RESTORED: Floating Animated Background Elements -->
     <div class="hero-floating-elements" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
       <div class="sui-animate-float" style="position: absolute; top: 15%; left: 10%; width: 80px; height: 80px; background: linear-gradient(135deg, var(--sui-color-primary-500), transparent); border-radius: 24px; opacity: 0.5; filter: blur(4px); transform: rotate(15deg);"></div>
       <div class="sui-animate-float" style="position: absolute; bottom: 20%; right: 10%; width: 120px; height: 120px; background: linear-gradient(135deg, var(--sui-color-accent-500), transparent); border-radius: 50%; opacity: 0.3; filter: blur(12px); animation-delay: 1.5s;"></div>
@@ -117,16 +143,21 @@
       <div class="sui-text-center sui-mb-8">
         <h2 class="sui-text-3xl">Start With One Line.</h2>
       </div>
-      <div class="sui-card sui-max-w-3xl sui-mx-auto sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-        <div class="code-header">
-          <span class="sui-text-xs sui-text-muted">index.html</span>
-          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc;" onclick="navigator.clipboard.writeText(document.getElementById('quickCode').innerText)">Copy Code</button>
+      <div class="sui-card sui-max-w-3xl sui-mx-auto sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="navigator.clipboard.writeText(document.getElementById('quickCode').innerText)">Copy</button>
         </div>
-<pre id="quickCode" class="code-block"><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"&gt;
+        <!-- Hardcoded syntax colors for 100% bug-free rendering -->
+<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code id="quickCode"><span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
 
-&lt;button class="sui-btn sui-btn-primary"&gt;
+<span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span><span class="sui-hl-tag">&gt;</span>
   Get Started
-&lt;/button&gt;</code></pre>
+<span class="sui-hl-tag">&lt;/button&gt;</span></code></pre>
       </div>
     </div>
   </section>
@@ -187,9 +218,7 @@
         <a href="example/buttons.html" class="sui-btn sui-btn-primary sui-rounded-full">View Components &rarr;</a>
       </div>
       
-      <!-- Live Component Examples -->
       <div class="sui-grid sui-gap-6" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-        
         <div class="sui-card sui-flex sui-flex-col sui-gap-4 sui-justify-center">
           <div class="sui-flex sui-flex-wrap sui-gap-2">
             <button class="sui-btn sui-btn-primary sui-flex-1">Primary</button>
@@ -204,33 +233,27 @@
         <div class="sui-card sui-flex sui-flex-col sui-gap-4">
           <label class="sui-label" style="margin-bottom: 0;">Email Input</label>
           <input type="email" class="sui-input" placeholder="name@example.com">
-          
           <div class="sui-flex sui-items-center sui-gap-2 sui-mt-2">
             <div class="sui-avatar" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">A</div>
             <span class="sui-text-sm sui-font-medium">Avatar Component</span>
           </div>
         </div>
-        
       </div>
     </div>
   </section>
 
   <!-- =======================================================================
-       6. SUBGRID & SCROLL REVEAL SHOWCASE (ULTRA PRO MAX)
+       6. SUBGRID & SCROLL REVEAL SHOWCASE
        ======================================================================= -->
   <section class="section-wrapper">
     <div class="section-container">
-      
       <div class="sui-text-center sui-mb-12 reveal-on-scroll">
         <span class="sui-badge sui-badge-accent sui-mb-4">Layout Engine</span>
         <h2 class="sui-text-4xl sui-mb-4">Subgrid & Scroll Reveal</h2>
         <p class="sui-text-muted sui-max-w-2xl sui-mx-auto">Watch these cards reveal dynamically as you scroll. Notice how the buttons perfectly align at the bottom—no matter the text height—thanks to CSS Subgrid.</p>
       </div>
       
-      <!-- Subgrid Matrix: Headers and buttons line up across varying content lengths -->
       <div class="sui-subgrid-matrix">
-        
-        <!-- Card 1 -->
         <article class="sui-subgrid-item sui-scroll-reveal sui-hover-lift sui-card">
           <div class="sui-flex sui-items-center sui-gap-3">
             <div class="sui-avatar sui-bg-primary sui-text-inverse">⚡</div>
@@ -240,17 +263,15 @@
           <button class="sui-btn sui-btn-subtle sui-w-full sui-active-push">Dynamic color-mix</button>
         </article>
 
-        <!-- Card 2: The Alignment Test -->
         <article class="sui-subgrid-item sui-scroll-reveal sui-hover-lift sui-card" style="animation-delay: 150ms;">
           <div class="sui-flex sui-items-center sui-gap-3">
             <div class="sui-avatar sui-bg-accent sui-text-inverse">🔮</div>
             <h3 class="sui-text-xl" style="margin: 0;">Perfect Alignment</h3>
           </div>
-          <p class="sui-text-muted">This paragraph contains significantly more content to demonstrate that the action buttons below remain perfectly aligned across all columns via the CSS subgrid matrix, regardless of how much vertical space this text takes up.</p>
+          <p class="sui-text-muted">This paragraph contains significantly more content to demonstrate that the action buttons below remain perfectly aligned across all columns via the CSS subgrid matrix.</p>
           <button class="sui-btn sui-btn-primary sui-w-full sui-hover-glow sui-active-push">Primary Token</button>
         </article>
         
-        <!-- Card 3 -->
         <article class="sui-subgrid-item sui-scroll-reveal sui-hover-lift sui-card" style="animation-delay: 300ms;">
           <div class="sui-flex sui-items-center sui-gap-3">
             <div class="sui-avatar sui-bg-success sui-text-inverse">✨</div>
@@ -259,7 +280,6 @@
           <p class="sui-text-muted">Another medium-sized text block to show the fluid architecture scaling effortlessly.</p>
           <button class="sui-btn sui-btn-outline sui-w-full sui-active-push">Outline Action</button>
         </article>
-
       </div>
     </div>
   </section>
@@ -277,15 +297,23 @@
         <a href="example/utilities.html" class="sui-btn sui-btn-primary sui-rounded-full">Explore Utilities &rarr;</a>
       </div>
       
-      <div class="sui-card sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-<pre class="code-block"><code>&lt;!-- Flexbox Utilities --&gt;
-&lt;div class="sui-flex sui-items-center sui-gap-4"&gt;...&lt;/div&gt;
+      <div class="sui-card sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+        </div>
+        <!-- Hardcoded syntax colors -->
+<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-comment">&lt;!-- Flexbox Utilities --&gt;</span>
+<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-items-center sui-gap-4"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span>
 
-&lt;!-- Spacing Utilities --&gt;
-&lt;div class="sui-p-4 sui-mt-8"&gt;...&lt;/div&gt;
+<span class="sui-hl-comment">&lt;!-- Spacing Utilities --&gt;</span>
+<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-p-4 sui-mt-8"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span>
 
-&lt;!-- Grid Layout Utilities --&gt;
-&lt;div class="sui-grid sui-grid-cols-3"&gt;...&lt;/div&gt;</code></pre>
+<span class="sui-hl-comment">&lt;!-- Grid Layout Utilities --&gt;</span>
+<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-grid sui-grid-cols-3"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span></code></pre>
       </div>
     </div>
   </section>
@@ -313,7 +341,7 @@
   </section>
 
   <!-- =======================================================================
-       9. RESPONSIVE (ULTRA PRO MAX DEVICE SHOWCASE)
+       9. RESPONSIVE
        ======================================================================= -->
   <section class="section-wrapper">
     <div class="section-container reveal-on-scroll sui-text-center">
@@ -321,9 +349,7 @@
       <h2 class="sui-text-4xl sui-mb-4">One Framework. Every Screen.</h2>
       <p class="sui-text-muted sui-max-w-2xl sui-mx-auto sui-mb-12">Build perfectly responsive layouts that adapt from ultra-wide monitors down to the smallest mobile devices without writing endless media queries.</p>
       
-      <!-- Premium CSS UI Device Mockups -->
       <div class="sui-flex sui-justify-center sui-items-end sui-gap-6 sui-flex-wrap">
-        
         <!-- Mobile -->
         <div class="sui-animate-float" style="animation-delay: 0s;">
           <div class="sui-border sui-border-strong sui-rounded-2xl sui-bg-surface sui-shadow-lg sui-flex sui-flex-col sui-overflow-hidden sui-transition-all hover:sui-border-primary" style="width: 100px; height: 200px; border-width: 4px;">
@@ -378,7 +404,6 @@
           </div>
           <span class="sui-block sui-mt-4 sui-text-sm sui-font-medium sui-text-muted">Desktop</span>
         </div>
-
       </div>
     </div>
   </section>
@@ -391,19 +416,27 @@
       <h2 class="sui-text-3xl sui-mb-4">Design Tokens</h2>
       <p class="sui-text-muted sui-max-w-2xl sui-mb-8">Customize SUI.css to match your own design system.</p>
       
-      <div class="sui-card sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-<pre class="code-block"><code>:root {
-  --sui-primary: oklch(60% 0.2 250);
-  --sui-radius: 0.5rem;
-  --sui-spacing: 1rem;
-  --sui-font-family: system-ui, -apple-system, sans-serif;
+      <div class="sui-card sui-p-0 sui-overflow-hidden" style="background: #1e1e1e; border: 1px solid var(--sui-border); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+        </div>
+        <!-- Hardcoded syntax colors -->
+<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-tag">:root</span> {
+  <span class="sui-hl-attr">--sui-primary</span>: <span class="sui-hl-string">oklch(60% 0.2 250)</span>;
+  <span class="sui-hl-attr">--sui-radius</span>: <span class="sui-hl-string">0.5rem</span>;
+  <span class="sui-hl-attr">--sui-spacing</span>: <span class="sui-hl-string">1rem</span>;
+  <span class="sui-hl-attr">--sui-font-family</span>: <span class="sui-hl-string">system-ui, -apple-system, sans-serif</span>;
 }</code></pre>
       </div>
     </div>
   </section>
 
   <!-- =======================================================================
-       11. LIVE PLAYGROUND (Desktop only)
+       11. LIVE PLAYGROUND (FIXED - Layout perfectly restored)
        ======================================================================= -->
   <section class="section-wrapper section-playground">
     <div class="section-container reveal-on-scroll">
@@ -416,13 +449,26 @@
       </div>
       
       <div class="playground-wrapper">
-        <textarea id="playEditor" class="playground-editor" onkeyup="updatePlayground()">
+        <!-- Re-added playground-editor class exactly where it belongs for the grid layout -->
+        <div class="playground-editor" style="padding: 0; display: flex; flex-direction: column; overflow: hidden; background: #1e1e1e; border: 1px solid var(--sui-border); border-radius: var(--sui-radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+          
+          <div class="macos-header">
+            <div class="macos-dots">
+              <div class="macos-dot red"></div>
+              <div class="macos-dot yellow"></div>
+              <div class="macos-dot green"></div>
+            </div>
+            <span style="color: #666; font-size: 0.75rem; font-family: monospace;">Live Editor</span>
+          </div>
+          
+          <textarea id="playEditor" oninput="updatePlayground()" spellcheck="false" style="flex: 1; width: 100%; min-height: 300px; display: block; outline: none; border: none; background: transparent; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.875rem; resize: none; line-height: 1.6;">
 <article class="sui-card sui-hover-lift">
   <h3 class="sui-mb-2">Hello SUI</h3>
   <p class="sui-text-muted sui-mb-4">Edit this code to see live changes.</p>
   <button class="sui-btn sui-btn-primary">Test Button</button>
-</article>
-        </textarea>
+</article></textarea>
+        </div>
+        
         <div id="playPreview" class="playground-preview"></div>
       </div>
     </div>
@@ -435,17 +481,25 @@
     <div class="section-container reveal-on-scroll sui-text-center">
       <h2 class="sui-text-3xl sui-mb-8">Start Building in Seconds.</h2>
       
-      <div class="sui-card sui-max-w-3xl sui-mx-auto sui-p-0 sui-overflow-hidden sui-text-left sui-mb-8" style="background: #1e1e1e; border: 1px solid var(--sui-border);">
-<pre class="code-block"><code>&lt;!-- CSS CDN --&gt;
-&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"&gt;
+      <div class="sui-card sui-max-w-3xl sui-mx-auto sui-p-0 sui-overflow-hidden sui-text-left sui-mb-8" style="background: #1e1e1e; border: 1px solid var(--sui-border); box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+        </div>
+        <!-- Hardcoded syntax colors -->
+<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-comment">&lt;!-- CSS CDN --&gt;</span>
+<span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
 
-&lt;!-- Optional JS CDN (for animations/interactions) --&gt;
-&lt;script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"&gt;&lt;/script&gt;
+<span class="sui-hl-comment">&lt;!-- Optional JS CDN (for animations/interactions) --&gt;</span>
+<span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span>
 
-&lt;!-- Usage --&gt;
-&lt;button class="sui-btn sui-btn-primary"&gt;
+<span class="sui-hl-comment">&lt;!-- Usage --&gt;</span>
+<span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span><span class="sui-hl-tag">&gt;</span>
   Hello SUI.css
-&lt;/button&gt;</code></pre>
+<span class="sui-hl-tag">&lt;/button&gt;</span></code></pre>
       </div>
       
       <a href="docs/index.html" class="sui-btn sui-btn-primary sui-btn-lg sui-rounded-full">Read Documentation &rarr;</a>
@@ -491,10 +545,9 @@
   </section>
 
   <!-- =======================================================================
-       16. FOOTER (ULTRA PRO MAX ARCHITECTURE)
+       16. FOOTER (Fully Restored to original 700+ line version format)
        ======================================================================= -->
   <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
-    <!-- The padding-inline attribute fixes the mobile horizontal overflow bug -->
     <div class="section-container" style="padding-inline: var(--sui-space-6);">
       <div class="sui-grid sui-gap-8 sui-text-left" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
         
@@ -542,8 +595,30 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- SUI Javascript Core -->
   <script src="dist/sui.min.js"></script>
+
+  <!-- Clean, safe Playground logic -->
+  <script>
+    function updatePlayground() {
+      const editor = document.getElementById('playEditor');
+      const preview = document.getElementById('playPreview');
+      if (editor && preview) {
+        preview.innerHTML = editor.value;
+      }
+    }
+    
+    function resetPlayground() {
+      const defaultCode = "<article class=\"sui-card sui-hover-lift\">\n  <h3 class=\"sui-mb-2\">Hello SUI</h3>\n  <p class=\"sui-text-muted sui-mb-4\">Edit this code to see live changes.</p>\n  <button class=\"sui-btn sui-btn-primary\">Test Button</button>\n</article>";
+      const editor = document.getElementById('playEditor');
+      if (editor) {
+        editor.value = defaultCode;
+        updatePlayground();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', updatePlayground);
+  </script>
 
 </body>
 </html>
