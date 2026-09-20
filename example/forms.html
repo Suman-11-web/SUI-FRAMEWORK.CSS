@@ -7,6 +7,19 @@
   
   <!-- Core Framework -->
   <link rel="stylesheet" href="../dist/sui.min.css">
+
+<meta name="description" content="Explore form input components and styles available in the SUI.css CSS framework with practical examples.">
+<meta name="keywords" content="SUI.css forms, CSS inputs, form components, CSS framework forms">
+<meta name="author" content="SUI.css">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/forms.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="SUI.css Forms">
+<meta property="og:description" content="Explore form input controls and styles available in SUI.css.">
+<meta property="og:url" content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/forms.html">
+<meta property="og:site_name" content="SUI.css">
+<meta property="og:image" content="../logosui.png">
   
   <style>
     /* ==========================================================================
@@ -75,6 +88,7 @@
       position: relative;
       text-align: center;
       border-bottom: 1px solid var(--sui-border-subtle);
+      overflow: hidden;
     }
     
     .hero-mesh-bg {
@@ -85,9 +99,40 @@
         radial-gradient(circle at 80% 20%, oklch(from var(--sui-color-primary-500) l c h / 0.1), transparent 30%),
         radial-gradient(circle at 20% 80%, oklch(from var(--sui-color-accent-500) l c h / 0.1), transparent 30%);
       filter: blur(60px);
+      animation: sui-pulse-glow 8s infinite alternate;
     }
 
     .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
+
+    /* --------------------------------------------------------------------------
+       MACOS HEADERS & CODE BLOCKS
+       -------------------------------------------------------------------------- */
+    .macos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 40px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+    .macos-dots { display: flex; gap: 8px; }
+    .macos-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .macos-dot.red { background-color: #ff5f56; }
+    .macos-dot.yellow { background-color: #ffbd2e; }
+    .macos-dot.green { background-color: #27c93f; }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #a5d6ff;
+      padding: 1.5rem;
+      margin: 0;
+      font-family: monospace;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      border: none;
+    }
 
     /* --------------------------------------------------------------------------
        COMPONENT SHOWCASE SPECIFIC STYLES
@@ -138,36 +183,12 @@
     .code-reveal-panel {
       display: none;
       border-top: 1px solid var(--sui-border);
-      position: relative;
+      background: #1e1e1e;
     }
     
     .code-reveal-panel.is-open {
       display: block;
       animation: sui-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
-      font-size: 0.85rem !important;
-      background: #1e1e1e !important;
-      color: #d4d4d4 !important;
-      padding: 2.5rem 1.5rem 1.5rem !important;
-    }
-
-    /* Custom Copy Button inside Code Block */
-    .btn-copy-code {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      z-index: 10;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(4px);
-    }
-    .btn-copy-code:hover {
-      background: rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
@@ -225,6 +246,14 @@
        ======================================================================= -->
   <header class="hero-section">
     <div class="hero-mesh-bg"></div>
+    
+    <!-- Floating Ultra Pro Max Elements -->
+    <div class="hero-floating-elements" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
+      <div class="sui-animate-float" style="position: absolute; top: 20%; left: 15%; width: 100px; height: 100px; background: linear-gradient(135deg, var(--sui-color-accent-500), transparent); border-radius: 20px; opacity: 0.4; filter: blur(8px); transform: rotate(-15deg);"></div>
+      <div class="sui-animate-float" style="position: absolute; bottom: 25%; right: 15%; width: 140px; height: 140px; background: linear-gradient(135deg, var(--sui-color-primary-500), transparent); border-radius: 50%; opacity: 0.2; filter: blur(16px); animation-delay: 1s;"></div>
+      <div class="sui-animate-pulse-glow" style="position: absolute; top: 40%; right: 30%; width: 16px; height: 16px; background: var(--sui-color-warning-500); border-radius: 50%; opacity: 0.6;"></div>
+    </div>
+
     <div class="hero-content sui-animate-blur-in">
       <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
       <h1 class="sui-text-hero sui-mb-4" style="font-size: clamp(2.5rem, 6vw, 4rem);">Form Architecture</h1>
@@ -291,15 +320,19 @@
         </div>
 
       </div>
+      
       <div class="code-reveal-panel">
-        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- SUI Standard Form Inputs --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-form-1', this)">Copy</button>
+        </div>
+<pre id="code-form-1" class="code-block"><code>&lt;!-- SUI Standard Form Inputs --&gt;
 &lt;div class="sui-form-group"&gt;
   &lt;label class="sui-label"&gt;Default Input&lt;/label&gt;
   &lt;input type="text" class="sui-input" placeholder="e.g. Suman M."&gt;
 &lt;/div&gt;
 
-&lt;!-- Validation States (Controlled via utility styles or inline for JS) --&gt;
+&lt;!-- Validation States --&gt;
 &lt;div class="sui-form-group"&gt;
   &lt;label class="sui-label"&gt;Error State&lt;/label&gt;
   &lt;input type="password" class="sui-input" style="border-color: var(--sui-color-danger-500);" value="12345"&gt;
@@ -344,7 +377,6 @@
           </div>
 
           <div class="sui-flex sui-items-center sui-gap-3">
-            <!-- Native radio styling with SUI utilities -->
             <input type="radio" name="plan" id="plan1" checked style="width: 1.25rem; height: 1.25rem; accent-color: var(--sui-color-primary-500);">
             <label for="plan1" class="sui-text-sm sui-cursor-pointer">Free Plan</label>
             
@@ -375,13 +407,15 @@
         </div>
 
       </div>
+      
       <div class="code-reveal-panel">
-        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- iOS Style Toggle --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-form-2', this)">Copy</button>
+        </div>
+<pre id="code-form-2" class="code-block"><code>&lt;!-- iOS Style Toggle --&gt;
 &lt;div class="sui-flex sui-items-center sui-justify-between sui-bg-surface-hover sui-p-4 sui-rounded-md"&gt;
-  &lt;div&gt;
-    &lt;strong class="sui-block sui-text-sm"&gt;Two-Factor Auth&lt;/strong&gt;
-  &lt;/div&gt;
+  &lt;div&gt;&lt;strong class="sui-block sui-text-sm"&gt;Two-Factor Auth&lt;/strong&gt;&lt;/div&gt;
   &lt;input type="checkbox" class="sui-toggle" checked&gt;
 &lt;/div&gt;
 
@@ -417,7 +451,6 @@
           </div>
           
           <div class="sui-grid sui-gap-6" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-            
             <div class="sui-form-group">
               <label class="sui-label">First Name</label>
               <input type="text" class="sui-input" placeholder="Suman">
@@ -428,7 +461,6 @@
               <input type="text" class="sui-input" placeholder="M.">
             </div>
             
-            <!-- Spans full width on small screens, 2 cols on wide screens -->
             <div class="sui-form-group" style="grid-column: 1 / -1;">
               <label class="sui-label">Email Address</label>
               <input type="email" class="sui-input" placeholder="admin@novasocial.app">
@@ -466,28 +498,23 @@
         </form>
 
       </div>
+      
       <div class="code-reveal-panel">
-        <button class="sui-btn sui-btn-sm btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Complex Auto-Fitting Grid Form --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-form-3', this)">Copy</button>
+        </div>
+<pre id="code-form-3" class="code-block"><code>&lt;!-- Complex Auto-Fitting Grid Form --&gt;
 &lt;form class="sui-card sui-w-full sui-max-w-4xl"&gt;
   &lt;div class="sui-grid sui-gap-6" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));"&gt;
-    
     &lt;div class="sui-form-group"&gt;
       &lt;label class="sui-label"&gt;First Name&lt;/label&gt;
       &lt;input type="text" class="sui-input" placeholder="Suman"&gt;
     &lt;/div&gt;
-    
-    &lt;div class="sui-form-group"&gt;
-      &lt;label class="sui-label"&gt;Last Name&lt;/label&gt;
-      &lt;input type="text" class="sui-input" placeholder="M."&gt;
-    &lt;/div&gt;
-    
-    &lt;!-- grid-column: 1 / -1 forces full width spanning --&gt;
     &lt;div class="sui-form-group" style="grid-column: 1 / -1;"&gt;
       &lt;label class="sui-label"&gt;Email Address&lt;/label&gt;
       &lt;input type="email" class="sui-input" placeholder="admin@novasocial.app"&gt;
     &lt;/div&gt;
-    
   &lt;/div&gt;
   &lt;div class="sui-mt-8 sui-flex sui-justify-end"&gt;
     &lt;button type="submit" class="sui-btn sui-btn-primary"&gt;Complete Purchase&lt;/button&gt;
@@ -546,6 +573,26 @@
   <!-- Scripts -->
   <script src="../dist/sui.min.js"></script>
   <script>
+    // Global Safe Copy Code Function
+    function copyCodeBlock(elementId, btnElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'Copied!';
+        btnElement.style.color = '#7ee787';
+        btnElement.style.borderColor = '#7ee787';
+        
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.color = '#ccc';
+          btnElement.style.borderColor = '#555';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy code: ', err);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       
       // 1. GLOBAL MOBILE DRAWER LOGIC
@@ -580,27 +627,6 @@
             e.target.classList.remove('sui-btn-outline');
             e.target.classList.add('sui-btn-primary');
           }
-        });
-      });
-
-      // 3. Copy to Clipboard Logic
-      const copyButtons = document.querySelectorAll('.btn-copy-code');
-      copyButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          const codeBlock = e.target.nextElementSibling.innerText;
-          
-          navigator.clipboard.writeText(codeBlock).then(() => {
-            const originalText = e.target.textContent;
-            e.target.textContent = 'Copied!';
-            e.target.style.background = 'var(--sui-color-success-500)';
-            e.target.style.borderColor = 'var(--sui-color-success-500)';
-            
-            setTimeout(() => {
-              e.target.textContent = originalText;
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            }, 2000);
-          }).catch(err => console.error('Failed to copy code: ', err));
         });
       });
 

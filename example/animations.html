@@ -7,36 +7,21 @@
   <!-- Core Framework -->
   <link rel="stylesheet" href="../dist/sui.min.css">
 
-
-
 <title>SUI.css Animations — CSS Animation Utilities</title>
 
-<meta name="description"
-      content="Explore animation and motion utilities available in SUI.css for creating modern interactive web interfaces.">
-
-<meta name="keywords"
-      content="SUI.css animations, CSS animations, CSS animation utilities, web animations, frontend animations">
-
+<meta name="description" content="Explore animation and motion utilities available in SUI.css for creating modern interactive web interfaces.">
+<meta name="keywords" content="SUI.css animations, CSS animations, CSS animation utilities, web animations, frontend animations">
 <meta name="author" content="SUI.css">
-
 <meta name="robots" content="index, follow">
-
-<link rel="canonical"
-      href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/animations.html">
+<link rel="canonical" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/animations.html">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="SUI.css Animations">
-<meta property="og:description"
-      content="Explore animation utilities and interactive effects available in SUI.css.">
-<meta property="og:url"
-      content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/animations.html">
+<meta property="og:description" content="Explore animation utilities and interactive effects available in SUI.css.">
+<meta property="og:url" content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/animations.html">
 <meta property="og:site_name" content="SUI.css">
-<meta property="og:image"
-      content="./logosui.png">
+<meta property="og:image" content="../logosui.png">
 
-
-
-  
   <style>
     /* ==========================================================================
        PREMIUM GLOBAL STYLES & LAYOUT
@@ -104,6 +89,7 @@
       position: relative;
       text-align: center;
       border-bottom: 1px solid var(--sui-border-subtle);
+      overflow: hidden;
     }
     
     .hero-mesh-bg {
@@ -114,9 +100,40 @@
         radial-gradient(circle at 80% 20%, oklch(from var(--sui-color-primary-500) l c h / 0.1), transparent 30%),
         radial-gradient(circle at 20% 80%, oklch(from var(--sui-color-accent-500) l c h / 0.1), transparent 30%);
       filter: blur(60px);
+      animation: sui-pulse-glow 8s infinite alternate;
     }
 
     .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
+
+    /* --------------------------------------------------------------------------
+       MACOS HEADERS & CODE BLOCKS
+       -------------------------------------------------------------------------- */
+    .macos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 40px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+    .macos-dots { display: flex; gap: 8px; }
+    .macos-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .macos-dot.red { background-color: #ff5f56; }
+    .macos-dot.yellow { background-color: #ffbd2e; }
+    .macos-dot.green { background-color: #27c93f; }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #a5d6ff;
+      padding: 1.5rem;
+      margin: 0;
+      font-family: monospace;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      border: none;
+    }
 
     /* --------------------------------------------------------------------------
        ANIMATION SHOWCASE SPECIFIC STYLES
@@ -148,47 +165,11 @@
       display: none;
       border-top: 1px solid var(--sui-border);
       position: relative;
+      background: #1e1e1e;
     }
     .code-reveal-panel.is-open {
       display: block;
       animation: sui-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    .btn-copy-code {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      z-index: 10;
-      background: var(--sui-surface);
-      border: 1px solid var(--sui-border-strong);
-      color: var(--sui-text);
-      font-size: 0.75rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: var(--sui-radius-sm);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: all 0.2s ease;
-    }
-    .btn-copy-code:hover {
-      background: var(--sui-color-primary-500);
-      color: white;
-      border-color: var(--sui-color-primary-500);
-    }
-    .btn-copy-code.copied {
-      background: var(--sui-color-success-600) !important;
-      color: white !important;
-      border-color: var(--sui-color-success-600) !important;
-    }
-
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 var(--sui-radius-lg) var(--sui-radius-lg) !important;
-      font-size: 0.82rem !important;
-      padding: 2.75rem 1rem 1rem !important;
-      background: #1e1e1e;
-      color: #d4d4d4;
     }
   </style>
 </head>
@@ -246,6 +227,14 @@
        ======================================================================= -->
   <header class="hero-section">
     <div class="hero-mesh-bg"></div>
+    
+    <!-- Floating Ultra Pro Max Elements -->
+    <div class="hero-floating-elements" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
+      <div class="sui-animate-float" style="position: absolute; top: 20%; left: 15%; width: 100px; height: 100px; background: linear-gradient(135deg, var(--sui-color-accent-500), transparent); border-radius: 20px; opacity: 0.4; filter: blur(8px); transform: rotate(-15deg);"></div>
+      <div class="sui-animate-float" style="position: absolute; bottom: 25%; right: 15%; width: 140px; height: 140px; background: linear-gradient(135deg, var(--sui-color-primary-500), transparent); border-radius: 50%; opacity: 0.2; filter: blur(16px); animation-delay: 1s;"></div>
+      <div class="sui-animate-pulse-glow" style="position: absolute; top: 40%; right: 30%; width: 16px; height: 16px; background: var(--sui-color-warning-500); border-radius: 50%; opacity: 0.6;"></div>
+    </div>
+
     <div class="hero-content sui-animate-blur-in">
       <div class="sui-flex sui-justify-center sui-flex-wrap sui-gap-2 sui-mb-4">
         <span class="sui-badge sui-badge-primary">GPU Accelerated (60fps)</span>
@@ -282,8 +271,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Smooth lens blur entry --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-1', this)">Copy</button>
+        </div>
+<pre id="code-anim-1" class="code-block"><code>&lt;!-- Smooth lens blur entry --&gt;
 &lt;div class="sui-animate-blur-in"&gt;
   &lt;h3&gt;Blur Reveal&lt;/h3&gt;
 &lt;/div&gt;</code></pre>
@@ -307,8 +299,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Pops up with spring overshoot --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-2', this)">Copy</button>
+        </div>
+<pre id="code-anim-2" class="code-block"><code>&lt;!-- Pops up with spring overshoot --&gt;
 &lt;div class="sui-avatar sui-animate-spring-up"&gt;
   SM
 &lt;/div&gt;</code></pre>
@@ -334,8 +329,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Zoom-fade for dialogs and popovers --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-3', this)">Copy</button>
+        </div>
+<pre id="code-anim-3" class="code-block"><code>&lt;!-- Zoom-fade for dialogs and popovers --&gt;
 &lt;div class="sui-animate-scale-fade"&gt;
   &lt;p&gt;Dialog Window&lt;/p&gt;
 &lt;/div&gt;</code></pre>
@@ -360,8 +358,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Tactile interactive button --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-4', this)">Copy</button>
+        </div>
+<pre id="code-anim-4" class="code-block"><code>&lt;!-- Tactile interactive button --&gt;
 &lt;button class="sui-btn sui-btn-primary sui-hover-lift sui-active-push"&gt;
   Click &amp; Hover
 &lt;/button&gt;</code></pre>
@@ -386,8 +387,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Pulsating radar ring indicator --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-5', this)">Copy</button>
+        </div>
+<pre id="code-anim-5" class="code-block"><code>&lt;!-- Pulsating radar ring indicator --&gt;
 &lt;div class="sui-avatar sui-animate-pulse-glow"&gt;
   &lt;!-- SVG Icon --&gt;
 &lt;/div&gt;</code></pre>
@@ -412,8 +416,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Skeleton shimmer placeholder --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-6', this)">Copy</button>
+        </div>
+<pre id="code-anim-6" class="code-block"><code>&lt;!-- Skeleton shimmer placeholder --&gt;
 &lt;div class="sui-skeleton sui-rounded-full" style="width: 2.5rem; height: 2.5rem;"&gt;&lt;/div&gt;
 &lt;div class="sui-skeleton sui-w-3/4" style="height: 1rem;"&gt;&lt;/div&gt;</code></pre>
       </div>
@@ -437,8 +444,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Idle levitating element --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-7', this)">Copy</button>
+        </div>
+<pre id="code-anim-7" class="code-block"><code>&lt;!-- Idle levitating element --&gt;
 &lt;div class="sui-avatar sui-animate-float"&gt;
   &lt;!-- Content --&gt;
 &lt;/div&gt;</code></pre>
@@ -464,8 +474,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Side navigation drawer entry --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-8', this)">Copy</button>
+        </div>
+<pre id="code-anim-8" class="code-block"><code>&lt;!-- Side navigation drawer entry --&gt;
 &lt;aside class="sui-animate-slide-right"&gt;
   &lt;p&gt;Drawer Content&lt;/p&gt;
 &lt;/aside&gt;</code></pre>
@@ -491,8 +504,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Toast alert / Mobile bottom sheet --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-9', this)">Copy</button>
+        </div>
+<pre id="code-anim-9" class="code-block"><code>&lt;!-- Toast alert / Mobile bottom sheet --&gt;
 &lt;div class="sui-toast sui-animate-slide-up"&gt;
   &lt;p&gt;Notification message&lt;/p&gt;
 &lt;/div&gt;</code></pre>
@@ -518,8 +534,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Playful squash &amp; stretch button --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-10', this)">Copy</button>
+        </div>
+<pre id="code-anim-10" class="code-block"><code>&lt;!-- Playful squash &amp; stretch button --&gt;
 &lt;button class="sui-btn sui-animate-jelly"&gt;
   Rubber Jelly Pop
 &lt;/button&gt;</code></pre>
@@ -545,8 +564,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Form field rejection error shake --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-11', this)">Copy</button>
+        </div>
+<pre id="code-anim-11" class="code-block"><code>&lt;!-- Form field rejection error shake --&gt;
 &lt;input class="sui-input sui-animate-shake" type="password" /&gt;</code></pre>
       </div>
     </article>
@@ -570,8 +592,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Social post like / favorite reaction --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-12', this)">Copy</button>
+        </div>
+<pre id="code-anim-12" class="code-block"><code>&lt;!-- Social post like / favorite reaction --&gt;
 &lt;button class="sui-btn-icon sui-animate-heartbeat"&gt;
   &lt;svg&gt;&lt;!-- Heart SVG --&gt;&lt;/svg&gt;
 &lt;/button&gt;</code></pre>
@@ -597,8 +622,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- 3D perspective flip entry --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-13', this)">Copy</button>
+        </div>
+<pre id="code-anim-13" class="code-block"><code>&lt;!-- 3D perspective flip entry --&gt;
 &lt;div class="sui-card sui-animate-flip-3d"&gt;
   &lt;p&gt;Front of Card&lt;/p&gt;
 &lt;/div&gt;</code></pre>
@@ -623,8 +651,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Rotating neon gradient border --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-14', this)">Copy</button>
+        </div>
+<pre id="code-anim-14" class="code-block"><code>&lt;!-- Rotating neon gradient border --&gt;
 &lt;div class="sui-card sui-animate-border-glow"&gt;
   &lt;p&gt;Pro Feature Badge&lt;/p&gt;
 &lt;/div&gt;</code></pre>
@@ -649,8 +680,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Shifting multi-color aurora flow --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-15', this)">Copy</button>
+        </div>
+<pre id="code-anim-15" class="code-block"><code>&lt;!-- Shifting multi-color aurora flow --&gt;
 &lt;div class="sui-animate-gradient-flow sui-p-6"&gt;
   &lt;h2&gt;Hero Gradient&lt;/h2&gt;
 &lt;/div&gt;</code></pre>
@@ -675,8 +709,11 @@
         </div>
       </div>
       <div class="code-reveal-panel">
-        <button class="btn-copy-code">Copy</button>
-<pre><code class="language-html">&lt;!-- Radar ripple broadcast ring --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-anim-16', this)">Copy</button>
+        </div>
+<pre id="code-anim-16" class="code-block"><code>&lt;!-- Radar ripple broadcast ring --&gt;
 &lt;button class="sui-avatar sui-animate-ripple"&gt;
   &lt;!-- Play Icon --&gt;
 &lt;/button&gt;</code></pre>
@@ -733,6 +770,26 @@
   <!-- Script for Syntax, Replay, Code Toggle, and Mobile Drawer -->
   <script src="../dist/sui.min.js"></script>
   <script>
+    // Global Safe Copy Code Function
+    function copyCodeBlock(elementId, btnElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'Copied!';
+        btnElement.style.color = '#7ee787';
+        btnElement.style.borderColor = '#7ee787';
+        
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.color = '#ccc';
+          btnElement.style.borderColor = '#555';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy code: ', err);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       
       // 1. GLOBAL MOBILE DRAWER LOGIC
@@ -784,31 +841,6 @@
           }
         });
       });
-
-      // 4. One-Click Copy to Clipboard with Feedback
-      const copyButtons = document.querySelectorAll('.btn-copy-code');
-      copyButtons.forEach(button => {
-        button.addEventListener('click', async (e) => {
-          const panel = e.target.closest('.code-reveal-panel');
-          const codeElement = panel.querySelector('code');
-          const rawCode = codeElement.textContent;
-
-          try {
-            await navigator.clipboard.writeText(rawCode);
-            const originalText = button.textContent;
-            button.textContent = '✓ Copied!';
-            button.classList.add('copied');
-            
-            setTimeout(() => {
-              button.textContent = originalText;
-              button.classList.remove('copied');
-            }, 2000);
-          } catch (err) {
-            console.error('Failed to copy snippet: ', err);
-          }
-        });
-      });
-
     });
   </script>
 </body>

@@ -75,6 +75,7 @@
       position: relative;
       text-align: center;
       border-bottom: 1px solid var(--sui-border-subtle);
+      overflow: hidden;
     }
     
     .hero-mesh-bg {
@@ -85,9 +86,40 @@
         radial-gradient(circle at 80% 20%, oklch(from var(--sui-color-primary-500) l c h / 0.1), transparent 30%),
         radial-gradient(circle at 20% 80%, oklch(from var(--sui-color-accent-500) l c h / 0.1), transparent 30%);
       filter: blur(60px);
+      animation: sui-pulse-glow 8s infinite alternate;
     }
 
     .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
+
+    /* --------------------------------------------------------------------------
+       MACOS HEADERS & CODE BLOCKS
+       -------------------------------------------------------------------------- */
+    .macos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 40px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+    .macos-dots { display: flex; gap: 8px; }
+    .macos-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .macos-dot.red { background-color: #ff5f56; }
+    .macos-dot.yellow { background-color: #ffbd2e; }
+    .macos-dot.green { background-color: #27c93f; }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #a5d6ff;
+      padding: 1.5rem;
+      margin: 0;
+      font-family: monospace;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      border: none;
+    }
 
     /* --------------------------------------------------------------------------
        COMPONENT SHOWCASE SPECIFIC STYLES
@@ -135,20 +167,12 @@
     .code-reveal-panel {
       display: none;
       border-top: 1px solid var(--sui-border);
+      background: #1e1e1e;
     }
     
     .code-reveal-panel.is-open {
       display: block;
       animation: sui-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
-      font-size: 0.85rem !important;
-      background: #1e1e1e !important;
-      color: #d4d4d4 !important;
-      padding: 2rem !important;
     }
   </style>
 </head>
@@ -166,7 +190,7 @@
     <div class="nav-desktop-menu">
       <a href="../index.html" class="nav-pill-link">Home</a>
       <a href="../docs/index.html" class="nav-pill-link">Docs</a>
-      <a href="buttons.html" class="nav-pill-link active">Components</a>
+      <a href="buttons.html" class="nav-pill-link">Components</a>
       <a href="utilities.html" class="nav-pill-link">Utilities</a>
       <a href="animations.html" class="nav-pill-link">Animations</a>
       <a href="advanced.html" class="nav-pill-link">Examples</a>
@@ -193,7 +217,7 @@
       <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
         <a href="../index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Home</a>
         <a href="../docs/index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Docs</a>
-        <a href="buttons.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Components</a>
+        <a href="buttons.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Components</a>
         <a href="utilities.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Utilities</a>
         <a href="animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations</a>
         <a href="advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Examples</a>
@@ -206,6 +230,14 @@
        ======================================================================= -->
   <header class="hero-section">
     <div class="hero-mesh-bg"></div>
+    
+    <!-- Floating Ultra Pro Max Elements -->
+    <div class="hero-floating-elements" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
+      <div class="sui-animate-float" style="position: absolute; top: 20%; left: 15%; width: 100px; height: 100px; background: linear-gradient(135deg, var(--sui-color-accent-500), transparent); border-radius: 20px; opacity: 0.4; filter: blur(8px); transform: rotate(-15deg);"></div>
+      <div class="sui-animate-float" style="position: absolute; bottom: 25%; right: 15%; width: 140px; height: 140px; background: linear-gradient(135deg, var(--sui-color-primary-500), transparent); border-radius: 50%; opacity: 0.2; filter: blur(16px); animation-delay: 1s;"></div>
+      <div class="sui-animate-pulse-glow" style="position: absolute; top: 40%; right: 30%; width: 16px; height: 16px; background: var(--sui-color-warning-500); border-radius: 50%; opacity: 0.6;"></div>
+    </div>
+
     <div class="hero-content sui-animate-blur-in">
       <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
       <h1 class="sui-text-hero sui-mb-4" style="font-size: clamp(2.5rem, 6vw, 4rem);">Cards & Data Matrices</h1>
@@ -248,19 +280,24 @@
 
         <!-- Lift & Action Card -->
         <a href="#" class="sui-card sui-hover-lift sui-block sui-no-underline">
-          <div class="sui-avatar sui-mb-4" style="background: var(--sui-color-accent-50); color: var(--sui-color-accent-500);">
+          <div class="sui-avatar sui-mb-4" style="background: oklch(from var(--sui-color-accent-500) l c h / 0.1); color: var(--sui-color-accent-500);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           </div>
           <h3 class="sui-text-lg sui-mb-2">API Documentation</h3>
           <p class="sui-text-sm sui-text-muted sui-mb-4">
             Explore the complete API reference for integrating the framework into your backend[cite: 5].
           </p>
-          <span class="sui-text-sm sui-text-link sui-font-medium">Read Docs &rarr;</span>
+          <span class="sui-text-sm sui-text-primary sui-font-medium">Read Docs &rarr;</span>
         </a>
 
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- Relational Hover Card (Reacts to .sui-btn-primary) --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-card-1', this)">Copy</button>
+        </div>
+<pre id="code-card-1" class="code-block"><code>&lt;!-- Relational Hover Card (Reacts to .sui-btn-primary) --&gt;
 &lt;article class="sui-card"&gt;
   &lt;div class="sui-flex sui-items-center sui-justify-between sui-mb-4"&gt;
     &lt;h3 class="sui-text-lg"&gt;Project Deployment&lt;/h3&gt;
@@ -277,7 +314,7 @@
   &lt;div class="sui-avatar sui-mb-4"&gt;...&lt;/div&gt;
   &lt;h3 class="sui-text-lg sui-mb-2"&gt;API Documentation&lt;/h3&gt;
   &lt;p class="sui-text-sm sui-text-muted sui-mb-4"&gt;...&lt;/p&gt;
-  &lt;span class="sui-text-sm sui-text-link sui-font-medium"&gt;Read Docs &amp;rarr;&lt;/span&gt;
+  &lt;span class="sui-text-sm sui-text-primary sui-font-medium"&gt;Read Docs &amp;rarr;&lt;/span&gt;
 &lt;/a&gt;</code></pre>
       </div>
     </section>
@@ -326,19 +363,20 @@
         </article>
 
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- Novasocial Style Profile Card --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-card-2', this)">Copy</button>
+        </div>
+<pre id="code-card-2" class="code-block"><code>&lt;!-- Novasocial Style Profile Card --&gt;
 &lt;article class="sui-card sui-p-0 sui-overflow-hidden"&gt;
-  &lt;!-- Cover Photo --&gt;
   &lt;div class="sui-aspect-video sui-bg-surface-hover" style="background: url('...') center/cover;"&gt;&lt;/div&gt;
-  
   &lt;div class="sui-px-6 sui-pb-6"&gt;
-    &lt;!-- Negative margin pulls avatar up into the cover photo --&gt;
     &lt;div class="sui-flex sui-justify-between sui-items-end" style="margin-top: -2rem; margin-bottom: 1rem;"&gt;
       &lt;div class="sui-avatar sui-avatar-online" style="width: 5rem; height: 5rem; border: 4px solid var(--sui-surface);"&gt;SM&lt;/div&gt;
       &lt;button class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full sui-px-4"&gt;Follow&lt;/button&gt;
     &lt;/div&gt;
-    
     &lt;h3 class="sui-text-xl sui-leading-none sui-mb-1"&gt;Suman M.&lt;/h3&gt;
     &lt;p class="sui-text-sm sui-text-muted sui-mb-4"&gt;@suman_dev &amp;middot; Mysuru&lt;/p&gt;
     &lt;p class="sui-text-sm sui-mb-4"&gt;Building Novasocial...&lt;/p&gt;
@@ -373,9 +411,13 @@
         </article>
 
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI Glass Component --&gt;
-&lt;!-- Place this over any complex background or image --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-card-3', this)">Copy</button>
+        </div>
+<pre id="code-card-3" class="code-block"><code>&lt;!-- SUI Glass Component --&gt;
 &lt;article class="sui-glass sui-p-8"&gt;
   &lt;div class="sui-flex sui-items-center sui-gap-4 sui-mb-6"&gt;
     &lt;div class="sui-avatar sui-bg-inverse sui-text-inverse"&gt;Pro&lt;/div&gt;
@@ -468,13 +510,17 @@
         </article>
 
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI Data Matrix (Card + Table) --&gt;
+        <div class="macos-header">
+          <div class="macos-dots"><div class="macos-dot red"></div><div class="macos-dot yellow"></div><div class="macos-dot green"></div></div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-card-4', this)">Copy</button>
+        </div>
+<pre id="code-card-4" class="code-block"><code>&lt;!-- SUI Data Matrix (Card + Table) --&gt;
 &lt;article class="sui-card sui-p-0 sui-overflow-hidden"&gt;
   &lt;div class="sui-flex sui-items-center sui-justify-between sui-p-6 sui-border-b sui-border-subtle"&gt;
     &lt;h3 class="sui-text-lg"&gt;Recent Users&lt;/h3&gt;
   &lt;/div&gt;
-  
   &lt;div class="sui-overflow-x-auto"&gt;
     &lt;table class="sui-table sui-w-full sui-text-left"&gt;
       &lt;thead class="sui-bg-surface-hover"&gt;
@@ -545,6 +591,26 @@
   <!-- Scripts -->
   <script src="../dist/sui.min.js"></script>
   <script>
+    // Global Safe Copy Code Function
+    function copyCodeBlock(elementId, btnElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'Copied!';
+        btnElement.style.color = '#7ee787';
+        btnElement.style.borderColor = '#7ee787';
+        
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.color = '#ccc';
+          btnElement.style.borderColor = '#555';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy code: ', err);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       
       // 1. GLOBAL MOBILE DRAWER LOGIC

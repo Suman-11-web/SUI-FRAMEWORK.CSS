@@ -6,28 +6,18 @@
 
   <title>SUI.css Buttons — Button Components</title>
 
-<meta name="description"
-      content="Explore button components and styles available in the SUI.css CSS framework with practical examples.">
+  <meta name="description" content="Explore button components and styles available in the SUI.css CSS framework with practical examples.">
+  <meta name="keywords" content="SUI.css buttons, CSS buttons, button components, CSS framework buttons">
+  <meta name="author" content="SUI.css">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/buttons.html">
 
-<meta name="keywords"
-      content="SUI.css buttons, CSS buttons, button components, CSS framework buttons">
-
-<meta name="author" content="SUI.css">
-
-<meta name="robots" content="index, follow">
-
-<link rel="canonical"
-      href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/buttons.html">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="SUI.css Buttons">
-<meta property="og:description"
-      content="Explore button components and styles available in SUI.css.">
-<meta property="og:url"
-      content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/buttons.html">
-<meta property="og:site_name" content="SUI.css">
-<meta property="og:image"
-      content="./logosui.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SUI.css Buttons">
+  <meta property="og:description" content="Explore button components and styles available in SUI.css.">
+  <meta property="og:url" content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/buttons.html">
+  <meta property="og:site_name" content="SUI.css">
+  <meta property="og:image" content="../logosui.png">
   
   <!-- Core Framework -->
   <link rel="stylesheet" href="../dist/sui.min.css">
@@ -114,6 +104,25 @@
     .hero-content { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; }
 
     /* --------------------------------------------------------------------------
+       MACOS HEADERS & CODE BLOCKS
+       -------------------------------------------------------------------------- */
+    .macos-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 40px;
+      background: #2d2d2d;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+    .macos-dots { display: flex; gap: 8px; }
+    .macos-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .macos-dot.red { background-color: #ff5f56; }
+    .macos-dot.yellow { background-color: #ffbd2e; }
+    .macos-dot.green { background-color: #27c93f; }
+
+    /* --------------------------------------------------------------------------
        COMPONENT SHOWCASE SPECIFIC STYLES
        -------------------------------------------------------------------------- */
     .showcase-container {
@@ -156,20 +165,12 @@
     .code-reveal-panel {
       display: none;
       border-top: 1px solid var(--sui-border);
+      background: #1e1e1e;
     }
     
     .code-reveal-panel.is-open {
       display: block;
       animation: sui-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    pre[class*="language-"] {
-      margin: 0 !important;
-      border-radius: 0 0 var(--sui-radius-xl) var(--sui-radius-xl) !important;
-      font-size: 0.85rem !important;
-      background: #1e1e1e !important;
-      color: #d4d4d4 !important;
-      padding: 2rem !important;
     }
   </style>
 </head>
@@ -231,7 +232,7 @@
       <span class="sui-badge sui-badge-success sui-mb-4">Component Library</span>
       <h1 class="sui-text-hero sui-mb-4" style="font-size: clamp(2.5rem, 6vw, 4rem);">Interactive Buttons</h1>
       <p class="sui-text-lg sui-text-muted sui-max-w-2xl sui-mx-auto">
-        A comprehensive suite of highly tactile, accessible button primitives[cite: 5]. Engineered with fluid padding, perceptual contrast, and hardware-accelerated micro-interactions[cite: 5].
+        A comprehensive suite of highly tactile, accessible button primitives. Engineered with fluid padding, perceptual contrast, and hardware-accelerated micro-interactions.
       </p>
     </div>
   </header>
@@ -246,7 +247,7 @@
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Semantic Variants</h2>
-          <p class="sui-text-sm sui-text-muted">Core styles for primary, secondary, and destructive actions[cite: 5].</p>
+          <p class="sui-text-sm sui-text-muted">Core styles for primary, secondary, and destructive actions.</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
@@ -257,8 +258,18 @@
         <button class="sui-btn sui-btn-ghost sui-hover-lift sui-active-push">Ghost Button</button>
         <button class="sui-btn sui-btn-danger sui-hover-lift sui-active-push">Delete Repository</button>
       </div>
+      
+      <!-- MacOS Code Reveal Panel -->
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI Core Button Variants --&gt;
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-btn-1', this)">Copy</button>
+        </div>
+<pre id="code-btn-1" style="margin: 0; padding: 1.5rem; color: #a5d6ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- SUI Core Button Variants --&gt;
 &lt;button class="sui-btn sui-btn-primary sui-hover-lift sui-active-push"&gt;Primary Action&lt;/button&gt;
 &lt;button class="sui-btn sui-btn-secondary sui-hover-lift sui-active-push"&gt;Secondary&lt;/button&gt;
 &lt;button class="sui-btn sui-btn-outline sui-hover-lift sui-active-push"&gt;Outline Variant&lt;/button&gt;
@@ -267,12 +278,12 @@
       </div>
     </section>
 
-    <!-- 2. Sizing Scale -->
+    <!-- 2. Volumetric Sizing -->
     <section class="demo-section sui-animate-spring-up sui-delay-2">
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Volumetric Sizing</h2>
-          <p class="sui-text-sm sui-text-muted">Fluid size variants that maintain perfect aspect ratios and touch targets[cite: 5].</p>
+          <p class="sui-text-sm sui-text-muted">Fluid size variants that maintain perfect aspect ratios and touch targets.</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
@@ -284,61 +295,76 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI Size Modifiers --&gt;
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-btn-2', this)">Copy</button>
+        </div>
+<pre id="code-btn-2" style="margin: 0; padding: 1.5rem; color: #a5d6ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- SUI Size Modifiers --&gt;
 &lt;button class="sui-btn sui-btn-primary sui-btn-sm"&gt;Small (sm)&lt;/button&gt;
 &lt;button class="sui-btn sui-btn-primary"&gt;Default (base)&lt;/button&gt;
 &lt;button class="sui-btn sui-btn-primary sui-btn-lg"&gt;Large Scale (lg)&lt;/button&gt;
 
 &lt;!-- Perfect Square Icon Button --&gt;
 &lt;button class="sui-btn sui-btn-primary sui-btn-icon"&gt;
-  &lt;svg&gt;...&lt;/svg&gt;
+  &lt;svg width="20" height="20"&gt;...&lt;/svg&gt;
 &lt;/button&gt;</code></pre>
       </div>
     </section>
 
-    <!-- 3. Complex Compositions (Icons & Badges) -->
+    <!-- 3. Rich Compositions -->
     <section class="demo-section sui-animate-spring-up sui-delay-3">
       <div class="demo-header">
         <div>
           <h2 class="sui-text-xl">Rich Compositions</h2>
-          <p class="sui-text-sm sui-text-muted">Buttons containing integrated SVG icons, status dots, and inline badges[cite: 5].</p>
+          <p class="sui-text-sm sui-text-muted">Buttons containing integrated SVG icons, status dots, and inline badges.</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
       <div class="demo-canvas">
-        
-        <!-- Leading Icon -->
         <button class="sui-btn sui-btn-outline sui-hover-lift">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           Download Export
         </button>
 
-        <!-- Trailing Icon -->
         <button class="sui-btn sui-btn-primary sui-hover-lift">
           Continue to Payment
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </button>
 
-        <!-- Badge Integration -->
         <button class="sui-btn sui-btn-secondary">
           Notifications
           <span class="sui-badge sui-badge-danger sui-ml-2">3 New</span>
         </button>
-
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- SUI flexbox natively handles SVG gap alignment within .sui-btn --&gt;
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-btn-3', this)">Copy</button>
+        </div>
+<pre id="code-btn-3" style="margin: 0; padding: 1.5rem; color: #a5d6ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- Leading Icon --&gt;
 &lt;button class="sui-btn sui-btn-outline"&gt;
   &lt;svg width="18" height="18"&gt;...&lt;/svg&gt;
   Download Export
 &lt;/button&gt;
 
+&lt;!-- Trailing Icon --&gt;
 &lt;button class="sui-btn sui-btn-primary"&gt;
   Continue to Payment
   &lt;svg width="18" height="18"&gt;...&lt;/svg&gt;
 &lt;/button&gt;
 
+&lt;!-- Badge Integration --&gt;
 &lt;button class="sui-btn sui-btn-secondary"&gt;
   Notifications
   &lt;span class="sui-badge sui-badge-danger sui-ml-2"&gt;3 New&lt;/span&gt;
@@ -346,31 +372,89 @@
       </div>
     </section>
 
-    <!-- 4. States & Feedback -->
+    <!-- 4. Advanced & Grouped Buttons (Ultra Pro Max Upgrade) -->
     <section class="demo-section sui-animate-spring-up sui-delay-4">
       <div class="demo-header">
         <div>
-          <h2 class="sui-text-xl">States & Processing</h2>
-          <p class="sui-text-sm sui-text-muted">Handling disabled states and asynchronous loading actions[cite: 5].</p>
+          <h2 class="sui-text-xl">Advanced Components</h2>
+          <p class="sui-text-sm sui-text-muted">Segmented button controls, neon glow states, and glassmorphism elements.</p>
         </div>
         <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
       </div>
       <div class="demo-canvas">
         
-        <!-- Disabled State -->
+        <!-- Segmented Control Group -->
+        <div class="sui-flex sui-rounded-md sui-overflow-hidden sui-border sui-border-subtle sui-shadow-sm">
+          <button class="sui-btn sui-bg-surface hover:sui-bg-surface-hover" style="border-radius: 0; border: none; border-right: 1px solid var(--sui-border);">Map View</button>
+          <button class="sui-btn sui-bg-surface-hover" style="border-radius: 0; border: none; border-right: 1px solid var(--sui-border); color: var(--sui-color-primary-500);">List View</button>
+          <button class="sui-btn sui-bg-surface hover:sui-bg-surface-hover" style="border-radius: 0; border: none;">Gallery</button>
+        </div>
+
+        <!-- Glassmorphism -->
+        <button class="sui-btn sui-glass sui-hover-lift">
+          Frosted Glass
+        </button>
+        
+        <!-- Glowing Pulse -->
+        <button class="sui-btn sui-btn-primary sui-animate-pulse-glow">
+          Live Recording
+        </button>
+
+      </div>
+      
+      <div class="code-reveal-panel">
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-btn-4', this)">Copy</button>
+        </div>
+<pre id="code-btn-4" style="margin: 0; padding: 1.5rem; color: #a5d6ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- Segmented Control Group --&gt;
+&lt;div class="sui-flex sui-rounded-md sui-border sui-border-subtle"&gt;
+  &lt;button class="sui-btn sui-bg-surface" style="border-radius: 0; border: none; border-right: 1px solid var(--sui-border);"&gt;Map View&lt;/button&gt;
+  &lt;button class="sui-btn sui-bg-surface-hover" style="border-radius: 0; border: none;"&gt;List View&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Glassmorphism Button --&gt;
+&lt;button class="sui-btn sui-glass sui-hover-lift"&gt;Frosted Glass&lt;/button&gt;
+
+&lt;!-- Continuous Pulse Glow --&gt;
+&lt;button class="sui-btn sui-btn-primary sui-animate-pulse-glow"&gt;Live Recording&lt;/button&gt;</code></pre>
+      </div>
+    </section>
+
+    <!-- 5. States & Processing -->
+    <section class="demo-section sui-animate-spring-up sui-delay-5">
+      <div class="demo-header">
+        <div>
+          <h2 class="sui-text-xl">States & Processing</h2>
+          <p class="sui-text-sm sui-text-muted">Handling disabled states and asynchronous loading actions.</p>
+        </div>
+        <button class="sui-btn sui-btn-outline sui-btn-sm btn-code">View Code</button>
+      </div>
+      <div class="demo-canvas">
         <button class="sui-btn sui-btn-primary" disabled>
           Insufficient Permissions
         </button>
 
-        <!-- Loading State -->
         <button class="sui-btn sui-btn-primary" style="cursor: wait;">
           <div class="sui-spinner" style="width: 1.25rem; height: 1.25rem; border-width: 2px; border-top-color: white; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent;"></div>
           Processing Request...
         </button>
-
       </div>
+      
       <div class="code-reveal-panel">
-<pre><code class="language-html">&lt;!-- Disabled (HTML5 Native Attribute) --&gt;
+        <div class="macos-header">
+          <div class="macos-dots">
+            <div class="macos-dot red"></div>
+            <div class="macos-dot yellow"></div>
+            <div class="macos-dot green"></div>
+          </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-btn-5', this)">Copy</button>
+        </div>
+<pre id="code-btn-5" style="margin: 0; padding: 1.5rem; color: #a5d6ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- Disabled Attribute --&gt;
 &lt;button class="sui-btn sui-btn-primary" disabled&gt;
   Insufficient Permissions
 &lt;/button&gt;
@@ -432,6 +516,26 @@
 
   <script src="../dist/sui.min.js"></script>
   <script>
+    // Global Safe Copy Code Function
+    function copyCodeBlock(elementId, btnElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'Copied!';
+        btnElement.style.color = '#7ee787';
+        btnElement.style.borderColor = '#7ee787';
+        
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.color = '#ccc';
+          btnElement.style.borderColor = '#555';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy code: ', err);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       
       // 1. GLOBAL MOBILE DRAWER LOGIC
