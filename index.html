@@ -10,14 +10,10 @@
 
   <meta name="google-site-verification" content="mZEgpTqfMntZi5yKJyxq39ymsYNqAh-oyInPAz8a77A" />
 
-
-
 <!-- =========================
      SUI.css SEO
 ========================= -->
 <link rel="shortcut icon" href="./logosui.png" type="image/x-icon">
-
-
 
 <meta name="description"
       content="SUI.css is a modern, reusable CSS framework with responsive utilities, layouts, components, animations, and JavaScript utilities for building modern web interfaces.">
@@ -26,52 +22,25 @@
       content="SUI.css, CSS framework, modern CSS framework, responsive CSS, CSS utilities, CSS components, frontend framework, web development">
 
 <meta name="author" content="SUI.css">
-
 <meta name="robots" content="index, follow">
-
-<link rel="canonical"
-      href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/">
+<link rel="canonical" href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-
-<meta property="og:title"
-      content="SUI.css — Modern CSS Framework for Developers">
-
-<meta property="og:description"
-      content="Build modern web interfaces with SUI.css — a reusable CSS framework with responsive utilities, components, layouts, animations, and JavaScript utilities.">
-
-<meta property="og:url"
-      content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/">
-
-<meta property="og:site_name"
-      content="SUI.css">
-
-<meta property="og:image"
-      content="./logosui.png">
-
-<meta property="og:image:alt"
-      content="SUI.css logo">
+<meta property="og:title" content="SUI.css — Modern CSS Framework for Developers">
+<meta property="og:description" content="Build modern web interfaces with SUI.css — a reusable CSS framework with responsive utilities, components, layouts, animations, and JavaScript utilities.">
+<meta property="og:url" content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/">
+<meta property="og:site_name" content="SUI.css">
+<meta property="og:image" content="./logosui.png">
+<meta property="og:image:alt" content="SUI.css logo">
 
 <!-- Theme -->
 <meta name="theme-color" content="#0b1020">
 
-
-
-
-
-
-
   <style>
     /* ----------------------------------------------------------------------
-       ZERO-DEPENDENCY SYNTAX COLORS & MACOS HEADERS
+       MACOS HEADERS & CODE BLOCKS
        ---------------------------------------------------------------------- */
-    .sui-hl-comment { color: #8b949e; font-style: italic; }
-    .sui-hl-tag { color: #7ee787; font-weight: 500; }
-    .sui-hl-attr { color: #79c0ff; }
-    .sui-hl-string { color: #a5d6ff; }
-    .sui-hl-prop { color: #d2a8ff; }
-
     .macos-header {
       display: flex;
       align-items: center;
@@ -146,6 +115,12 @@
       resize: none;
       outline: none;
     }
+
+    /* Simple syntax colors for the live editor overlay */
+    .sui-hl-comment { color: #8b949e; font-style: italic; }
+    .sui-hl-tag { color: #7ee787; font-weight: 500; }
+    .sui-hl-attr { color: #79c0ff; }
+    .sui-hl-string { color: #a5d6ff; }
   </style>
 </head>
 <body class="sui-bg">
@@ -245,7 +220,7 @@
   </main>
 
   <!-- =======================================================================
-       3. QUICK CODE / CDN (HARDCODED COLORS - BULLETPROOF)
+       3. QUICK CODE / CDN
        ======================================================================= -->
   <section class="section-wrapper sui-bg-surface-hover">
     <div class="section-container reveal-on-scroll">
@@ -259,13 +234,13 @@
             <div class="macos-dot yellow"></div>
             <div class="macos-dot green"></div>
           </div>
-          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="navigator.clipboard.writeText('<link rel=\'stylesheet\' href=\'https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css\'>\n\n<button class=\'sui-btn sui-btn-primary\'>\n  Get Started\n</button>')">Copy</button>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-block-1', this)">Copy</button>
         </div>
-<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
+<pre id="code-block-1" class="code-block" style="margin: 0; padding: 1.5rem; color: #7ee787; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"&gt;
 
-<span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span><span class="sui-hl-tag">&gt;</span>
+&lt;button class="sui-btn sui-btn-primary"&gt;
   Get Started
-<span class="sui-hl-tag">&lt;/button&gt;</span></code></pre>
+&lt;/button&gt;</code></pre>
       </div>
     </div>
   </section>
@@ -393,7 +368,7 @@
   </section>
 
   <!-- =======================================================================
-       7. UTILITY SHOWCASE (HARDCODED COLORS - BULLETPROOF)
+       7. UTILITY SHOWCASE
        ======================================================================= -->
   <section class="section-wrapper">
     <div class="section-container reveal-on-scroll">
@@ -412,15 +387,16 @@
             <div class="macos-dot yellow"></div>
             <div class="macos-dot green"></div>
           </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-block-2', this)">Copy</button>
         </div>
-<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-comment">&lt;!-- Flexbox Utilities --&gt;</span>
-<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-items-center sui-gap-4"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span>
+<pre id="code-block-2" class="code-block" style="margin: 0; padding: 1.5rem; color: #79c0ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- Flexbox Utilities --&gt;
+&lt;div class="sui-flex sui-items-center sui-gap-4"&gt;...&lt;/div&gt;
 
-<span class="sui-hl-comment">&lt;!-- Spacing Utilities --&gt;</span>
-<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-p-4 sui-mt-8"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span>
+&lt;!-- Spacing Utilities --&gt;
+&lt;div class="sui-p-4 sui-mt-8"&gt;...&lt;/div&gt;
 
-<span class="sui-hl-comment">&lt;!-- Grid Layout Utilities --&gt;</span>
-<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-grid sui-grid-cols-3"</span><span class="sui-hl-tag">&gt;</span>...<span class="sui-hl-tag">&lt;/div&gt;</span></code></pre>
+&lt;!-- Grid Layout Utilities --&gt;
+&lt;div class="sui-grid sui-grid-cols-3"&gt;...&lt;/div&gt;</code></pre>
       </div>
     </div>
   </section>
@@ -516,7 +492,7 @@
   </section>
 
   <!-- =======================================================================
-       10. DESIGN TOKENS (HARDCODED COLORS - BULLETPROOF)
+       10. DESIGN TOKENS
        ======================================================================= -->
   <section class="section-wrapper sui-bg-surface-hover">
     <div class="section-container reveal-on-scroll">
@@ -530,12 +506,13 @@
             <div class="macos-dot yellow"></div>
             <div class="macos-dot green"></div>
           </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-block-3', this)">Copy</button>
         </div>
-<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-tag">:root</span> {
-  <span class="sui-hl-attr">--sui-primary</span>: <span class="sui-hl-string">oklch(60% 0.2 250)</span>;
-  <span class="sui-hl-attr">--sui-radius</span>: <span class="sui-hl-string">0.5rem</span>;
-  <span class="sui-hl-attr">--sui-spacing</span>: <span class="sui-hl-string">1rem</span>;
-  <span class="sui-hl-attr">--sui-font-family</span>: <span class="sui-hl-string">system-ui, -apple-system, sans-serif</span>;
+<pre id="code-block-3" class="code-block" style="margin: 0; padding: 1.5rem; color: #d2a8ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>:root {
+  --sui-primary: oklch(60% 0.2 250);
+  --sui-radius: 0.5rem;
+  --sui-spacing: 1rem;
+  --sui-font-family: system-ui, -apple-system, sans-serif;
 }</code></pre>
       </div>
     </div>
@@ -588,7 +565,7 @@
   </section>
 
   <!-- =======================================================================
-       12. GETTING STARTED (HARDCODED COLORS - BULLETPROOF)
+       12. GETTING STARTED
        ======================================================================= -->
   <section id="getting-started" class="section-wrapper sui-bg-surface-hover">
     <div class="section-container reveal-on-scroll sui-text-center">
@@ -601,17 +578,18 @@
             <div class="macos-dot yellow"></div>
             <div class="macos-dot green"></div>
           </div>
+          <button class="sui-btn sui-btn-sm sui-btn-outline" style="border-color: #555; color: #ccc; padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyCodeBlock('code-block-4', this)">Copy</button>
         </div>
-<pre class="code-block" style="margin: 0; padding: 1.5rem; color: #ededed; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code><span class="sui-hl-comment">&lt;!-- CSS CDN --&gt;</span>
-<span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
+<pre id="code-block-4" class="code-block" style="margin: 0; padding: 1.5rem; color: #a5d6ff; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>&lt;!-- CSS CDN --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.css"&gt;
 
-<span class="sui-hl-comment">&lt;!-- Optional JS CDN (for animations/interactions) --&gt;</span>
-<span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span>
+&lt;!-- Optional JS CDN (for animations/interactions) --&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v2.0.0/dist/sui.min.js"&gt;&lt;/script&gt;
 
-<span class="sui-hl-comment">&lt;!-- Usage --&gt;</span>
-<span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary"</span><span class="sui-hl-tag">&gt;</span>
+&lt;!-- Usage --&gt;
+&lt;button class="sui-btn sui-btn-primary"&gt;
   Hello SUI.css
-<span class="sui-hl-tag">&lt;/button&gt;</span></code></pre>
+&lt;/button&gt;</code></pre>
       </div>
       
       <a href="docs/index.html" class="sui-btn sui-btn-primary sui-btn-lg sui-rounded-full">Read Documentation &rarr;</a>
@@ -711,39 +689,46 @@
   <script src="dist/sui.min.js"></script>
 
   <!-- =======================================================================
-       BULLETPROOF SYNTAX ENGINE FOR LIVE PLAYGROUND ONLY
+       JAVASCRIPT HELPERS (COPY BUTTONS & PLAYGROUND)
        ======================================================================= -->
   <script>
-    // Robust, non-destructive HTML Syntax Highlighter
-    function highlightHTML(code) {
-      // 1. Convert actual brackets to HTML entities to render as text
-      let text = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    // New Safe Copy Code Function
+    function copyCodeBlock(elementId, btnElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
       
-      // 2. Safely highlight tags that are strictly bounded by &lt; and &gt;
-      // This prevents the regex from EVER eating actual <span class="..."> tags injected into the DOM
-      text = text.replace(/(&lt;)(.*?)(&gt;)/g, function(match, p1, p2, p3) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'Copied!';
+        btnElement.style.color = '#7ee787';
+        btnElement.style.borderColor = '#7ee787';
         
-        // Handle HTML Comments safely
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.color = '#ccc';
+          btnElement.style.borderColor = '#555';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy code: ', err);
+      });
+    }
+
+    // Robust, non-destructive HTML Syntax Highlighter for the Live Editor ONLY
+    function highlightHTML(code) {
+      let text = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      text = text.replace(/(&lt;)(.*?)(&gt;)/g, function(match, p1, p2, p3) {
         if (p2.startsWith('!--')) {
           return '<span class="sui-hl-comment">' + match + '</span>';
         }
-        
-        // Split tag name from its attributes securely
         let parts = p2.split(/^(\/?[\w\-]+)/);
         if (parts.length > 1) {
             let tagName = parts[1];
             let attrs = parts.slice(2).join('');
-            
-            // Highlight attributes and strings inside the tag
             attrs = attrs.replace(/([a-zA-Z\-]+)(?=\=)/g, '<span class="sui-hl-attr">$1</span>');
             attrs = attrs.replace(/(&quot;.*?&quot;|\'.*?\')/g, '<span class="sui-hl-string">$1</span>');
-            
             return '<span class="sui-hl-tag">' + p1 + tagName + '</span>' + attrs + '<span class="sui-hl-tag">' + p3 + '</span>';
         }
-        
-        return match; // Return unmodified if regex parsing fails
+        return match; 
       });
-      
       return text;
     }
 
@@ -755,21 +740,13 @@
       
       if (editor && preview && highlightLayer) {
         const rawCode = editor.value;
-        preview.innerHTML = rawCode; // Update the real UI container
-        
-        // Apply the bulletproof regex
+        preview.innerHTML = rawCode;
         let colored = highlightHTML(rawCode);
-
-        // Required hack to ensure vertical scroll sync perfectly matches the bottom line
-        if(rawCode.endsWith("\n")) { 
-            colored += " "; 
-        }
-        
+        if(rawCode.endsWith("\n")) { colored += " "; }
         highlightLayer.innerHTML = colored;
       }
     }
 
-    // Scroll Sync for Textarea over Pre Layer
     function syncScroll() {
       const editor = document.getElementById('playEditor');
       const highlightLayer = document.getElementById('highlightLayer');
@@ -788,7 +765,6 @@
       }
     }
 
-    // Boot Everything on DOM Load
     document.addEventListener('DOMContentLoaded', () => {
       updatePlayground();
     });
