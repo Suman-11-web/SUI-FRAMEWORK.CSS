@@ -586,3 +586,71 @@
   };
 
 }));
+
+document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Bulletproof Mobile Menu Drawer Logic
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      const closeTriggers = document.querySelectorAll('.js-drawer-close');
+
+      function openDrawer() {
+        if (mobileDrawer) mobileDrawer.classList.add('is-open');
+      }
+
+      function closeDrawer() {
+        if (mobileDrawer) mobileDrawer.classList.remove('is-open');
+      }
+
+      if (menuBtn) menuBtn.addEventListener('click', openDrawer);
+      closeTriggers.forEach(trigger => trigger.addEventListener('click', closeDrawer));
+
+      // 2. Premium Magnetic Glow Effect for Bento Boxes
+      const bentoItems = document.querySelectorAll('.bento-item');
+      bentoItems.forEach(item => {
+        item.addEventListener('mousemove', e => {
+          const rect = item.getBoundingClientRect();
+          item.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+          item.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        });
+      });
+
+      // 3. Scroll Reveal Animation Engine
+      const revealElements = document.querySelectorAll('.reveal-on-scroll');
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+      
+      // 4. Initialize Playground
+      updatePlayground();
+    });
+
+    // Playground Logic
+    const defaultPlaygroundCode = `<article class="sui-card sui-hover-lift">\n  <h3 class="sui-mb-2">Hello SUI</h3>\n  <p class="sui-text-muted sui-mb-4">Edit this code to see live changes.</p>\n  <button class="sui-btn sui-btn-primary">Test Button</button>\n</article>`;
+    
+    function updatePlayground() {
+      const editor = document.getElementById('playEditor');
+      const preview = document.getElementById('playPreview');
+      if(editor && preview) {
+        preview.innerHTML = editor.value;
+      }
+    }
+    
+    function resetPlayground() {
+      const editor = document.getElementById('playEditor');
+      if(editor) {
+        editor.value = defaultPlaygroundCode;
+        updatePlayground();
+      }
+    }

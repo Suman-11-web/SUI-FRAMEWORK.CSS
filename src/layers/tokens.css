@@ -388,3 +388,27 @@
   --sui-text-strong: #ffffff;
   --sui-text-muted: #8a8a93;
 }
+
+:root {
+  /* Master Brand Color */
+  --sui-brand-hue: 250;
+  --sui-color-primary-500: oklch(60% 0.2 var(--sui-brand-hue));
+  --sui-color-accent-500: oklch(65% 0.22 calc(var(--sui-brand-hue) + 60));
+
+  /* Dynamic Color Mixing Tokens */
+  --sui-primary-hover: color-mix(in oklch, var(--sui-color-primary-500) 85%, black);
+  --sui-primary-active: color-mix(in oklch, var(--sui-color-primary-500) 75%, black);
+  --sui-primary-subtle: color-mix(in oklch, var(--sui-color-primary-500) 12%, transparent);
+  --sui-primary-border: color-mix(in oklch, var(--sui-color-primary-500) 30%, transparent);
+
+  /* Dynamic Contrast Inversion */
+  --sui-text-contrast: color-mix(in oklch, var(--sui-color-primary-500) 5%, white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sui-primary-hover: color-mix(in oklch, var(--sui-color-primary-500) 85%, white);
+    --sui-primary-active: color-mix(in oklch, var(--sui-color-primary-500) 70%, white);
+    --sui-primary-subtle: color-mix(in oklch, var(--sui-color-primary-500) 18%, transparent);
+  }
+}

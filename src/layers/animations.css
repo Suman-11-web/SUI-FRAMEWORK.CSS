@@ -274,3 +274,58 @@
   border: 2px solid var(--sui-color-primary-500);
   animation: sui-ripple-ring 1.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
+
+/* ==========================================================================
+   SCROLL-DRIVEN ANIMATIONS ENGINE
+   ========================================================================== */
+
+/* 1. Viewport Reading Progress Bar */
+@keyframes sui-scroll-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.sui-scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sui-color-primary-500), var(--sui-color-accent-500));
+  transform-origin: 0 50%;
+  animation: sui-scroll-progress auto linear;
+  animation-timeline: scroll(root block);
+  z-index: 1000;
+}
+
+/* 2. Scroll Reveal for Cards / Feed Items */
+@keyframes sui-view-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.sui-scroll-reveal {
+  animation: sui-view-reveal linear both;
+  animation-timeline: view();
+  animation-range: entry 10% cover 30%;
+}
+
+/* 3. Parallax Header / Image Zoom */
+@keyframes sui-parallax-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+.sui-scroll-parallax {
+  animation: sui-parallax-zoom linear both;
+  animation-timeline: scroll(root block);
+  animation-range: 0vh 100vh;
+}

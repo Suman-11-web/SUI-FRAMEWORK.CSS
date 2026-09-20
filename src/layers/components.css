@@ -31,16 +31,18 @@
 
 /* Button Variants */
 .sui-btn-primary {
-  background-color: var(--sui-primary-500);
-  color: oklch(100% 0 0);
-  box-shadow: 0 2px 4px oklch(from var(--sui-primary-500) l c h / 0.1);
+  background-color: var(--sui-color-primary-500);
+  color: var(--sui-text-contrast);
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .sui-btn-primary:hover {
-  background-color: var(--sui-primary-600);
-  box-shadow: 0 8px 16px -4px oklch(from var(--sui-primary-500) l c h / 0.4);
-  transform: translateY(-1px);
+  background-color: var(--sui-primary-hover);
+  border-color: var(--sui-primary-border);
 }
-.sui-btn-primary:active { transform: translateY(1px); }
+.sui-btn-primary:active {
+  background-color: var(--sui-primary-active);
+}
 
 .sui-btn-secondary {
   background-color: var(--sui-surface-hover);
@@ -715,4 +717,13 @@ pre[class*="language-"] {
 }
 .token.italic {
   font-style: italic;
+}
+.sui-btn-subtle {
+  background-color: var(--sui-primary-subtle);
+  color: var(--sui-color-primary-500);
+  border: 1px solid var(--sui-primary-border);
+}
+
+.sui-btn-subtle:hover {
+  background-color: color-mix(in oklch, var(--sui-color-primary-500) 22%, transparent);
 }
