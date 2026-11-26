@@ -148,6 +148,12 @@ for (const rel of htmlFiles.filter((f) => f.endsWith('.html'))) {
   if (/v2\.0\.0/.test(c)) staleV2Pages.push(rel);
 }
 assert('Zero stale v2.0.0 version badges across all HTML pages', staleV2Pages.length === 0, staleV2Pages.join(', '));
+const staleV300Cdn = [];
+for (const rel of htmlFiles) {
+  const c = fs.readFileSync(path.join(root, rel), "utf8");
+  if (c.includes("@v3.0.0")) staleV300Cdn.push(rel);
+}
+assert("Zero stale @v3.0.0 CDN links across HTML/README files (all use @v3.0.1)", staleV300Cdn.length === 0, staleV300Cdn.join(", "));
 
 // 6. Verify README.md has no broken markdown links inside HTML attributes
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
