@@ -79,8 +79,8 @@ img, picture, video, canvas, svg {
   /* Fluid interpolation across keyword heights (0 to auto animation support) */
   interpolate-size: allow-keywords;
   
-  /* Color scheme integration for browser native UI controls */
-  color-scheme: light dark;
+  /* Default to light color scheme; dark/oled themes opt into color-scheme: dark */
+  color-scheme: light;
   
   /* Font smoothing and typography rendering engines */
   text-rendering: optimizeLegibility;
@@ -119,7 +119,6 @@ body {
   background-color: var(--sui-bg, #ffffff);
   color: var(--sui-text, #111827);
   
-  overflow-x: hidden;
   position: relative;
 }
 

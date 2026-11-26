@@ -1,0 +1,187 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - FEEDBACK & STATUS SYSTEM (src/layers/feedback.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOAST NOTIFICATIONS (Works with SUI.toast API)
+   -------------------------------------------------------------------------- */
+.sui-toast-container {
+  position: fixed;
+  bottom: var(--sui-space-6);
+  right: var(--sui-space-6);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--sui-space-3);
+  pointer-events: none;
+  max-width: calc(100vw - var(--sui-space-6));
+}
+
+.sui-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sui-space-3);
+  min-width: 280px;
+  max-width: 420px;
+  padding: 0.85rem 1.25rem;
+  background: var(--sui-surface);
+  color: var(--sui-text);
+  border: 1px solid var(--sui-border-strong);
+  border-radius: var(--sui-radius-lg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 15px 30px -5px oklch(0% 0 0 / 0.3);
+  box-sizing: border-box;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-toast-success {
+  border-left: 4px solid var(--sui-color-success-500);
+}
+.sui-toast-error {
+  border-left: 4px solid var(--sui-color-danger-500);
+}
+.sui-toast-warning {
+  border-left: 4px solid var(--sui-color-warning-500);
+}
+.sui-toast-info {
+  border-left: 4px solid var(--sui-color-primary-500);
+}
+
+/* --------------------------------------------------------------------------
+   2. ALERT BANNERS
+   -------------------------------------------------------------------------- */
+.sui-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sui-space-3);
+  padding: var(--sui-space-4) var(--sui-space-5);
+  border-radius: var(--sui-radius-md);
+  border: 1px solid var(--sui-border);
+  background: var(--sui-surface);
+  color: var(--sui-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.sui-alert-primary {
+  background: oklch(from var(--sui-color-primary-500) l c h / 0.08);
+  border-color: oklch(from var(--sui-color-primary-500) l c h / 0.3);
+  color: var(--sui-color-primary-500);
+}
+
+.sui-alert-success {
+  background: oklch(from var(--sui-color-success-500) l c h / 0.08);
+  border-color: oklch(from var(--sui-color-success-500) l c h / 0.3);
+  color: var(--sui-color-success-500);
+}
+
+.sui-alert-warning {
+  background: oklch(from var(--sui-color-warning-500) l c h / 0.08);
+  border-color: oklch(from var(--sui-color-warning-500) l c h / 0.3);
+  color: var(--sui-color-warning-500);
+}
+
+.sui-alert-danger {
+  background: oklch(from var(--sui-color-danger-500) l c h / 0.08);
+  border-color: oklch(from var(--sui-color-danger-500) l c h / 0.3);
+  color: var(--sui-color-danger-500);
+}
+
+.sui-alert-info {
+  background: oklch(from var(--sui-color-info-500) l c h / 0.08);
+  border-color: oklch(from var(--sui-color-info-500) l c h / 0.3);
+  color: var(--sui-color-info-500);
+}
+
+/* --------------------------------------------------------------------------
+   3. SPINNERS & PROGRESS INDICATORS
+   -------------------------------------------------------------------------- */
+.sui-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid oklch(from var(--sui-color-primary-500) l c h / 0.2);
+  border-top-color: var(--sui-color-primary-500);
+  border-radius: 50%;
+  animation: sui-spin 0.8s linear infinite;
+  box-sizing: border-box;
+}
+
+.sui-spinner-sm { width: 1rem; height: 1rem; border-width: 2px; }
+.sui-spinner-lg { width: 2.5rem; height: 2.5rem; border-width: 3px; }
+
+.sui-progress {
+  width: 100%;
+  height: 0.5rem;
+  background: var(--sui-surface-hover);
+  border-radius: 999px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.sui-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--sui-color-primary-500);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-progress-success { background: var(--sui-color-success-500); }
+.sui-progress-danger  { background: var(--sui-color-danger-500); }
+
+/* --------------------------------------------------------------------------
+   4. SKELETON LOADERS (Hardware-Accelerated Shimmer)
+   -------------------------------------------------------------------------- */
+.sui-skeleton {
+  position: relative;
+  background: var(--sui-surface-hover);
+  border-radius: var(--sui-radius-md);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sui-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(from var(--sui-border-strong) l c h / 0.15) 50%,
+    transparent 100%
+  );
+  animation: sui-shimmer 1.6s infinite;
+}
+
+.sui-skeleton-text {
+  height: 1rem;
+  width: 100%;
+  border-radius: var(--sui-radius-sm);
+  margin-bottom: var(--sui-space-2);
+}
+
+.sui-skeleton-card {
+  height: 160px;
+  width: 100%;
+  border-radius: var(--sui-radius-xl);
+}
+
+@keyframes sui-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sui-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sui-spinner { animation-duration: 2s; }
+  .sui-skeleton::after { animation: none; }
+  .sui-progress-bar,
+  .sui-toast { transition: none !important; }
+}

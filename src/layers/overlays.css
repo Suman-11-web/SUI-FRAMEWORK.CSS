@@ -1,0 +1,396 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - INTERACTIVE OVERLAYS (src/layers/overlays.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. MODALS & DIALOGS
+   -------------------------------------------------------------------------- */
+.sui-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sui-space-4);
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0s linear 0.25s;
+}
+
+.sui-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0s linear 0s;
+}
+
+.sui-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: oklch(0% 0 0 / 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.sui-modal-dialog {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 540px;
+  max-height: calc(100vh - var(--sui-space-8));
+  display: flex;
+  flex-direction: column;
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-xl);
+  box-shadow: 0 25px 50px -12px oklch(0% 0 0 / 0.35);
+  overflow: hidden;
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-modal.is-open .sui-modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.sui-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sui-space-5) var(--sui-space-6);
+  border-bottom: 1px solid var(--sui-border-subtle);
+  flex-shrink: 0;
+}
+
+.sui-modal-body {
+  padding: var(--sui-space-6);
+  overflow-y: auto;
+  color: var(--sui-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.sui-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sui-space-3);
+  padding: var(--sui-space-4) var(--sui-space-6);
+  border-top: 1px solid var(--sui-border-subtle);
+  background: var(--sui-surface-hover);
+  flex-shrink: 0;
+}
+
+.sui-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--sui-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sui-modal-close:hover {
+  background: var(--sui-surface-hover);
+  color: var(--sui-text);
+}
+
+/* Modal Sizes */
+.sui-modal-sm .sui-modal-dialog { max-width: 400px; }
+.sui-modal-md .sui-modal-dialog { max-width: 560px; }
+.sui-modal-lg .sui-modal-dialog { max-width: 800px; }
+.sui-modal-xl .sui-modal-dialog { max-width: 1140px; }
+
+/* --------------------------------------------------------------------------
+   2. DROPDOWN MENUS
+   -------------------------------------------------------------------------- */
+.sui-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.sui-dropdown-menu {
+  position: absolute;
+  top: calc(100% + var(--sui-space-2));
+  left: 0;
+  z-index: 500;
+  min-width: 200px;
+  padding: var(--sui-space-2);
+  margin: 0;
+  list-style: none;
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-lg);
+  box-shadow: 0 10px 25px -5px oklch(0% 0 0 / 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.2s;
+}
+
+.sui-dropdown.is-open > .sui-dropdown-menu,
+.sui-dropdown-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.sui-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sui-space-3);
+  width: 100%;
+  padding: var(--sui-space-2) var(--sui-space-3);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--sui-text);
+  text-decoration: none;
+  border-radius: var(--sui-radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sui-dropdown-item:hover {
+  background: var(--sui-surface-hover);
+  color: var(--sui-color-primary-500);
+}
+
+.sui-dropdown-header {
+  padding: var(--sui-space-2) var(--sui-space-3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--sui-text-muted);
+}
+
+.sui-dropdown-divider {
+  height: 1px;
+  margin: var(--sui-space-2) 0;
+  background: var(--sui-border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   3. PURE CSS TOOLTIPS (Data Attributes)
+   -------------------------------------------------------------------------- */
+[data-sui-tooltip] {
+  position: relative;
+}
+
+[data-sui-tooltip]::before,
+[data-sui-tooltip]::after {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 600;
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tooltip Bubble */
+[data-sui-tooltip]::before {
+  content: attr(data-sui-tooltip);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: #ffffff;
+  background: oklch(20% 0.02 var(--sui-brand-hue));
+  border: 1px solid var(--sui-border-strong);
+  border-radius: var(--sui-radius-md);
+  box-shadow: 0 4px 12px oklch(0% 0 0 / 0.25);
+}
+
+/* Tooltip Arrow */
+[data-sui-tooltip]::after {
+  content: '';
+  border: 5px solid transparent;
+}
+
+/* Default / Top Placement */
+[data-sui-tooltip]::before,
+.sui-tooltip-top::before {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+[data-sui-tooltip]::after,
+.sui-tooltip-top::after {
+  bottom: calc(100% - 2px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border-top-color: oklch(20% 0.02 var(--sui-brand-hue));
+}
+
+/* Bottom Placement */
+.sui-tooltip-bottom::before {
+  top: calc(100% + 8px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+}
+.sui-tooltip-bottom::after {
+  top: calc(100% - 2px);
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  border-bottom-color: oklch(20% 0.02 var(--sui-brand-hue));
+  border-top-color: transparent;
+}
+
+/* Left Placement */
+.sui-tooltip-left::before {
+  right: calc(100% + 8px);
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  transform: translateY(-50%) translateX(4px);
+}
+.sui-tooltip-left::after {
+  right: calc(100% - 2px);
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  transform: translateY(-50%) translateX(4px);
+  border-left-color: oklch(20% 0.02 var(--sui-brand-hue));
+  border-top-color: transparent;
+}
+
+/* Right Placement */
+.sui-tooltip-right::before {
+  left: calc(100% + 8px);
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%) translateX(-4px);
+}
+.sui-tooltip-right::after {
+  left: calc(100% - 2px);
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%) translateX(-4px);
+  border-right-color: oklch(20% 0.02 var(--sui-brand-hue));
+  border-top-color: transparent;
+}
+
+/* Hover Reveal */
+[data-sui-tooltip]:hover::before,
+[data-sui-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+[data-sui-tooltip]:hover::before,
+.sui-tooltip-top:hover::before { transform: translateX(-50%) translateY(0); }
+[data-sui-tooltip]:hover::after,
+.sui-tooltip-top:hover::after { transform: translateX(-50%) translateY(0); }
+
+.sui-tooltip-bottom:hover::before { transform: translateX(-50%) translateY(0); }
+.sui-tooltip-bottom:hover::after { transform: translateX(-50%) translateY(0); }
+
+.sui-tooltip-left:hover::before { transform: translateY(-50%) translateX(0); }
+.sui-tooltip-left:hover::after { transform: translateY(-50%) translateX(0); }
+
+.sui-tooltip-right:hover::before { transform: translateY(-50%) translateX(0); }
+.sui-tooltip-right:hover::after { transform: translateY(-50%) translateX(0); }
+
+/* --------------------------------------------------------------------------
+   4. ACCORDIONS & COLLAPSIBLE PANELS
+   -------------------------------------------------------------------------- */
+.sui-accordion {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-lg);
+  background: var(--sui-surface);
+  overflow: hidden;
+}
+
+.sui-accordion-item:not(:last-child) {
+  border-bottom: 1px solid var(--sui-border-subtle);
+}
+
+.sui-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--sui-space-4) var(--sui-space-6);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--sui-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sui-accordion-header:hover {
+  background: var(--sui-surface-hover);
+}
+
+.sui-accordion-header::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--sui-text-muted);
+  border-bottom: 2px solid var(--sui-text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-accordion-item.is-open .sui-accordion-header::after {
+  transform: rotate(-135deg);
+}
+
+.sui-accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-accordion-item.is-open .sui-accordion-body,
+.sui-collapse.is-open {
+  grid-template-rows: 1fr;
+}
+
+.sui-accordion-content {
+  overflow: hidden;
+  padding: 0 var(--sui-space-6);
+  color: var(--sui-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.sui-accordion-item.is-open .sui-accordion-content {
+  padding: 0 var(--sui-space-6) var(--sui-space-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sui-modal,
+  .sui-modal-dialog,
+  .sui-dropdown-menu,
+  [data-sui-tooltip]::before,
+  [data-sui-tooltip]::after,
+  .sui-accordion-body,
+  .sui-accordion-header::after {
+    transition: none !important;
+  }
+}

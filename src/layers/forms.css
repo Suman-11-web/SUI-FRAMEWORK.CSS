@@ -1,0 +1,329 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - ADVANCED FORMS & TOGGLES (src/layers/forms.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. FORM ARCHITECTURE & TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+.sui-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sui-space-6);
+  width: 100%;
+}
+
+.sui-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sui-space-2);
+  width: 100%;
+}
+
+.sui-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sui-text);
+  display: inline-block;
+  user-select: none;
+}
+
+.sui-help-text,
+.sui-error-text,
+.sui-success-text {
+  font-size: 0.75rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.sui-help-text { color: var(--sui-text-muted); }
+.sui-error-text { color: var(--sui-color-danger-500); }
+.sui-success-text { color: var(--sui-color-success-500); }
+
+/* --------------------------------------------------------------------------
+   2. BASE INPUTS (Text, Textarea, Select, Search)
+   -------------------------------------------------------------------------- */
+.sui-input,
+.sui-textarea,
+.sui-select,
+.sui-search {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--sui-text);
+  background: var(--sui-bg);
+  border: 1px solid var(--sui-border-strong);
+  border-radius: var(--sui-radius-md);
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  appearance: none;
+}
+
+.sui-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Custom Select Chevron */
+.sui-select {
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888888'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  cursor: pointer;
+}
+
+.sui-search {
+  padding-left: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888888'%3E%3Ccircle cx='11' cy='11' r='8' stroke-width='2'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 0.75rem center;
+  background-size: 1.15rem;
+}
+
+/* Focus States */
+.sui-input:focus,
+.sui-textarea:focus,
+.sui-select:focus,
+.sui-search:focus {
+  outline: none;
+  border-color: var(--sui-color-primary-500);
+  box-shadow: 0 0 0 3px oklch(from var(--sui-color-primary-500) l c h / 0.15);
+  background: var(--sui-surface);
+}
+
+.sui-input::placeholder,
+.sui-textarea::placeholder,
+.sui-search::placeholder {
+  color: var(--sui-text-muted);
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   3. SIZES & STATES
+   -------------------------------------------------------------------------- */
+.sui-input-sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: var(--sui-radius-sm); }
+.sui-input-lg { padding: 0.85rem 1.25rem; font-size: 1.1rem; border-radius: var(--sui-radius-lg); }
+
+.sui-input-error { 
+  border-color: var(--sui-color-danger-500); 
+  box-shadow: 0 0 0 1px var(--sui-color-danger-500) inset; 
+}
+.sui-input-error:focus { box-shadow: 0 0 0 3px oklch(from var(--sui-color-danger-500) l c h / 0.15); }
+
+.sui-input-success { 
+  border-color: var(--sui-color-success-500); 
+  box-shadow: 0 0 0 1px var(--sui-color-success-500) inset; 
+}
+.sui-input-success:focus { box-shadow: 0 0 0 3px oklch(from var(--sui-color-success-500) l c h / 0.15); }
+
+.sui-input-disabled,
+.sui-input:disabled,
+.sui-select:disabled,
+.sui-textarea:disabled {
+  background: var(--sui-surface-hover);
+  color: var(--sui-text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: var(--sui-border);
+}
+
+/* --------------------------------------------------------------------------
+   4. INPUT GROUPS (Prefixes & Suffixes)
+   -------------------------------------------------------------------------- */
+.sui-input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  border: 1px solid var(--sui-border-strong);
+  border-radius: var(--sui-radius-md);
+  background: var(--sui-bg);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.sui-input-group:focus-within {
+  border-color: var(--sui-color-primary-500);
+  box-shadow: 0 0 0 3px oklch(from var(--sui-color-primary-500) l c h / 0.15);
+}
+
+.sui-input-group .sui-input {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+  flex: 1;
+}
+
+.sui-input-group .sui-input:focus { box-shadow: none; }
+
+.sui-input-prefix,
+.sui-input-suffix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  color: var(--sui-text-muted);
+  background: var(--sui-surface-hover);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sui-input-prefix { border-right: 1px solid var(--sui-border); }
+.sui-input-suffix { border-left: 1px solid var(--sui-border); }
+
+/* --------------------------------------------------------------------------
+   5. ADVANCED CONTROLS (Radios, Checkboxes, Switches)
+   -------------------------------------------------------------------------- */
+.sui-checkbox,
+.sui-radio {
+  width: 1.25rem;
+  height: 1.25rem;
+  appearance: none;
+  background: var(--sui-bg);
+  border: 1px solid var(--sui-border-strong);
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.sui-checkbox { border-radius: 4px; }
+.sui-radio { border-radius: 50%; }
+
+.sui-checkbox:focus-visible,
+.sui-radio:focus-visible,
+.sui-switch:focus-visible {
+  outline: 2px solid var(--sui-color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Custom Checkmark / Radio Dot */
+.sui-checkbox::before {
+  content: "";
+  width: 0.75rem;
+  height: 0.75rem;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  background-color: #fff;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-radio::before {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  transform: scale(0);
+  background-color: #fff;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-checkbox:checked,
+.sui-radio:checked {
+  background-color: var(--sui-color-primary-500);
+  border-color: var(--sui-color-primary-500);
+}
+
+.sui-checkbox:checked::before,
+.sui-radio:checked::before {
+  transform: scale(1);
+}
+
+/* --- iOS Style Toggle Switch --- */
+.sui-switch {
+  appearance: none;
+  width: 2.75rem;
+  height: 1.5rem;
+  background: var(--sui-border-strong);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  margin: 0;
+  flex-shrink: 0;
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(1.5rem - 4px);
+  height: calc(1.5rem - 4px);
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 1px rgba(0,0,0,0.2);
+}
+
+.sui-switch:checked { background: var(--sui-color-success-500); }
+.sui-switch:checked::after { transform: translateX(1.25rem); }
+
+/* --- Range Slider --- */
+.sui-range {
+  width: 100%;
+  height: 6px;
+  background: var(--sui-border-strong);
+  border-radius: 999px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.sui-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--sui-color-primary-500);
+  box-shadow: 0 2px 6px oklch(from var(--sui-color-primary-500) l c h / 0.3);
+  transition: transform 0.1s;
+}
+.sui-range::-webkit-slider-thumb:active { transform: scale(1.15); }
+
+/* --- File Upload --- */
+.sui-file {
+  width: 100%;
+  padding: 0.4rem;
+  background: var(--sui-surface-hover);
+  border: 1px dashed var(--sui-border-strong);
+  border-radius: var(--sui-radius-md);
+  color: var(--sui-text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.sui-file:hover {
+  background: var(--sui-surface);
+  border-color: var(--sui-color-primary-500);
+}
+
+.sui-file::file-selector-button {
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border);
+  color: var(--sui-text);
+  padding: 0.4rem 1rem;
+  border-radius: var(--sui-radius-sm);
+  margin-right: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.sui-file::file-selector-button:hover {
+  background: var(--sui-color-primary-500);
+  color: #fff;
+  border-color: var(--sui-color-primary-500);
+}

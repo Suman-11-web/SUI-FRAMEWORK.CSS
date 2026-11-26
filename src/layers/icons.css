@@ -1,0 +1,431 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - ICONOGRAPHY ARCHITECTURE (src/layers/icons.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CORE SVG PRIMITIVES
+   -------------------------------------------------------------------------- */
+.sui-icon {
+  display: inline-block;
+  vertical-align: middle;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              stroke-width 0.2s ease;
+  user-select: none;
+  pointer-events: none; /* Prevents icons from swallowing clicks inside buttons */
+}
+
+/* Base override for solid/filled icons */
+.sui-icon-solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* --------------------------------------------------------------------------
+   2. VOLUMETRIC SIZING SCALES (Responsive aspect ratios)
+   -------------------------------------------------------------------------- */
+.sui-icon-xs  { width: 0.75rem; height: 0.75rem; stroke-width: 2.5; }
+.sui-icon-sm  { width: 1.00rem; height: 1.00rem; stroke-width: 2.5; }
+.sui-icon-md  { width: 1.25rem; height: 1.25rem; stroke-width: 2.0; } /* Default */
+.sui-icon-lg  { width: 1.50rem; height: 1.50rem; stroke-width: 2.0; }
+.sui-icon-xl  { width: 2.00rem; height: 2.00rem; stroke-width: 1.5; }
+.sui-icon-2xl { width: 2.50rem; height: 2.50rem; stroke-width: 1.5; }
+.sui-icon-3xl { width: 3.00rem; height: 3.00rem; stroke-width: 1.5; }
+.sui-icon-4xl { width: 4.00rem; height: 4.00rem; stroke-width: 1.0; }
+.sui-icon-5xl { width: 5.00rem; height: 5.00rem; stroke-width: 1.0; }
+.sui-icon-6xl { width: 6.00rem; height: 6.00rem; stroke-width: 1.0; }
+.sui-icon-7xl { width: 8.00rem; height: 8.00rem; stroke-width: 0.5; }
+.sui-icon-8xl { width: 10.0rem; height: 10.0rem; stroke-width: 0.5; }
+.sui-icon-9xl { width: 12.0rem; height: 12.0rem; stroke-width: 0.5; }
+
+/* Fallback default size */
+.sui-icon:not([class*="sui-icon-"]) {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 2;
+}
+
+/* --------------------------------------------------------------------------
+   3. STROKE WIDTH MODIFIERS (Override volumetric defaults)
+   -------------------------------------------------------------------------- */
+.sui-stroke-0   { stroke-width: 0 !important; }
+.sui-stroke-0-5 { stroke-width: 0.5 !important; }
+.sui-stroke-1   { stroke-width: 1 !important; }
+.sui-stroke-1-5 { stroke-width: 1.5 !important; }
+.sui-stroke-2   { stroke-width: 2 !important; }
+.sui-stroke-2-5 { stroke-width: 2.5 !important; }
+.sui-stroke-3   { stroke-width: 3 !important; }
+.sui-stroke-4   { stroke-width: 4 !important; }
+
+/* --------------------------------------------------------------------------
+   4. ALIGNMENT & POSITIONING UTILITIES
+   -------------------------------------------------------------------------- */
+.sui-icon-left  { margin-right: var(--sui-space-2); }
+.sui-icon-right { margin-left: var(--sui-space-2); }
+.sui-icon-center { display: block; margin-left: auto; margin-right: auto; }
+
+/* Absolute positioning for input fields */
+.sui-icon-absolute-left {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.sui-icon-absolute-right {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. MASK-BASED ICONS (For background-image / sprite workflows)
+   -------------------------------------------------------------------------- */
+.sui-icon-mask {
+  display: inline-block;
+  vertical-align: middle;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. SEMANTIC COLOR UTILITIES (Stroke & Fill Variants)
+   -------------------------------------------------------------------------- */
+/* Primary */
+.sui-icon-primary { color: var(--sui-color-primary-500); }
+.sui-icon-primary-subtle { color: oklch(from var(--sui-color-primary-500) l c h / 0.5); }
+.sui-fill-primary { fill: var(--sui-color-primary-500); stroke: none; }
+
+/* Secondary/Accent */
+.sui-icon-accent { color: var(--sui-color-accent-500); }
+.sui-icon-accent-subtle { color: oklch(from var(--sui-color-accent-500) l c h / 0.5); }
+.sui-fill-accent { fill: var(--sui-color-accent-500); stroke: none; }
+
+/* Success */
+.sui-icon-success { color: var(--sui-color-success-500); }
+.sui-icon-success-subtle { color: oklch(from var(--sui-color-success-500) l c h / 0.5); }
+.sui-fill-success { fill: var(--sui-color-success-500); stroke: none; }
+
+/* Warning */
+.sui-icon-warning { color: var(--sui-color-warning-500); }
+.sui-icon-warning-subtle { color: oklch(from var(--sui-color-warning-500) l c h / 0.5); }
+.sui-fill-warning { fill: var(--sui-color-warning-500); stroke: none; }
+
+/* Danger */
+.sui-icon-danger { color: var(--sui-color-danger-500); }
+.sui-icon-danger-subtle { color: oklch(from var(--sui-color-danger-500) l c h / 0.5); }
+.sui-fill-danger { fill: var(--sui-color-danger-500); stroke: none; }
+
+/* Info */
+.sui-icon-info { color: var(--sui-color-info-500); }
+.sui-icon-info-subtle { color: oklch(from var(--sui-color-info-500) l c h / 0.5); }
+.sui-fill-info { fill: var(--sui-color-info-500); stroke: none; }
+
+/* Neutrals */
+.sui-icon-muted { color: var(--sui-text-muted); }
+.sui-icon-white { color: #ffffff; }
+.sui-icon-black { color: #000000; }
+.sui-fill-muted { fill: var(--sui-text-muted); stroke: none; }
+.sui-fill-white { fill: #ffffff; stroke: none; }
+.sui-fill-black { fill: #000000; stroke: none; }
+
+/* Inherited Context */
+.sui-icon-inherit { color: inherit; }
+
+/* --------------------------------------------------------------------------
+   7. INTERACTIVE ICON BUTTONS (Base Structure)
+   -------------------------------------------------------------------------- */
+.sui-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sui-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  color: var(--sui-text-muted);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Allow icons inside buttons to inherit exact dimensions */
+.sui-icon-btn > .sui-icon {
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Button Sizing */
+.sui-icon-btn-xs { width: 1.5rem; height: 1.5rem; border-radius: var(--sui-radius-sm); }
+.sui-icon-btn-sm { width: 2rem; height: 2rem; }
+.sui-icon-btn-md { width: 2.5rem; height: 2.5rem; } /* Default */
+.sui-icon-btn-lg { width: 3rem; height: 3rem; border-radius: var(--sui-radius-lg); }
+.sui-icon-btn-xl { width: 3.5rem; height: 3.5rem; border-radius: var(--sui-radius-xl); }
+
+.sui-icon-btn:not([class*="sui-icon-btn-"]) {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Shape Modifiers */
+.sui-btn-rounded,
+.sui-icon-btn-rounded {
+  border-radius: 9999px !important;
+}
+
+.sui-btn-square,
+.sui-icon-btn-square {
+  border-radius: var(--sui-radius-sm) !important;
+}
+
+/* Base Interactions */
+.sui-icon-btn:hover {
+  background: var(--sui-surface-hover);
+  color: var(--sui-text);
+}
+
+.sui-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.sui-icon-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px oklch(from var(--sui-color-primary-500) l c h / 0.3);
+}
+
+.sui-icon-btn:disabled,
+.sui-icon-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: transparent;
+  color: var(--sui-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   8. ICON BUTTON VARIANTS (Solid, Outline, Soft, Ghost)
+   -------------------------------------------------------------------------- */
+
+/* PRIMARY VARIANTS */
+.sui-icon-btn-primary {
+  background: var(--sui-color-primary-500);
+  color: #ffffff;
+  box-shadow: 0 2px 4px oklch(from var(--sui-color-primary-500) l c h / 0.2);
+}
+.sui-icon-btn-primary:hover {
+  background: var(--sui-color-primary-600);
+  box-shadow: 0 4px 8px oklch(from var(--sui-color-primary-500) l c h / 0.3);
+}
+.sui-icon-btn-primary-outline {
+  background: transparent;
+  color: var(--sui-color-primary-500);
+  border-color: var(--sui-color-primary-500);
+}
+.sui-icon-btn-primary-outline:hover {
+  background: oklch(from var(--sui-color-primary-500) l c h / 0.1);
+}
+.sui-icon-btn-primary-soft {
+  background: oklch(from var(--sui-color-primary-500) l c h / 0.1);
+  color: var(--sui-color-primary-500);
+}
+.sui-icon-btn-primary-soft:hover {
+  background: oklch(from var(--sui-color-primary-500) l c h / 0.2);
+}
+
+/* SUCCESS VARIANTS */
+.sui-icon-btn-success {
+  background: var(--sui-color-success-500);
+  color: #ffffff;
+}
+.sui-icon-btn-success:hover {
+  background: var(--sui-color-success-600);
+}
+.sui-icon-btn-success-outline {
+  background: transparent;
+  color: var(--sui-color-success-500);
+  border-color: var(--sui-color-success-500);
+}
+.sui-icon-btn-success-outline:hover {
+  background: oklch(from var(--sui-color-success-500) l c h / 0.1);
+}
+.sui-icon-btn-success-soft {
+  background: oklch(from var(--sui-color-success-500) l c h / 0.1);
+  color: var(--sui-color-success-500);
+}
+.sui-icon-btn-success-soft:hover {
+  background: oklch(from var(--sui-color-success-500) l c h / 0.2);
+}
+
+/* DANGER VARIANTS */
+.sui-icon-btn-danger {
+  background: var(--sui-color-danger-500);
+  color: #ffffff;
+}
+.sui-icon-btn-danger:hover {
+  background: var(--sui-color-danger-600);
+}
+.sui-icon-btn-danger-outline {
+  background: transparent;
+  color: var(--sui-color-danger-500);
+  border-color: var(--sui-color-danger-500);
+}
+.sui-icon-btn-danger-outline:hover {
+  background: oklch(from var(--sui-color-danger-500) l c h / 0.1);
+}
+.sui-icon-btn-danger-soft {
+  background: oklch(from var(--sui-color-danger-500) l c h / 0.1);
+  color: var(--sui-color-danger-500);
+}
+.sui-icon-btn-danger-soft:hover {
+  background: oklch(from var(--sui-color-danger-500) l c h / 0.2);
+}
+
+/* WARNING VARIANTS */
+.sui-icon-btn-warning {
+  background: var(--sui-color-warning-500);
+  color: #000000;
+}
+.sui-icon-btn-warning:hover {
+  background: var(--sui-color-warning-600);
+}
+.sui-icon-btn-warning-outline {
+  background: transparent;
+  color: var(--sui-color-warning-500);
+  border-color: var(--sui-color-warning-500);
+}
+.sui-icon-btn-warning-outline:hover {
+  background: oklch(from var(--sui-color-warning-500) l c h / 0.1);
+}
+.sui-icon-btn-warning-soft {
+  background: oklch(from var(--sui-color-warning-500) l c h / 0.1);
+  color: var(--sui-color-warning-500);
+}
+.sui-icon-btn-warning-soft:hover {
+  background: oklch(from var(--sui-color-warning-500) l c h / 0.2);
+}
+
+/* OUTLINE DEFAULT */
+.sui-icon-btn-outline {
+  background: transparent;
+  border-color: var(--sui-border-strong);
+  color: var(--sui-text);
+}
+.sui-icon-btn-outline:hover {
+  background: var(--sui-surface-hover);
+  border-color: var(--sui-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   9. TRANSFORMATIONS & ROTATION
+   -------------------------------------------------------------------------- */
+.sui-rotate-90  { transform: rotate(90deg); }
+.sui-rotate-180 { transform: rotate(180deg); }
+.sui-rotate-270 { transform: rotate(270deg); }
+
+.sui-flip-horizontal { transform: scaleX(-1); }
+.sui-flip-vertical   { transform: scaleY(-1); }
+.sui-flip-both       { transform: scale(-1, -1); }
+
+/* Transition wrappers for dropdown carets */
+.sui-icon-transition-rotate {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.is-open > .sui-icon-transition-rotate,
+[aria-expanded="true"] > .sui-icon-transition-rotate {
+  transform: rotate(180deg);
+}
+
+/* --------------------------------------------------------------------------
+   10. ICON ANIMATIONS (Hardware Accelerated)
+   -------------------------------------------------------------------------- */
+/* Spin */
+.sui-icon-spin {
+  animation: sui-icon-spin 2s linear infinite;
+  transform-origin: center center;
+}
+.sui-icon-spin-fast {
+  animation: sui-icon-spin 0.75s linear infinite;
+  transform-origin: center center;
+}
+@keyframes sui-icon-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pulse (Opacity fading) */
+.sui-icon-pulse {
+  animation: sui-icon-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes sui-icon-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Ping (Scaling alert ring) */
+.sui-icon-ping {
+  position: relative;
+}
+.sui-icon-ping::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  animation: sui-icon-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes sui-icon-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Bounce (Vertical floating) */
+.sui-icon-bounce {
+  animation: sui-icon-bounce 2s infinite;
+}
+@keyframes sui-icon-bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+/* Shake (Error state feedback) */
+.sui-icon-shake {
+  animation: sui-icon-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes sui-icon-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+/* --------------------------------------------------------------------------
+   11. RTL (RIGHT-TO-LEFT) SUPPORT
+   -------------------------------------------------------------------------- */
+/* Automatically flips directional icons when HTML dir="rtl" */
+[dir="rtl"] .sui-icon-rtl-flip {
+  transform: scaleX(-1);
+}

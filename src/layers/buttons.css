@@ -1,0 +1,223 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - BUTTON SYSTEM 3.0 (src/layers/buttons.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. BASE BUTTON ARCHITECTURE
+   -------------------------------------------------------------------------- */
+.sui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--sui-radius-md);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sui-btn:focus-visible {
+  outline: 2px solid var(--sui-color-primary-500);
+  outline-offset: 2px;
+}
+
+.sui-btn:disabled,
+.sui-btn[disabled],
+.sui-btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   2. VARIANTS (OKLCH Perceptual Colors)
+   -------------------------------------------------------------------------- */
+.sui-btn-primary {
+  background: var(--sui-color-primary-500);
+  color: #ffffff;
+  box-shadow: 0 2px 4px oklch(from var(--sui-color-primary-500) l c h / 0.2);
+}
+.sui-btn-primary:hover {
+  background: var(--sui-color-primary-600);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px oklch(from var(--sui-color-primary-500) l c h / 0.3);
+}
+.sui-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px oklch(from var(--sui-color-primary-500) l c h / 0.2);
+}
+
+.sui-btn-secondary {
+  background: var(--sui-surface-hover);
+  border-color: var(--sui-border);
+  color: var(--sui-text);
+}
+.sui-btn-secondary:hover {
+  background: var(--sui-border-subtle);
+  border-color: var(--sui-border-strong);
+}
+
+.sui-btn-outline {
+  background: transparent;
+  border-color: var(--sui-border-strong);
+  color: var(--sui-text);
+}
+.sui-btn-outline:hover {
+  background: var(--sui-surface-hover);
+  border-color: var(--sui-text-muted);
+}
+
+.sui-btn-ghost {
+  background: transparent;
+  color: var(--sui-text-muted);
+}
+.sui-btn-ghost:hover {
+  background: var(--sui-surface-hover);
+  color: var(--sui-text);
+}
+
+/* --- Semantic Variants --- */
+.sui-btn-success { background: var(--sui-color-success-500); color: #ffffff; }
+.sui-btn-success:hover { background: var(--sui-color-success-600); }
+
+.sui-btn-danger { background: var(--sui-color-danger-500); color: #ffffff; }
+.sui-btn-danger:hover { background: var(--sui-color-danger-600); }
+
+.sui-btn-warning { background: var(--sui-color-warning-500); color: #000000; }
+.sui-btn-warning:hover { background: var(--sui-color-warning-600); }
+
+.sui-btn-info { background: var(--sui-color-info-500); color: #ffffff; }
+.sui-btn-info:hover { background: var(--sui-color-info-600); }
+
+/* --------------------------------------------------------------------------
+   3. SIZES
+   -------------------------------------------------------------------------- */
+.sui-btn-xs {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: var(--sui-radius-sm);
+}
+
+.sui-btn-sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  border-radius: var(--sui-radius-sm);
+}
+
+.sui-btn-md {
+  /* Default size inherited from .sui-btn */
+}
+
+.sui-btn-lg {
+  padding: 0.8rem 1.75rem;
+  font-size: 1.05rem;
+  border-radius: var(--sui-radius-lg);
+}
+
+.sui-btn-xl {
+  padding: 1rem 2rem;
+  font-size: 1.15rem;
+  border-radius: var(--sui-radius-xl);
+}
+
+/* --------------------------------------------------------------------------
+   4. STATES & MODIFIERS
+   -------------------------------------------------------------------------- */
+.sui-btn-disabled,
+.sui-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  filter: grayscale(20%);
+}
+
+.sui-btn-block {
+  display: flex;
+  width: 100%;
+}
+
+.sui-btn-icon {
+  padding: 0.6rem;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--sui-radius-md);
+}
+.sui-btn-icon.sui-btn-rounded {
+  border-radius: 50%;
+}
+
+/* Loading State */
+.sui-btn-loading {
+  color: transparent !important;
+  pointer-events: none;
+  position: relative;
+}
+.sui-btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 1.2em;
+  height: 1.2em;
+  top: calc(50% - 0.6em);
+  left: calc(50% - 0.6em);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: sui-btn-spin 0.8s linear infinite;
+}
+
+/* Adjust loader color for ghost/outline variants */
+.sui-btn-outline.sui-btn-loading::after,
+.sui-btn-ghost.sui-btn-loading::after {
+  border-color: var(--sui-border-strong);
+  border-top-color: var(--sui-text);
+}
+
+@keyframes sui-btn-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   5. BUTTON GROUPS
+   -------------------------------------------------------------------------- */
+.sui-btn-group {
+  display: inline-flex;
+  border-radius: var(--sui-radius-md);
+  overflow: hidden;
+}
+
+.sui-btn-group .sui-btn {
+  border-radius: 0;
+  margin-left: -1px;
+}
+
+.sui-btn-group .sui-btn:first-child {
+  margin-left: 0;
+  border-top-left-radius: var(--sui-radius-md);
+  border-bottom-left-radius: var(--sui-radius-md);
+}
+
+.sui-btn-group .sui-btn:last-child {
+  border-top-right-radius: var(--sui-radius-md);
+  border-bottom-right-radius: var(--sui-radius-md);
+}
+
+/* Ensure hover states overlap correctly to avoid double borders */
+.sui-btn-group .sui-btn:hover {
+  z-index: 10;
+  position: relative;
+}
+.sui-btn-group .sui-btn:focus-visible {
+  z-index: 20;
+  position: relative;
+}

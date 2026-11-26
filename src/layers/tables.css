@@ -1,0 +1,49 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - DATA TABLES (src/layers/tables.css)
+   ========================================================================== */
+
+.sui-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-lg);
+  background: var(--sui-surface);
+}
+
+.sui-table-styled {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--sui-text-sm);
+}
+
+.sui-table-styled th,
+.sui-table-styled td {
+  padding: var(--sui-space-3) var(--sui-space-4);
+  border-bottom: 1px solid var(--sui-border);
+  vertical-align: middle;
+}
+
+.sui-table-styled thead th {
+  font-weight: 600;
+  color: var(--sui-text-muted);
+  background: var(--sui-surface-hover);
+  white-space: nowrap;
+}
+
+.sui-table-styled tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sui-table-striped tbody tr:nth-child(even) {
+  background: var(--sui-surface-hover);
+}
+
+.sui-table-hover tbody tr:hover {
+  background: var(--sui-surface-active);
+}
+
+.sui-table-compact th,
+.sui-table-compact td {
+  padding: var(--sui-space-2) var(--sui-space-3);
+}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUI.css v3.0.0 — Automated Browser Regression Suite</title>
+  <!-- Exact built production CSS an end user receives -->
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  <!-- Small unlayered user stylesheet to verify @layer override ergonomics -->
+  <style>
+    .custom-theme-scope {
+      --sui-brand-hue: 160;
+    }
+    .custom-card-override {
+      border-width: 3px;
+      border-style: dashed;
+    }
+    .reg-report {
+      margin-bottom: 2rem;
+    }
+    .reg-pass { color: var(--sui-color-success-600); font-weight: 600; }
+    .reg-fail { color: var(--sui-color-danger-600); font-weight: 700; }
+    .reg-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .reg-table th, .reg-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--sui-border); text-align: left; }
+  </style>
+</head>
+<body class="sui-bg sui-text">
+  <a href="#regression-main" class="sui-skip-link">Skip to regression suite</a>
+
+  <!-- 1. Responsive Navbar (collapses < 768px, expands >= 768px) -->
+  <nav class="sui-navbar" id="test-navbar" aria-label="Primary regression navigation">
+    <a href="../index.html" class="sui-navbar-brand">SUI.css Regression</a>
+    <button type="button" id="nav-toggle-btn" class="sui-navbar-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="test-nav-menu">&#9776;</button>
+    <ul id="test-nav-menu" class="sui-navbar-menu">
+      <li class="sui-navbar-item"><a href="#buttons" class="sui-navbar-link" aria-current="page">Buttons</a></li>
+      <li class="sui-navbar-item"><a href="#cards" class="sui-navbar-link">Cards</a></li>
+      <li class="sui-navbar-item"><a href="#forms" class="sui-navbar-link">Forms</a></li>
+      <li class="sui-navbar-item"><button type="button" id="theme-toggle-btn" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle">Toggle Theme</button></li>
+    </ul>
+  </nav>
+
+  <main id="regression-main" class="sui-container sui-py-12">
+    <section class="sui-card reg-report" aria-live="polite">
+      <div class="sui-card-header">
+        <h1 class="sui-text-2xl">SUI.css Regression Verification</h1>
+        <span id="reg-summary" class="sui-badge sui-badge-primary">Running...</span>
+      </div>
+      <p class="sui-text-muted sui-text-sm">Resize viewport across 576px, 768px, 992px, and 1200px (and test 200% zoom) to verify responsive assertions live. <button type="button" id="rerun-btn" class="sui-btn sui-btn-secondary sui-btn-sm">Re-run Checks</button></p>
+      <div class="sui-table-wrapper">
+        <table class="reg-table">
+          <thead>
+            <tr><th>Assertion</th><th>Status</th><th>Observed</th></tr>
+          </thead>
+          <tbody id="reg-results"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. Button + Utility + Color Variant + Info Token + Disabled -->
+    <section id="buttons" class="sui-card sui-mb-6">
+      <h2 class="sui-text-xl">1. Buttons, Utilities &amp; Tokens</h2>
+      <div class="sui-flex sui-flex-wrap sui-gap-4 sui-items-center">
+        <button type="button" id="btn-util-combo" class="sui-btn sui-btn-primary sui-mt-4 sui-p-6">Primary + Utility Spacing</button>
+        <button type="button" id="btn-info-test" class="sui-btn sui-btn-info">Info Variant</button>
+        <button type="button" id="btn-disabled-test" class="sui-btn sui-btn-primary" disabled>Disabled Button</button>
+        <span id="badge-primary-test" class="sui-badge sui-badge-primary">Primary Badge</span>
+        <span id="badge-outline-test" class="sui-badge sui-badge-outline">Outline Badge</span>
+      </div>
+      <div id="responsive-util-box" class="sui-hidden sui-md-flex sui-gap-2 sui-mt-4">
+        <span class="sui-badge sui-badge-success">Visible at &gt;= 768px (.sui-hidden.sui-md-flex)</span>
+      </div>
+    </section>
+
+    <!-- 3. Grid/Flex Card with Long Unbroken Title & Image -->
+    <section id="cards" class="sui-mb-6">
+      <h2 class="sui-text-xl sui-mb-4">2. Grid Cards, Long Unbroken Text &amp; Custom Overrides</h2>
+      <div class="sui-grid sui-grid-cols-1 sui-md-grid-cols-2 sui-gap-6">
+        <article id="card-overflow-test" class="sui-card">
+          <h3 class="sui-text-lg">SupercalifragilisticexpialidociousUnbrokenIdentifierTitleWithoutAnySpacesOrHyphensForOverflowVerification</h3>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='240'%3E%3Crect width='800' height='240' fill='%234f46e5'/%3E%3Ctext x='50%25' y='50%25' fill='white' font-size='28' text-anchor='middle' dy='.3em'%3EResponsive Media 800x240%3C/text%3E%3C/svg%3E" alt="Responsive placeholder graphic" class="sui-rounded-md">
+          <p class="sui-text-muted">Verifies that card titles and wide images stay inside the card bounds without horizontal scrolling.</p>
+        </article>
+        <article id="card-custom-override" class="sui-card custom-card-override custom-theme-scope">
+          <h3 class="sui-text-lg">Custom Stylesheet &amp; Token Override</h3>
+          <p class="sui-text-muted">Unlayered CSS overrides <code>--sui-brand-hue: 160</code> and dashed 3px border without <code>!important</code>.</p>
+          <button type="button" id="btn-rebranded" class="sui-btn sui-btn-primary">Rebranded Hue Button</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Accessible Form with Validation & Disabled Controls -->
+    <section id="forms" class="sui-card sui-mb-6">
+      <h2 class="sui-text-xl">3. Forms, Labels, Validation &amp; Disabled Controls</h2>
+      <form class="sui-form" onsubmit="event.preventDefault()">
+        <div class="sui-form-group">
+          <label for="f-email" class="sui-label">Work Email</label>
+          <input id="f-email" type="email" class="sui-input sui-input-error" value="invalid-email" aria-invalid="true" aria-describedby="f-email-err">
+          <p id="f-email-err" class="sui-error-text">Please enter a valid email address.</p>
+        </div>
+        <div class="sui-form-group">
+          <label for="f-org" class="sui-label">Organization (Valid)</label>
+          <input id="f-org" type="text" class="sui-input sui-input-success" value="SUI Labs" aria-describedby="f-org-ok">
+          <p id="f-org-ok" class="sui-success-text">Organization verified.</p>
+        </div>
+        <div class="sui-form-group">
+          <label for="f-readonly" class="sui-label">Disabled Field</label>
+          <input id="f-readonly" type="text" class="sui-input" value="Locked value" disabled>
+        </div>
+        <div>
+          <button type="submit" class="sui-btn sui-btn-primary">Submit Form</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 5. Two Independent Modals (Focus Restore + Escape + Repeated Open/Close) -->
+    <section id="interactive" class="sui-card">
+      <h2 class="sui-text-xl">4. Interactive Modals &amp; Focus Management</h2>
+      <div class="sui-flex sui-flex-wrap sui-gap-4">
+        <button type="button" id="open-modal-a" class="sui-btn sui-btn-primary" data-sui-modal-target="modal-a">Open Modal A</button>
+        <button type="button" id="open-modal-b" class="sui-btn sui-btn-secondary" data-sui-modal-target="modal-b">Open Modal B</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal-a" class="sui-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-a-title">
+    <div class="sui-modal-overlay"></div>
+    <div class="sui-modal-dialog">
+      <div class="sui-modal-header">
+        <h3 id="modal-a-title">Modal Instance A</h3>
+        <button type="button" class="sui-modal-close" data-sui-modal-close aria-label="Close Modal A">&times;</button>
+      </div>
+      <div class="sui-modal-body">
+        <input id="modal-a-input" type="text" class="sui-input" placeholder="Auto-focused input A">
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-b" class="sui-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-b-title">
+    <div class="sui-modal-overlay"></div>
+    <div class="sui-modal-dialog">
+      <div class="sui-modal-header">
+        <h3 id="modal-b-title">Modal Instance B</h3>
+        <button type="button" class="sui-modal-close" data-sui-modal-close aria-label="Close Modal B">&times;</button>
+      </div>
+      <div class="sui-modal-body">
+        <input id="modal-b-input" type="text" class="sui-input" placeholder="Auto-focused input B">
+      </div>
+    </div>
+  </div>
+
+  <script src="../dist/sui.min.js"></script>
+  <script>
+    function runRegressionChecks() {
+      const results = [];
+      const add = (name, pass, detail) => results.push({ name, pass: Boolean(pass), detail });
+
+      // 1. Utility overrides component padding/margin via @layer utilities
+      const btnCombo = document.getElementById('btn-util-combo');
+      const btnStyle = getComputedStyle(btnCombo);
+      add('Utility overrides component (.sui-btn + .sui-p-6 + .sui-mt-4)',
+        parseFloat(btnStyle.paddingTop) >= 20 && parseFloat(btnStyle.marginTop) >= 14,
+        `paddingTop=${btnStyle.paddingTop}, marginTop=${btnStyle.marginTop}`);
+
+      // 2. Undefined --sui-color-info-500 resolved
+      const btnInfo = document.getElementById('btn-info-test');
+      const infoBg = getComputedStyle(btnInfo).backgroundColor;
+      add('Info color token resolves (.sui-btn-info)',
+        infoBg && infoBg !== 'rgba(0, 0, 0, 0)' && infoBg !== 'transparent',
+        `backgroundColor=${infoBg}`);
+
+      // 3. Disabled button state
+      const btnDis = document.getElementById('btn-disabled-test');
+      const disStyle = getComputedStyle(btnDis);
+      add('Disabled button styling (opacity < 1, pointer-events: none)',
+        parseFloat(disStyle.opacity) < 0.8 && disStyle.pointerEvents === 'none',
+        `opacity=${disStyle.opacity}, pointerEvents=${disStyle.pointerEvents}`);
+
+      // 4. Documented badge variants exist
+      const badgePrimaryBg = getComputedStyle(document.getElementById('badge-primary-test')).backgroundColor;
+      add('Documented .sui-badge-primary renders non-transparent bg',
+        badgePrimaryBg && badgePrimaryBg !== 'rgba(0, 0, 0, 0)',
+        `backgroundColor=${badgePrimaryBg}`);
+
+      // 5. Unlayered custom stylesheet overrides component without !important
+      const customCard = document.getElementById('card-custom-override');
+      const customStyle = getComputedStyle(customCard);
+      add('Unlayered user stylesheet overrides SUI component',
+        customStyle.borderTopStyle === 'dashed' && parseFloat(customStyle.borderTopWidth) >= 3,
+        `border=${customStyle.borderTopWidth} ${customStyle.borderTopStyle}`);
+
+      // 6. Card overflow guard with unbroken title & 800px image
+      const cardOverflow = document.getElementById('card-overflow-test');
+      add('Card prevents horizontal overflow on unbroken title & wide image',
+        cardOverflow.scrollWidth <= cardOverflow.clientWidth + 1,
+        `scrollWidth=${cardOverflow.scrollWidth}, clientWidth=${cardOverflow.clientWidth}`);
+
+      // 7. Page-wide horizontal overflow check
+      add('No document horizontal overflow (without body overflow-x: hidden)',
+        document.documentElement.scrollWidth <= window.innerWidth + 1 &&
+        getComputedStyle(document.body).overflowX !== 'hidden',
+        `docScrollW=${document.documentElement.scrollWidth}, innerW=${window.innerWidth}, body.overflowX=${getComputedStyle(document.body).overflowX}`);
+
+      // 8. Responsive utility (.sui-hidden.sui-md-flex) at current viewport
+      const respBox = document.getElementById('responsive-util-box');
+      const expectedResp = window.innerWidth >= 768 ? 'flex' : 'none';
+      const actualResp = getComputedStyle(respBox).display;
+      add(`Responsive utility (.sui-hidden.sui-md-flex) at ${window.innerWidth}px`,
+        actualResp === expectedResp,
+        `expected=${expectedResp}, actual=${actualResp}`);
+
+      // 9. Responsive navbar toggle & collapse behavior
+      const navToggle = document.getElementById('nav-toggle-btn');
+      const navMenu = document.getElementById('test-nav-menu');
+      const expectedToggleDisp = window.innerWidth < 768 ? 'inline-flex' : 'none';
+      add(`Navbar toggle visibility at ${window.innerWidth}px`,
+        getComputedStyle(navToggle).display === expectedToggleDisp,
+        `expected=${expectedToggleDisp}, actual=${getComputedStyle(navToggle).display}`);
+
+      navToggle.click();
+      const openedNav = navMenu.classList.contains('is-open') && navToggle.getAttribute('aria-expanded') === 'true';
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      const closedNav = !navMenu.classList.contains('is-open') && navToggle.getAttribute('aria-expanded') === 'false';
+      add('Navbar toggle + Escape dismissal + ARIA sync', openedNav && closedNav, `opened=${openedNav}, closedOnEsc=${closedNav}`);
+
+      // 10. Dual modals: repeated open/close, Escape, focus restoration
+      const openA = document.getElementById('open-modal-a');
+      const openB = document.getElementById('open-modal-b');
+      const modalA = document.getElementById('modal-a');
+      const modalB = document.getElementById('modal-b');
+      openA.focus();
+      openA.click();
+      const aOpened = modalA.classList.contains('is-open') && document.activeElement === document.getElementById('modal-a-input');
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      const aClosedAndRestored = !modalA.classList.contains('is-open') && document.activeElement === openA;
+      openB.focus();
+      openB.click();
+      const bOpened = modalB.classList.contains('is-open') && document.activeElement === document.getElementById('modal-b-input');
+      window.SUI.modal.close('modal-b');
+      const bClosed = !modalB.classList.contains('is-open') && document.body.style.overflow === '' && document.activeElement === openB;
+      add('Two modals: open, focus, Escape, focus restoration & body overflow reset',
+        aOpened && aClosedAndRestored && bOpened && bClosed,
+        `aOpen=${aOpened}, aEscRestore=${aClosedAndRestored}, bOpen=${bOpened}, bCloseRestore=${bClosed}`);
+
+      // 11. Theme engine unified data-theme (single toggle, no stale data-sui-theme)
+      const initialTheme = window.SUI.theme.get();
+      document.getElementById('theme-toggle-btn').click();
+      const toggledTheme = document.documentElement.getAttribute('data-theme');
+      const noStaleAttr = !document.documentElement.hasAttribute('data-sui-theme');
+      document.getElementById('theme-toggle-btn').click(); // restore
+      add('Theme toggle flips data-theme cleanly once without data-sui-theme drift',
+        toggledTheme !== initialTheme && noStaleAttr,
+        `initial=${initialTheme}, toggled=${toggledTheme}, noStaleAttr=${noStaleAttr}`);
+
+      // Render report
+      const tbody = document.getElementById('reg-results');
+      tbody.innerHTML = results.map(r => `
+        <tr>
+          <td>${r.name}</td>
+          <td class="${r.pass ? 'reg-pass' : 'reg-fail'}">${r.pass ? 'PASS' : 'FAIL'}</td>
+          <td><code>${r.detail}</code></td>
+        </tr>
+      `).join('');
+
+      const passed = results.filter(r => r.pass).length;
+      const summary = document.getElementById('reg-summary');
+      summary.textContent = `${passed} / ${results.length} Passed`;
+      summary.className = `sui-badge ${passed === results.length ? 'sui-badge-success' : 'sui-badge-danger'}`;
+      window.__SUI_REGRESSION__ = { passed, total: results.length, results };
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runRegressionChecks();
+      document.getElementById('rerun-btn').addEventListener('click', runRegressionChecks);
+    });
+  </script>
+</body>
+</html>

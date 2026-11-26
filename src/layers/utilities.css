@@ -1,36 +1,3 @@
-.sui-flex { display: flex; }
-.sui-grid { display: grid; }
-.sui-flex-col { flex-direction: column; }
-.sui-items-center { align-items: center; }
-.sui-justify-between { justify-content: space-between; }
-.sui-gap-2 { gap: var(--sui-space-2); }
-.sui-gap-4 { gap: var(--sui-space-4); }
-
-.sui-mt-4 { margin-top: var(--sui-space-4); }
-.sui-mb-6 { margin-bottom: var(--sui-space-6); }
-
-.sui-text-center { text-align: center; }
-.sui-text-muted { color: var(--sui-text-muted); }
-
-
-/* Add to existing utilities */
-.sui-w-full { width: 100%; }
-.sui-h-full { height: 100%; }
-
-.sui-p-6 { padding: var(--sui-space-6); }
-.sui-py-12 { padding-top: 3rem; padding-bottom: 3rem; }
-
-.sui-mb-2 { margin-bottom: var(--sui-space-2); }
-.sui-mt-8 { margin-top: 2rem; }
-
-.sui-text-lg { font-size: var(--sui-text-lg); }
-.sui-text-hero { font-size: var(--sui-text-xl); font-weight: 800; letter-spacing: -0.02em; }
-
-
-
-
-
-
 /* ==========================================================================
    SUI.CSS - LUXURY UTILITY ENGINE (ULTRA PRO MAX)
    Comprehensive, Single-Responsibility Classes for Premium UI Engineering
@@ -39,7 +6,7 @@
 /* --------------------------------------------------------------------------
    1. DISPLAY & VISIBILITY
    -------------------------------------------------------------------------- */
-.sui-hidden { display: none !important; }
+.sui-hidden { display: none; }
 .sui-block { display: block; }
 .sui-inline-block { display: inline-block; }
 .sui-inline { display: inline; }
@@ -644,18 +611,42 @@
 .sui-ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
 .sui-ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
 
-/* Native Syntax Highlighter Theme (Enforced) */
-pre code { color: #d4d4d4 !important; }
+/* --------------------------------------------------------------------------
+   12. DOCUMENTED EXTENDED UTILITIES (Grid Columns, Spacing, Sizing, Theme)
+   -------------------------------------------------------------------------- */
+.sui-bg { background-color: var(--sui-bg); }
+.sui-text { color: var(--sui-text); }
+.sui-text-hero { font-size: var(--sui-text-hero); font-weight: 800; letter-spacing: var(--sui-tracking-tight); line-height: var(--sui-leading-tight); }
+.sui-tracking-wider { letter-spacing: var(--sui-tracking-wider, 0.05em); }
 
-/* HTML Tokens */
-.token.comment { color: #6a9955 !important; }
-.token.tag { color: #569cd6 !important; }
-.token.attr-name { color: #9cdcfe !important; }
-.token.attr-value { color: #ce9178 !important; }
-.token.punctuation { color: #808080 !important; }
+/* Grid Column Helpers */
+.sui-grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.sui-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sui-grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sui-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.sui-grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.sui-grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 
-/* CSS Tokens */
-.token.selector { color: #d7ba7d !important; }
-.token.property { color: #9cdcfe !important; }
-.token.function { color: #dcdcaa !important; }
-.token.value { color: #b5cea8 !important; }
+/* Extended Spacing Helpers */
+.sui-mt-12 { margin-top: var(--sui-space-12); }
+.sui-mb-3 { margin-bottom: var(--sui-space-3); }
+.sui-mb-10 { margin-bottom: var(--sui-space-10); }
+.sui-mb-12 { margin-bottom: var(--sui-space-12); }
+.sui-py-24 { padding-top: var(--sui-space-24); padding-bottom: var(--sui-space-24); }
+
+/* Extended Sizing Helpers */
+.sui-w-20 { width: 5rem; }
+.sui-w-24 { width: 6rem; }
+.sui-w-64 { width: 16rem; }
+.sui-h-20 { height: 5rem; }
+.sui-h-64 { height: 16rem; }
+.sui-max-w-3xl { max-width: 48rem; }
+.sui-max-w-4xl { max-width: 56rem; }
+
+/* Borders, Outlines & Interactive Helpers */
+.sui-border-accent { border-color: var(--sui-color-accent-500); }
+.sui-border-success { border-color: var(--sui-color-success-500); }
+.sui-outline-none { outline: 2px solid transparent; outline-offset: 2px; }
+.sui-hover-bg-subtle:hover { background-color: var(--sui-surface-hover); }
+.sui-search-result { display: flex; align-items: center; gap: var(--sui-space-3); padding: var(--sui-space-2) var(--sui-space-3); border-radius: var(--sui-radius-md); color: var(--sui-text); text-decoration: none; cursor: pointer; transition: background-color var(--sui-duration-fast) ease; }
+.sui-search-result:hover { background-color: var(--sui-surface-hover); }

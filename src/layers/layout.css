@@ -236,9 +236,17 @@
   .sui-layout-app-nav { display: none; } /* Off-canvas on mobile */
 }
 
-.sui-layout-nav { grid-area: nav; }
+.sui-layout-nav,
+.sui-layout-app-sidebar { grid-area: nav; min-width: 0; }
 .sui-layout-main { grid-area: main; min-width: 0; }
-.sui-layout-aside { grid-area: aside; }
+.sui-layout-aside { grid-area: aside; min-width: 0; }
+
+/* Prevent grid & row children from causing horizontal overflow on unbroken text */
+.sui-grid > *,
+.sui-row > *,
+.sui-layout-app-body > * {
+  min-width: 0;
+}
 
 /* Split View Layout (Login pages, feature highlights) */
 .sui-layout-split {

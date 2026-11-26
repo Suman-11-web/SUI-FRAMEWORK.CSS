@@ -329,3 +329,29 @@
   animation-timeline: scroll(root block);
   animation-range: 0vh 100vh;
 }
+
+/* Hardware-Accelerated Button Ripple Keyframe (used by sui.js) */
+@keyframes sui-ripple-anim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Documented Animation Aliases & Delays */
+.sui-animate-glow,
+.sui-pulse-glow {
+  animation: sui-pulse-glow 2.5s ease-in-out infinite;
+}
+
+.sui-animate-pulse {
+  animation: sui-pulse-glow 2s ease-in-out infinite;
+}
+
+.sui-slide-up {
+  animation: sui-slide-up 0.5s var(--sui-ease-smooth, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+.sui-delay-6 {
+  animation-delay: 600ms;
+}

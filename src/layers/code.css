@@ -117,18 +117,8 @@ code[class*="language-"]::selection {
   text-shadow: none;
 }
 
- *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      overflow-x: hidden;
-      background-color: var(--sui-bg);
-      font-family: system-ui, -apple-system, sans-serif;
-      width: 100vw;
-      max-width: 100%;
-    }
+/* Global reset & body rules live in src/layers/reset.css */
+.sui-hl-prop { color: #9cdcfe; }
 
     .hero-section {
       min-height: 100dvh;
@@ -266,10 +256,10 @@ code[class*="language-"]::selection {
       .section-wrapper { padding: 4rem 1.5rem; }
       .hero-section { padding-top: 7rem; padding-bottom: 4rem; }
       
-      /* Typography Scaling */
-      .sui-text-hero { font-size: clamp(2.5rem, 8vw, 4rem) !important; line-height: 1.1; }
-      .sui-text-3xl { font-size: 2rem !important; }
-      .sui-text-4xl { font-size: 2.5rem !important; }
+      /* Typography Scaling (unforced so @layer utilities can override) */
+      .sui-text-hero { font-size: clamp(2.5rem, 8vw, 4rem); line-height: 1.1; }
+      .sui-text-3xl { font-size: 2rem; }
+      .sui-text-4xl { font-size: 2.5rem; }
       
       /* Interactive Element Wrapping */
       .responsive-button-group { flex-direction: column; }

@@ -1,10 +1,40 @@
-@layer reset, tokens, layout, code, components, utilities, animations;
+/* ==========================================================================
+   SUI.CSS v3.0.0 - CORE CASCADE ARCHITECTURE
+   Intended Cascade (lowest to highest priority):
+     reset -> tokens -> base -> layout -> components -> overlays -> animations -> utilities
+   Unlayered user stylesheets automatically override all SUI layers without !important.
+   SUI utilities always override SUI components without !important.
+   ========================================================================== */
+@layer reset, tokens, base, layout, components, overlays, animations, utilities;
 
-@import './layers/reset.css' layer(reset);
-@import './layers/tokens.css' layer(tokens);
-@import './layers/layout.css' layer(layout);
-@import './layers/code.css' layer(code);
-@import './layers/components.css' layer(components);
-@import './layers/utilities.css' layer(utilities);
-@import './layers/animations.css' layer(animations);
-@import './layers/advanced.css' layer(components);
+/* 1. Reset & Design Tokens */
+@import 'layers/reset.css' layer(reset);
+@import 'layers/tokens.css' layer(tokens);
+
+/* 2. Base Typography & Accessibility */
+@import 'layers/typography.css' layer(base);
+@import 'layers/accessibility.css' layer(base);
+
+/* 3. Layout Engine */
+@import 'layers/layout.css' layer(layout);
+
+/* 4. Core Components */
+@import 'layers/components.css' layer(components);
+@import 'layers/buttons.css' layer(components);
+@import 'layers/forms.css' layer(components);
+@import 'layers/navigation.css' layer(components);
+@import 'layers/icons.css' layer(components);
+@import 'layers/tables.css' layer(components);
+@import 'layers/feedback.css' layer(components);
+@import 'layers/code.css' layer(components);
+@import 'layers/advanced.css' layer(components);
+
+/* 5. Overlays & Floating Layers */
+@import 'layers/overlays.css' layer(overlays);
+
+/* 6. Motion & Keyframes */
+@import 'layers/animations.css' layer(animations);
+
+/* 7. Utilities & Responsive Overrides (Final Cascade Layer) */
+@import 'layers/utilities.css' layer(utilities);
+@import 'layers/responsive.css' layer(utilities);

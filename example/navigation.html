@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sui.css — Responsive Navigation Example</title>
+  <link rel="stylesheet" href="../dist/sui.min.css">
+</head>
+<body class="sui-bg sui-text">
+  <a href="#main-content" class="sui-skip-link">Skip to content</a>
+  <nav class="sui-navbar" aria-label="Main navigation">
+    <a href="../index.html" class="sui-navbar-brand">SUI.css</a>
+    <button type="button" class="sui-navbar-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="demo-nav-menu">
+      &#9776;
+    </button>
+    <ul id="demo-nav-menu" class="sui-navbar-menu">
+      <li class="sui-navbar-item"><a href="../index.html" class="sui-navbar-link" aria-current="page">Home</a></li>
+      <li class="sui-navbar-item"><a href="../docs/index.html" class="sui-navbar-link">Docs</a></li>
+      <li class="sui-navbar-item"><a href="./buttons.html" class="sui-navbar-link">Buttons</a></li>
+      <li class="sui-navbar-item"><button type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle">Toggle Theme</button></li>
+    </ul>
+  </nav>
+
+  <main id="main-content" class="sui-container sui-py-12">
+    <h1 class="sui-mb-4">Navigation System</h1>
+    <p class="sui-text-muted sui-mb-6">Resize below 768px to test responsive navbar collapse/expand, keyboard focus, and Escape dismissal.</p>
+
+    <nav aria-label="Breadcrumb" class="sui-mb-6">
+      <ol class="sui-breadcrumb">
+        <li class="sui-breadcrumb-item"><a href="../index.html">Home</a></li>
+        <li class="sui-breadcrumb-item"><a href="../docs/index.html">Docs</a></li>
+        <li class="sui-breadcrumb-item" aria-current="page">Navigation</li>
+      </ol>
+    </nav>
+
+    <div class="sui-tabs" role="tablist">
+      <button type="button" class="sui-tab sui-tab-active" role="tab" aria-selected="true" data-target="tab-1">Overview</button>
+      <button type="button" class="sui-tab" role="tab" aria-selected="false" data-target="tab-2">Accessibility</button>
+      <button type="button" class="sui-tab" role="tab" aria-selected="false" data-target="tab-3">Breakpoints</button>
+    </div>
+  </main>
+
+  <script src="../dist/sui.min.js"></script>
+</body>
+</html>

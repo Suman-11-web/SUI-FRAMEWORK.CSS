@@ -1,15 +1,34 @@
 {
   "name": "sui-css",
-  "version": "2.0.0",
+  "version": "3.0.0",
+  "description": "Perceptual OKLCH CSS framework with layered cascade, accessible components, and zero-dependency interactive runtime.",
+  "license": "MIT",
+  "style": "dist/sui.min.css",
+  "main": "dist/sui.min.js",
+  "exports": {
+    ".": {
+      "style": "./dist/sui.min.css",
+      "default": "./dist/sui.min.js"
+    },
+    "./css": "./dist/sui.min.css",
+    "./js": "./dist/sui.min.js",
+    "./src": "./src/sui.css"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build:css": "lightningcss --minify --bundle --targets \">= 0.25%\" src/sui.css -o dist/sui.min.css",
     "build:js": "esbuild src/sui.js --minify --bundle --outfile=dist/sui.min.js",
-    "build": "npm run build:css && npm run build:js"
+    "build": "npm run build:css && npm run build:js",
+    "verify": "node tests/verify.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
-    "lightningcss-cli": "^1.28.2",
-    "terser": "^5.51.2"
+    "lightningcss-cli": "^1.28.2"
   },
   "allowScripts": {
     "lightningcss-cli@1.33.0": true,

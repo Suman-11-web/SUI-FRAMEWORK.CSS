@@ -1,0 +1,36 @@
+/* ==========================================================================
+   SUI.CSS v3.0.0 - BASE TYPOGRAPHY (src/layers/typography.css)
+   ========================================================================== */
+
+.sui-prose {
+  max-inline-size: 65ch;
+  line-height: var(--sui-leading-relaxed);
+  color: var(--sui-text);
+}
+
+.sui-prose > * + * {
+  margin-block-start: var(--sui-space-4);
+}
+
+.sui-text-link {
+  color: var(--sui-text-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color var(--sui-duration-fast) ease;
+}
+
+.sui-text-link:hover {
+  color: var(--sui-color-primary-500);
+}
+
+.sui-line-clamp-1,
+.sui-line-clamp-2,
+.sui-line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sui-line-clamp-1 { -webkit-line-clamp: 1; line-clamp: 1; }
+.sui-line-clamp-2 { -webkit-line-clamp: 2; line-clamp: 2; }
+.sui-line-clamp-3 { -webkit-line-clamp: 3; line-clamp: 3; }

@@ -1,41 +1,42 @@
 /**
- * Sui.css - Ultra Pro Max Interactive Engine v2.0
- * Architecture: Zero-Dependency Pure Vanilla JavaScript
+ * SUI.css - Interactive Runtime Engine v3.0.0
+ * Architecture: Zero-Dependency Pure Vanilla JavaScript (Unified UMD)
  * Author: Suman M. (Sui.css Core Team)
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.SUI = factory());
-})(this, (function () {
+  const api = factory();
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
+    module.exports = api;
+  } else if (typeof define === 'function' && define.amd) {
+    define(function () { return api; });
+  }
+  const root = typeof globalThis !== 'undefined' ? globalThis : global || self;
+  if (root) root.SUI = api;
+})(this, function () {
   'use strict';
 
-  /* ==========================================================================
-     GLOBAL CONFIGURATION & REGISTRY
-     ========================================================================== */
   const SUI_CONFIG = {
     themeKey: 'sui-theme',
     toastContainerId: 'sui-toast-container',
-    scrollOffset: 80,
     animationThreshold: 0.15
   };
 
+  let initialized = false;
+
   /* ==========================================================================
-     1. UTILITY HELPER METHODS
+     1. UTILITIES
      ========================================================================== */
   const Utils = {
-    isTouchDevice() {
-      return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    },
-    escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    prefersReducedMotion() {
+      return (
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
       );
     },
     createElement(tag, classes = [], attributes = {}) {
       const el = document.createElement(tag);
-      if (Array.isArray(classes)) classes.forEach(c => c && el.classList.add(c));
+      if (Array.isArray(classes)) classes.forEach((c) => c && el.classList.add(c));
       else if (typeof classes === 'string') el.className = classes;
       for (const [key, val] of Object.entries(attributes)) {
         el.setAttribute(key, val);
@@ -43,29 +44,47 @@
       return el;
     },
     triggerReflow(element) {
-      void element.offsetWidth;
+      if (element) void element.offsetWidth;
     }
   };
 
   /* ==========================================================================
-     2. THEME ENGINE (OKLCH Reactive Engine)
+     2. THEME ENGINE (Unified data-theme with prefers-color-scheme sync)
      ========================================================================== */
   const ThemeEngine = {
     init() {
-      const stored = localStorage.getItem(SUI_CONFIG.themeKey);
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialTheme = stored || (systemPrefersDark ? 'dark' : 'light');
-      
+      let stored = null;
+      try {
+        stored = localStorage.getItem(SUI_CONFIG.themeKey);
+      } catch (_) {
+        /* ignore storage restrictions */
+      }
+      const declaredTheme = document.documentElement.getAttribute('data-theme');
+      const mql =
+        typeof window.matchMedia === 'function'
+          ? window.matchMedia('(prefers-color-scheme: dark)')
+          : null;
+      let initialTheme = stored || declaredTheme || 'light';
+      if (initialTheme === 'auto') {
+        initialTheme = mql && mql.matches ? 'dark' : 'light';
+      }
+
       this.set(initialTheme, false);
 
-      // System Preference Listener
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem(SUI_CONFIG.themeKey)) {
-          this.set(e.matches ? 'dark' : 'light', false);
-        }
-      });
+      if (mql && typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', (e) => {
+          let currentStored = null;
+          try {
+            currentStored = localStorage.getItem(SUI_CONFIG.themeKey);
+          } catch (_) {
+            /* ignore */
+          }
+          if (!currentStored && declaredTheme === 'auto') {
+            this.set(e.matches ? 'dark' : 'light', false);
+          }
+        });
+      }
 
-      // Bind all toggle buttons
       document.addEventListener('click', (e) => {
         const toggleBtn = e.target.closest('.sui-theme-toggle');
         if (toggleBtn) {
@@ -75,24 +94,33 @@
       });
     },
     get() {
-      return document.documentElement.getAttribute('data-theme') || 'light';
+      return (
+        document.documentElement.getAttribute('data-theme') ||
+        document.documentElement.getAttribute('data-sui-theme') ||
+        'light'
+      );
     },
     set(theme, store = true) {
       document.documentElement.setAttribute('data-theme', theme);
-      if (store) localStorage.setItem(SUI_CONFIG.themeKey, theme);
-      
-      // Dispatch reactive event
+      document.documentElement.removeAttribute('data-sui-theme');
+      if (store) {
+        try {
+          localStorage.setItem(SUI_CONFIG.themeKey, theme);
+        } catch (_) {
+          /* ignore */
+        }
+      }
       window.dispatchEvent(new CustomEvent('sui:theme-change', { detail: { theme } }));
     },
     toggle() {
-      const current = this.get();
-      const next = current === 'dark' ? 'light' : 'dark';
+      const next = this.get() === 'dark' ? 'light' : 'dark';
       this.set(next, true);
+      return next;
     }
   };
 
   /* ==========================================================================
-     3. TOAST NOTIFICATION ENGINE
+     3. TOAST NOTIFICATION ENGINE (Supports both v2 .show() and v3 helpers)
      ========================================================================== */
   const Toast = {
     getContainer() {
@@ -100,30 +128,44 @@
       if (!container) {
         container = Utils.createElement('div', ['sui-toast-container'], {
           id: SUI_CONFIG.toastContainerId,
-          style: 'position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: calc(100% - 3rem); pointer-events: none;'
+          role: 'status',
+          'aria-live': 'polite',
+          style:
+            'position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: calc(100% - 3rem); pointer-events: none;'
         });
         document.body.appendChild(container);
       }
       return container;
     },
-    show({ title = '', message = '', type = 'info', duration = 4000, dismissible = true }) {
+    show({ title = '', message = '', type = 'info', duration = 4000, dismissible = true } = {}) {
+      const normalizedType = type === 'error' ? 'danger' : type;
       const container = this.getContainer();
-      const toast = Utils.createElement('div', ['sui-toast', 'sui-animate-spring-up'], {
-        style: 'pointer-events: auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;'
-      });
+      const toast = Utils.createElement(
+        'div',
+        ['sui-toast', `sui-toast-${normalizedType}`, 'sui-animate-spring-up'],
+        {
+          style:
+            'pointer-events: auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;'
+        }
+      );
 
-      if (type === 'success') toast.style.borderLeftColor = 'var(--sui-color-success-500)';
-      if (type === 'danger') toast.style.borderLeftColor = 'var(--sui-color-danger-500)';
-      if (type === 'warning') toast.style.borderLeftColor = 'var(--sui-color-warning-500)';
+      if (normalizedType === 'success') toast.style.borderLeftColor = 'var(--sui-color-success-500)';
+      if (normalizedType === 'danger') toast.style.borderLeftColor = 'var(--sui-color-danger-500)';
+      if (normalizedType === 'warning') toast.style.borderLeftColor = 'var(--sui-color-warning-500)';
+      if (normalizedType === 'info') toast.style.borderLeftColor = 'var(--sui-color-info-500)';
 
       const content = document.createElement('div');
       if (title) {
-        const strong = Utils.createElement('strong', ['sui-block', 'sui-text-sm'], { style: 'margin-bottom: 0.25rem;' });
+        const strong = Utils.createElement('strong', ['sui-block', 'sui-text-sm'], {
+          style: 'margin-bottom: 0.25rem;'
+        });
         strong.textContent = title;
         content.appendChild(strong);
       }
       if (message) {
-        const text = Utils.createElement('p', ['sui-text-xs', 'sui-text-muted'], { style: 'margin: 0;' });
+        const text = Utils.createElement('p', ['sui-text-xs', 'sui-text-muted'], {
+          style: 'margin: 0;'
+        });
         text.textContent = message;
         content.appendChild(text);
       }
@@ -131,9 +173,12 @@
 
       if (dismissible) {
         const closeBtn = Utils.createElement('button', ['sui-btn-icon'], {
-          style: 'background: transparent; border: none; cursor: pointer; color: var(--sui-text-muted); padding: 0.25rem;'
+          type: 'button',
+          'aria-label': 'Dismiss notification',
+          style:
+            'background: transparent; border: none; cursor: pointer; color: var(--sui-text-muted); padding: 0.25rem;'
         });
-        closeBtn.innerHTML = '&times;';
+        closeBtn.textContent = '\u00d7';
         closeBtn.addEventListener('click', () => this.dismiss(toast));
         toast.appendChild(closeBtn);
       }
@@ -142,14 +187,28 @@
 
       if (duration > 0) {
         let timer = setTimeout(() => this.dismiss(toast), duration);
-        // Pause timeout on mouse hover
         toast.addEventListener('mouseenter', () => clearTimeout(timer));
         toast.addEventListener('mouseleave', () => {
-          timer = setTimeout(() => this.dismiss(toast), duration / 2);
+          timer = setTimeout(() => this.dismiss(toast), Math.max(duration / 2, 1000));
         });
       }
 
       return toast;
+    },
+    success(message, title = '') {
+      return this.show({ title, message, type: 'success' });
+    },
+    error(message, title = '') {
+      return this.show({ title, message, type: 'danger' });
+    },
+    danger(message, title = '') {
+      return this.show({ title, message, type: 'danger' });
+    },
+    warning(message, title = '') {
+      return this.show({ title, message, type: 'warning' });
+    },
+    info(message, title = '') {
+      return this.show({ title, message, type: 'info' });
     },
     dismiss(toast) {
       if (!toast) return;
@@ -163,68 +222,413 @@
   };
 
   /* ==========================================================================
-     4. MODAL & DIALOG ENGINE
+     4. MODAL & DIALOG ENGINE (Multi-instance, Escape, Focus Restoration)
+     Supports both v3 (.sui-modal + .is-open) and v2 (.sui-dialog-overlay + .active)
      ========================================================================== */
   const Modal = {
-    open(targetId) {
-      const modal = document.getElementById(targetId);
-      if (!modal) return;
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      
-      // Auto-focus first input or button
-      const focusable = modal.querySelector('input, button:not([data-sui-modal-close])');
-      if (focusable) focusable.focus();
-
-      window.dispatchEvent(new CustomEvent('sui:modal-open', { detail: { id: targetId } }));
+    _stack: [],
+    _resolveElement(target) {
+      if (!target) return null;
+      return typeof target === 'string' ? document.getElementById(target) : target;
     },
-    close(modalElement) {
-      if (!modalElement) return;
-      modalElement.classList.remove('active');
-      document.body.style.overflow = '';
-      window.dispatchEvent(new CustomEvent('sui:modal-close', { detail: { element: modalElement } }));
+    _isLegacyDialog(el) {
+      return el.classList.contains('sui-dialog-overlay') && !el.classList.contains('sui-modal');
+    },
+    open(target, triggerElement = null) {
+      const modal = this._resolveElement(target);
+      if (!modal) return false;
+
+      const returnFocusTo = triggerElement || document.activeElement;
+      const existingIdx = this._stack.findIndex((entry) => entry.modal === modal);
+      if (existingIdx !== -1) {
+        this._stack.splice(existingIdx, 1);
+      }
+      this._stack.push({ modal, returnFocusTo });
+
+      if (this._isLegacyDialog(modal)) {
+        modal.classList.add('active');
+      } else {
+        modal.classList.add('is-open');
+        modal.classList.add('active');
+      }
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      // Flush style/layout so visibility: visible is active before focusing
+      Utils.triggerReflow(modal);
+
+      const focusable = modal.querySelector(
+        '[autofocus], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([data-sui-modal-close]):not(.sui-modal-close), [tabindex]:not([tabindex="-1"])'
+      ) || modal.querySelector('button:not([disabled])');
+      if (focusable && typeof focusable.focus === 'function') {
+        focusable.focus();
+      }
+
+      window.dispatchEvent(
+        new CustomEvent('sui:modal-open', { detail: { id: modal.id, element: modal } })
+      );
+      return true;
+    },
+    close(target) {
+      let modal = this._resolveElement(target);
+      if (!modal && this._stack.length > 0) {
+        modal = this._stack[this._stack.length - 1].modal;
+      }
+      if (!modal) {
+        modal = document.querySelector('.sui-modal.is-open, .sui-dialog-overlay.active');
+      }
+      if (!modal) return false;
+
+      modal.classList.remove('is-open', 'active');
+      modal.setAttribute('aria-hidden', 'true');
+
+      let returnFocusTo = null;
+      const idx = this._stack.findIndex((entry) => entry.modal === modal);
+      if (idx !== -1) {
+        returnFocusTo = this._stack[idx].returnFocusTo;
+        this._stack.splice(idx, 1);
+      }
+
+      if (this._stack.length === 0) {
+        document.body.style.overflow = '';
+      }
+
+      if (
+        returnFocusTo &&
+        typeof returnFocusTo.focus === 'function' &&
+        document.contains(returnFocusTo)
+      ) {
+        returnFocusTo.focus();
+      }
+
+      window.dispatchEvent(
+        new CustomEvent('sui:modal-close', { detail: { id: modal.id, element: modal } })
+      );
+      return true;
     },
     closeAll() {
-      document.querySelectorAll('.sui-dialog-overlay.active').forEach(m => this.close(m));
+      while (this._stack.length > 0) {
+        this.close(this._stack[this._stack.length - 1].modal);
+      }
+      document
+        .querySelectorAll('.sui-modal.is-open, .sui-dialog-overlay.active')
+        .forEach((m) => this.close(m));
     },
     init() {
-      // Trigger buttons
       document.addEventListener('click', (e) => {
         const openBtn = e.target.closest('[data-sui-modal-target]');
         if (openBtn) {
           e.preventDefault();
           const targetId = openBtn.getAttribute('data-sui-modal-target');
-          this.open(targetId);
+          this.open(targetId, openBtn);
+          return;
         }
 
-        const closeBtn = e.target.closest('[data-sui-modal-close]');
+        const closeBtn = e.target.closest('[data-sui-modal-close], .sui-modal-close');
         if (closeBtn) {
           e.preventDefault();
-          const modal = closeBtn.closest('.sui-dialog-overlay');
+          const modal = closeBtn.closest('.sui-modal, .sui-dialog-overlay');
           this.close(modal);
+          return;
         }
 
-        // Close on backdrop overlay click
-        if (e.target.classList.contains('sui-dialog-overlay')) {
-          this.close(e.target);
+        if (
+          e.target.classList.contains('sui-modal-overlay') ||
+          e.target.classList.contains('sui-dialog-overlay') ||
+          e.target.classList.contains('sui-modal')
+        ) {
+          const modal = e.target.closest('.sui-modal, .sui-dialog-overlay');
+          this.close(modal);
         }
       });
 
-      // ESC Key to close
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.closeAll();
+        if (e.key === 'Escape' && this._stack.length > 0) {
+          this.close(this._stack[this._stack.length - 1].modal);
+        }
       });
     }
   };
 
   /* ==========================================================================
-     5. HARDWARE ACCELERATED RIPPLE EFFECT
+     5. RESPONSIVE NAVBAR & MOBILE DRAWER ENGINE
+     ========================================================================== */
+  const Navbar = {
+    _resolveMenu(toggleBtn) {
+      const targetId =
+        toggleBtn.getAttribute('data-sui-navbar-target') ||
+        toggleBtn.getAttribute('aria-controls');
+      if (targetId) return document.getElementById(targetId);
+      const nav = toggleBtn.closest('.sui-navbar');
+      return nav ? nav.querySelector('.sui-navbar-menu') : null;
+    },
+    toggle(toggleBtn) {
+      const menu = this._resolveMenu(toggleBtn);
+      if (!menu) return false;
+      const isOpen = menu.classList.toggle('is-open');
+      const nav = toggleBtn.closest('.sui-navbar');
+      if (nav) nav.classList.toggle('is-open', isOpen);
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      return isOpen;
+    },
+    closeAll(restoreFocus = false) {
+      document.querySelectorAll('.sui-navbar-menu.is-open').forEach((menu) => {
+        menu.classList.remove('is-open');
+        const nav = menu.closest('.sui-navbar');
+        if (nav) {
+          nav.classList.remove('is-open');
+          const btn = nav.querySelector('.sui-navbar-toggle, [data-sui-navbar-toggle]');
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'false');
+            if (restoreFocus && typeof btn.focus === 'function') btn.focus();
+          }
+        }
+      });
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const toggleBtn = e.target.closest('.sui-navbar-toggle, [data-sui-navbar-toggle]');
+        if (toggleBtn) {
+          e.preventDefault();
+          this.toggle(toggleBtn);
+          return;
+        }
+
+        // Legacy landing-page mobile drawer compatibility
+        if (e.target.closest('#mobileMenuBtn')) {
+          const drawer = document.getElementById('mobileDrawer');
+          if (drawer) drawer.classList.add('is-open');
+          return;
+        }
+        if (e.target.closest('.js-drawer-close')) {
+          const drawer = document.getElementById('mobileDrawer');
+          if (drawer) drawer.classList.remove('is-open');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.closeAll(true);
+          const drawer = document.getElementById('mobileDrawer');
+          if (drawer) drawer.classList.remove('is-open');
+        }
+      });
+    }
+  };
+
+  /* ==========================================================================
+     6. DROPDOWN ENGINE (Multi-instance, Outside-click, Escape, ARIA)
+     ========================================================================== */
+  const Dropdown = {
+    open(target, trigger = null) {
+      const dd = typeof target === 'string' ? document.getElementById(target) : target;
+      if (!dd) return false;
+      dd.classList.add('is-open');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      return true;
+    },
+    close(target = null) {
+      if (target) {
+        const dd = typeof target === 'string' ? document.getElementById(target) : target;
+        if (dd) {
+          dd.classList.remove('is-open');
+          const trigger = document.querySelector(`[data-sui-dropdown-trigger="${dd.id}"]`);
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+        return;
+      }
+      document.querySelectorAll('.sui-dropdown.is-open').forEach((dd) => this.close(dd));
+    },
+    toggle(target, trigger = null) {
+      const dd = typeof target === 'string' ? document.getElementById(target) : target;
+      if (!dd) return false;
+      if (dd.classList.contains('is-open')) {
+        this.close(dd);
+        return false;
+      }
+      this.open(dd, trigger);
+      return true;
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-sui-dropdown-trigger]');
+        const targetId = trigger ? trigger.getAttribute('data-sui-dropdown-trigger') : null;
+
+        document.querySelectorAll('.sui-dropdown.is-open').forEach((dd) => {
+          if (!dd.contains(e.target) && (!targetId || targetId !== dd.id)) {
+            this.close(dd);
+          }
+        });
+
+        if (trigger && targetId) {
+          e.preventDefault();
+          this.toggle(targetId, trigger);
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.close();
+      });
+    }
+  };
+
+  /* ==========================================================================
+     7. ACCORDION & COLLAPSIBLE SYSTEM
+     ========================================================================== */
+  const Accordion = {
+    init() {
+      document.addEventListener('click', (e) => {
+        const header = e.target.closest('.sui-accordion-header, [data-sui-accordion-trigger]');
+        if (!header) return;
+
+        const accordionItem = header.closest('.sui-accordion-item');
+        const parentAccordion = header.closest('.sui-accordion');
+        const content = accordionItem
+          ? accordionItem.querySelector('.sui-accordion-content, .sui-accordion-body')
+          : null;
+        if (!accordionItem || !content) return;
+
+        const isOpen = accordionItem.classList.contains('is-open');
+
+        if (parentAccordion && !parentAccordion.hasAttribute('data-sui-multi')) {
+          parentAccordion.querySelectorAll('.sui-accordion-item.is-open').forEach((item) => {
+            if (item !== accordionItem) {
+              item.classList.remove('is-open');
+              const h = item.querySelector('.sui-accordion-header, [data-sui-accordion-trigger]');
+              if (h) h.setAttribute('aria-expanded', 'false');
+              const c = item.querySelector('.sui-accordion-content, .sui-accordion-body');
+              if (c) c.style.maxHeight = null;
+            }
+          });
+        }
+
+        if (isOpen) {
+          accordionItem.classList.remove('is-open');
+          header.setAttribute('aria-expanded', 'false');
+          content.style.maxHeight = null;
+        } else {
+          accordionItem.classList.add('is-open');
+          header.setAttribute('aria-expanded', 'true');
+          content.style.maxHeight = `${content.scrollHeight}px`;
+        }
+      });
+    }
+  };
+
+  /* ==========================================================================
+     8. TAB SWITCHER & SLIDING INDICATOR
+     ========================================================================== */
+  const TabEngine = {
+    _updateIndicator(tabList, activeBtn) {
+      if (!tabList || !activeBtn) return;
+      tabList.style.setProperty('--sui-tab-left', `${activeBtn.offsetLeft}px`);
+      tabList.style.setProperty('--sui-tab-width', `${activeBtn.offsetWidth}px`);
+    },
+    init() {
+      document.querySelectorAll('.sui-tabs').forEach((tabList) => {
+        const active = tabList.querySelector(
+          '.sui-tab.active, .sui-tab.sui-tab-active, .sui-tab[aria-selected="true"]'
+        );
+        if (active) this._updateIndicator(tabList, active);
+      });
+
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn, .sui-tab');
+        if (!btn) return;
+
+        const container = btn.closest(
+          '.sui-tabs, .showcase-block, .sui-tabs-container, .showcase-tabs, .sui-card'
+        );
+        if (!container) return;
+
+        container.querySelectorAll('.tab-btn, .sui-tab').forEach((b) => {
+          b.classList.remove('active', 'sui-tab-active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active', 'sui-tab-active');
+        btn.setAttribute('aria-selected', 'true');
+
+        if (container.classList.contains('sui-tabs')) {
+          this._updateIndicator(container, btn);
+        }
+
+        const targetId = btn.getAttribute('data-target') || btn.getAttribute('aria-controls');
+        if (targetId) {
+          const parentContext = container.parentElement || document;
+          parentContext.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+        }
+      });
+    }
+  };
+
+  /* ==========================================================================
+     9. FORM UTILITIES (OTP Auto-Advance, Password Toggle, Auto-Resize)
+     ========================================================================== */
+  const FormUtilities = {
+    init() {
+      document.querySelectorAll('.sui-otp-group').forEach((group) => {
+        const inputs = Array.from(group.querySelectorAll('input'));
+        inputs.forEach((input, index) => {
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+              inputs[index - 1].focus();
+              inputs[index - 1].value = '';
+            }
+          });
+          input.addEventListener('input', () => {
+            if (input.value.length === 1 && index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            }
+          });
+          input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+            if (!pasteData) return;
+            pasteData
+              .replace(/\D/g, '')
+              .split('')
+              .forEach((digit, i) => {
+                if (inputs[i]) {
+                  inputs[i].value = digit;
+                  if (inputs[i + 1]) inputs[i + 1].focus();
+                }
+              });
+          });
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        const eyeBtn = e.target.closest('[data-sui-toggle-password]');
+        if (!eyeBtn) return;
+        const targetInput = eyeBtn.parentElement && eyeBtn.parentElement.querySelector('input');
+        if (!targetInput) return;
+
+        const revealing = targetInput.type === 'password';
+        targetInput.type = revealing ? 'text' : 'password';
+        eyeBtn.classList.toggle('is-visible', revealing);
+        eyeBtn.setAttribute('aria-pressed', String(revealing));
+      });
+
+      document.querySelectorAll('textarea.sui-auto-resize').forEach((textarea) => {
+        textarea.addEventListener('input', () => {
+          textarea.style.height = 'auto';
+          textarea.style.height = `${textarea.scrollHeight}px`;
+        });
+      });
+    }
+  };
+
+  /* ==========================================================================
+     10. HARDWARE-ACCELERATED RIPPLE (Respects prefers-reduced-motion)
      ========================================================================== */
   const Ripple = {
     init() {
       document.addEventListener('pointerdown', (e) => {
+        if (Utils.prefersReducedMotion()) return;
         const target = e.target.closest('.sui-btn, .sui-ripple');
-        if (!target) return;
+        if (!target || target.disabled || target.getAttribute('aria-disabled') === 'true') return;
 
         const rect = target.getBoundingClientRect();
         const circle = document.createElement('span');
@@ -234,9 +638,7 @@
         circle.style.width = circle.style.height = `${diameter}px`;
         circle.style.left = `${e.clientX - rect.left - radius}px`;
         circle.style.top = `${e.clientY - rect.top - radius}px`;
-        circle.classList.add('sui-ripple-wave');
-
-        // Style ripple dynamically
+        circle.className = 'sui-ripple-wave';
         circle.style.position = 'absolute';
         circle.style.borderRadius = '50%';
         circle.style.transform = 'scale(0)';
@@ -244,10 +646,11 @@
         circle.style.backgroundColor = 'oklch(100% 0 0 / 0.3)';
         circle.style.pointerEvents = 'none';
 
-        target.style.position = target.style.position === 'relative' ? target.style.position : 'relative';
+        if (getComputedStyle(target).position === 'static') {
+          target.style.position = 'relative';
+        }
         target.style.overflow = 'hidden';
 
-        // Remove old ripples
         const existing = target.querySelector('.sui-ripple-wave');
         if (existing) existing.remove();
 
@@ -258,140 +661,37 @@
   };
 
   /* ==========================================================================
-     6. ACCORDION & COLLAPSIBLE SYSTEM
-     ========================================================================== */
-  const Accordion = {
-    init() {
-      document.addEventListener('click', (e) => {
-        const header = e.target.closest('.sui-accordion-header, [data-sui-accordion-trigger]');
-        if (!header) return;
-
-        const accordionItem = header.closest('.sui-accordion-item');
-        const parentAccordion = header.closest('.sui-accordion');
-        const content = accordionItem ? accordionItem.querySelector('.sui-accordion-content') : null;
-        
-        if (!accordionItem || !content) return;
-
-        const isCurrentlyOpen = accordionItem.classList.contains('is-open');
-
-        // Close siblings if parent doesn't allow multi-open
-        if (parentAccordion && !parentAccordion.hasAttribute('data-sui-multi')) {
-          parentAccordion.querySelectorAll('.sui-accordion-item.is-open').forEach(item => {
-            if (item !== accordionItem) {
-              item.classList.remove('is-open');
-              const c = item.querySelector('.sui-accordion-content');
-              if (c) c.style.maxHeight = null;
-            }
-          });
-        }
-
-        // Toggle state
-        if (isCurrentlyOpen) {
-          accordionItem.classList.remove('is-open');
-          content.style.maxHeight = null;
-        } else {
-          accordionItem.classList.add('is-open');
-          content.style.maxHeight = content.scrollHeight + 'px';
-        }
-      });
-    }
-  };
-
-  /* ==========================================================================
-     7. FORM UTILITIES (OTP Auto-Advance, Password Revealer & Auto-Resize)
-     ========================================================================== */
-  const FormUtilities = {
-    init() {
-      // OTP 6-Digit Auto-Focusing & Backspacing
-      document.querySelectorAll('.sui-otp-group').forEach(group => {
-        const inputs = Array.from(group.querySelectorAll('input'));
-        
-        inputs.forEach((input, index) => {
-          // Keydown handler
-          input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !input.value && index > 0) {
-              inputs[index - 1].focus();
-              inputs[index - 1].value = '';
-            }
-          });
-
-          // Input handler
-          input.addEventListener('input', (e) => {
-            const val = input.value;
-            if (val.length === 1 && index < inputs.length - 1) {
-              inputs[index + 1].focus();
-            }
-          });
-
-          // Paste listener
-          input.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
-            if (!pasteData) return;
-
-            const digits = pasteData.replace(/\D/g, '').split('');
-            digits.forEach((digit, i) => {
-              if (inputs[i]) {
-                inputs[i].value = digit;
-                if (inputs[i + 1]) inputs[i + 1].focus();
-              }
-            });
-          });
-        });
-      });
-
-      // Password Eye Revealer
-      document.addEventListener('click', (e) => {
-        const eyeBtn = e.target.closest('[data-sui-toggle-password]');
-        if (!eyeBtn) return;
-        const targetInput = eyeBtn.parentElement.querySelector('input');
-        if (!targetInput) return;
-
-        if (targetInput.type === 'password') {
-          targetInput.type = 'text';
-          eyeBtn.classList.add('is-visible');
-        } else {
-          targetInput.type = 'password';
-          eyeBtn.classList.remove('is-visible');
-        }
-      });
-
-      // Auto-resizing Textareas
-      document.querySelectorAll('textarea.sui-auto-resize').forEach(textarea => {
-        textarea.addEventListener('input', () => {
-          textarea.style.height = 'auto';
-          textarea.style.height = textarea.scrollHeight + 'px';
-        });
-      });
-    }
-  };
-
-  /* ==========================================================================
-     8. CLIPBOARD ONE-CLICK COPY ENGINE
+     11. CLIPBOARD ONE-CLICK COPY ENGINE
      ========================================================================== */
   const Clipboard = {
+    async text(str) {
+      if (!navigator.clipboard) return false;
+      await navigator.clipboard.writeText(String(str).trim());
+      return true;
+    },
+    async element(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return false;
+      return this.text(el.value || el.textContent || '');
+    },
     init() {
       document.addEventListener('click', async (e) => {
-        const copyBtn = e.target.closest('[data-sui-copy], .btn-copy-code');
+        const copyBtn = e.target.closest('[data-sui-copy], .btn-copy-code, .sui-copy-btn');
         if (!copyBtn) return;
 
         let textToCopy = copyBtn.getAttribute('data-sui-copy');
-        
-        // If no explicit attribute, attempt to copy sibling code block
         if (!textToCopy) {
           const container = copyBtn.closest('.code-reveal-panel, .u-card, .demo-section, article');
           const codeEl = container ? container.querySelector('code, pre') : null;
           if (codeEl) textToCopy = codeEl.textContent;
         }
-
         if (!textToCopy) return;
 
         try {
-          await navigator.clipboard.writeText(textToCopy.trim());
+          await this.text(textToCopy);
           const originalText = copyBtn.textContent;
           copyBtn.textContent = '✓ Copied!';
           copyBtn.classList.add('copied');
-
           setTimeout(() => {
             copyBtn.textContent = originalText;
             copyBtn.classList.remove('copied');
@@ -404,101 +704,50 @@
   };
 
   /* ==========================================================================
-     9. SCROLL ANIMATION & INTERSECTION OBSERVER
+     12. SCROLL REVEAL & NATIVE SYNTAX HIGHLIGHTER
      ========================================================================== */
   const ScrollEngine = {
     init() {
-      if (!('IntersectionObserver' in window)) return;
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+          el.classList.add('is-visible');
+        });
+        return;
+      }
 
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            entry.target.style.animationPlayState = 'running';
-            obs.unobserve(entry.target);
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              entry.target.style.animationPlayState = 'running';
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: SUI_CONFIG.animationThreshold, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      document
+        .querySelectorAll('.reveal-on-scroll, [class*="sui-animate-"]:not(.sui-floating-nav)')
+        .forEach((el) => {
+          if (!el.classList.contains('is-visible')) {
+            if (!el.classList.contains('reveal-on-scroll')) {
+              el.style.animationPlayState = 'paused';
+            }
+            observer.observe(el);
           }
         });
-      }, {
-        threshold: SUI_CONFIG.animationThreshold,
-        rootMargin: '0px 0px -40px 0px'
-      });
-
-      document.querySelectorAll('.reveal-on-scroll, [class*="sui-animate-"]:not(.sui-floating-nav)').forEach(el => {
-        // Only pause if not already triggered
-        if (!el.classList.contains('is-visible')) {
-          el.style.animationPlayState = 'paused';
-          observer.observe(el);
-        }
-      });
     }
   };
 
-  /* ==========================================================================
-     10. TAB SWITCHER & SHOWCASE LOGIC
-     ========================================================================== */
-  const TabEngine = {
-    init() {
-      document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.tab-btn, .sui-tab');
-        if (!btn) return;
-
-        const container = btn.closest('.showcase-block, .sui-tabs-container, .showcase-tabs, .sui-card');
-        if (!container) return;
-
-        const targetId = btn.getAttribute('data-target');
-        
-        // Remove active states within scope
-        container.querySelectorAll('.tab-btn, .sui-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        if (targetId) {
-          const parentContext = container.parentElement || document;
-          parentContext.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-          const targetPanel = document.getElementById(targetId);
-          if (targetPanel) targetPanel.classList.add('active');
-        }
-      });
-    }
-  };
-
-  /* ==========================================================================
-     11. DROPDOWNS & TOOLTIPS (FLOATING ENGINE)
-     ========================================================================== */
-  const FloatingEngine = {
-    init() {
-      // Dropdown Click Handlers
-      document.addEventListener('click', (e) => {
-        const trigger = e.target.closest('[data-sui-dropdown-trigger]');
-        const activeDropdowns = document.querySelectorAll('.sui-dropdown.is-open');
-
-        // Close opened dropdowns if clicked outside
-        activeDropdowns.forEach(dd => {
-          if (!dd.contains(e.target) && (!trigger || trigger.getAttribute('data-sui-dropdown-trigger') !== dd.id)) {
-            dd.classList.remove('is-open');
-          }
-        });
-
-        if (trigger) {
-          e.preventDefault();
-          const targetId = trigger.getAttribute('data-sui-dropdown-trigger');
-          const dropdown = document.getElementById(targetId);
-          if (dropdown) dropdown.classList.toggle('is-open');
-        }
-      });
-    }
-  };
-
-  /* ==========================================================================
-     12. SUI NATIVE SYNTAX HIGHLIGHTER (Zero Dependency Tokenizer)
-     ========================================================================== */
   const SyntaxHighlighter = {
     highlightAll() {
-      document.querySelectorAll('pre code:not(.sui-highlighted)').forEach(block => {
+      document.querySelectorAll('pre code:not(.sui-highlighted)').forEach((block) => {
         let code = block.innerHTML;
         const isHTML = code.includes('&lt;') || code.includes('<');
 
         if (!isHTML) {
-          // CSS Highlighter
           code = code
             .replace(/(\/\*[\s\S]*?\*\/)/g, '§COMMENT§$1§END§')
             .replace(/([a-zA-Z0-9\-\.\:]+)(?=\s*\{)/g, '§SELECTOR§$1§END§')
@@ -506,7 +755,6 @@
             .replace(/(oklch|clamp|var|calc)(?=\()/g, '§FUNC§$1§END§')
             .replace(/(:?\s*)([0-9\.]+[a-zA-Z%]*|#[0-9a-fA-F]+)(?=[;\s}])/g, '$1§VAL§$2§END§');
         } else {
-          // HTML Highlighter
           code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
           code = code
             .replace(/(&lt;!--[\s\S]*?--&gt;)/g, '§COMMENT§$1§END§')
@@ -534,28 +782,30 @@
   };
 
   /* ==========================================================================
-     GLOBAL INITIALIZATION LIFECYCLE
+     LIFECYCLE INITIALIZATION
      ========================================================================== */
   function initialize() {
+    if (initialized) return;
+    initialized = true;
+
     ThemeEngine.init();
     Modal.init();
-    Ripple.init();
+    Navbar.init();
+    Dropdown.init();
     Accordion.init();
+    TabEngine.init();
     FormUtilities.init();
+    Ripple.init();
     Clipboard.init();
     ScrollEngine.init();
-    TabEngine.init();
-    FloatingEngine.init();
     SyntaxHighlighter.highlightAll();
 
-    // Replay Buttons Engine (Found on animations documentation page)
     document.addEventListener('click', (e) => {
       const replayBtn = e.target.closest('.btn-replay');
       if (!replayBtn) return;
       const card = replayBtn.closest('.sui-card, .u-card, article');
       const target = card ? card.querySelector('.js-anim-target') : null;
       if (!target) return;
-
       const animClass = target.getAttribute('data-anim');
       if (animClass) {
         target.classList.remove(animClass);
@@ -563,123 +813,28 @@
         target.classList.add(animClass);
       }
     });
-
-    console.log('%c🚀 Sui.css Engine initialized with Ultra Pro Max capabilities.', 'color: #3b82f6; font-weight: bold;');
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initialize);
-  } else {
-    initialize();
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+      initialize();
+    }
   }
 
-  /* ==========================================================================
-     EXPORT PUBLIC GLOBAL API (window.SUI)
-     ========================================================================== */
   return {
-    version: '2.0.0',
+    version: '3.0.0',
+    init: initialize,
     theme: ThemeEngine,
     modal: Modal,
+    navbar: Navbar,
+    dropdown: Dropdown,
+    accordion: Accordion,
+    tabs: TabEngine,
     toast: Toast,
     clipboard: Clipboard,
+    copy: Clipboard,
     highlight: SyntaxHighlighter.highlightAll
   };
-
-}));
-
-document.addEventListener('DOMContentLoaded', () => {
-      
-      // 1. Bulletproof Mobile Menu Drawer Logic
-      const menuBtn = document.getElementById('mobileMenuBtn');
-      const mobileDrawer = document.getElementById('mobileDrawer');
-      const closeTriggers = document.querySelectorAll('.js-drawer-close');
-
-      function openDrawer() {
-        if (mobileDrawer) mobileDrawer.classList.add('is-open');
-      }
-
-      function closeDrawer() {
-        if (mobileDrawer) mobileDrawer.classList.remove('is-open');
-      }
-
-      if (menuBtn) menuBtn.addEventListener('click', openDrawer);
-      closeTriggers.forEach(trigger => trigger.addEventListener('click', closeDrawer));
-
-      // 2. Premium Magnetic Glow Effect for Bento Boxes
-      const bentoItems = document.querySelectorAll('.bento-item');
-      bentoItems.forEach(item => {
-        item.addEventListener('mousemove', e => {
-          const rect = item.getBoundingClientRect();
-          item.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-          item.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-        });
-      });
-
-      // 3. Scroll Reveal Animation Engine
-      const revealElements = document.querySelectorAll('.reveal-on-scroll');
-      const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        root: null,
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-      });
-
-      revealElements.forEach(el => revealObserver.observe(el));
-      
-      // 4. Initialize Playground
-      updatePlayground();
-    });
-
-    // Playground Logic
-    const defaultPlaygroundCode = `<article class="sui-card sui-hover-lift">\n  <h3 class="sui-mb-2">Hello SUI</h3>\n  <p class="sui-text-muted sui-mb-4">Edit this code to see live changes.</p>\n  <button class="sui-btn sui-btn-primary">Test Button</button>\n</article>`;
-    
-    function updatePlayground() {
-      const editor = document.getElementById('playEditor');
-      const preview = document.getElementById('playPreview');
-      if(editor && preview) {
-        preview.innerHTML = editor.value;
-      }
-    }
-    
-    function resetPlayground() {
-      const editor = document.getElementById('playEditor');
-      if(editor) {
-        editor.value = defaultPlaygroundCode;
-        updatePlayground();
-      }
-    }
-
-    /* ==========================================================================
-   SUI NATIVE SYNTAX HIGHLIGHTER
-   ========================================================================== */
-const suiSyntax = {
-    highlight(text) {
-        return text
-            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") // Escape HTML
-            .replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="sui-hl-comment">$1</span>') // Comments
-            .replace(/(&lt;\/?)([a-zA-Z0-9\-]+)/g, '$1<span class="sui-hl-tag">$2</span>') // Tags
-            .replace(/([a-zA-Z\-]+)(?=\=)/g, '<span class="sui-hl-attr">$1</span>') // Attributes
-            .replace(/(&quot;.*?&quot;|\'.*?\')/g, '<span class="sui-hl-string">$1</span>'); // Strings
-    },
-    init() {
-        // Auto-highlight static code blocks on page load
-        document.querySelectorAll('.language-html').forEach(el => {
-            if (el.getAttribute('contenteditable') !== 'true') {
-                el.innerHTML = this.highlight(el.textContent);
-            }
-        });
-    }
-};
-
-// Expose global function for the contenteditable Live Editor onblur event
-window.suiHighlightElement = function(el) {
-    el.innerHTML = suiSyntax.highlight(el.innerText);
-};
-
-document.addEventListener('DOMContentLoaded', () => suiSyntax.init());
+});
