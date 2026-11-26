@@ -237,7 +237,22 @@
     /* ==========================================================================
        MOBILE RESPONSIVENESS
        ========================================================================== */
-    @media (max-width: 992px) {
+    .docs-close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      background: var(--sui-surface-hover);
+      border: 1px solid var(--sui-border);
+      border-radius: var(--sui-radius-md);
+      color: var(--sui-text);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .docs-close-btn:hover { background: var(--sui-border); }
+
+    @media (max-width: 991.98px) {
       .docs-wrapper { flex-direction: column; padding-top: 6rem; gap: 1rem; }
       
       .docs-mobile-menu-btn { display: flex; }
@@ -246,20 +261,27 @@
       .docs-sidebar {
         position: fixed;
         top: 0; left: 0; bottom: 0;
-        width: 300px;
+        width: min(300px, 85vw);
         max-height: 100vh;
-        background: oklch(from var(--sui-surface) l c h / 0.95);
+        background: oklch(from var(--sui-surface) l c h / 0.96);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
         padding: 2rem 1.5rem;
         border-right: 1px solid var(--sui-border);
         box-shadow: var(--sui-shadow-2xl);
         transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        z-index: 300;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.3s;
+        z-index: 350;
       }
 
-      .docs-sidebar.is-open { transform: translateX(0); }
+      .docs-sidebar.is-open {
+        transform: translateX(0);
+        visibility: visible;
+        pointer-events: auto;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
+      }
       
       .docs-sidebar-close {
         display: flex;
@@ -273,7 +295,7 @@
       .docs-iframe { height: 85vh; min-height: 500px; }
     }
     
-    @media (min-width: 993px) {
+    @media (min-width: 992px) {
       .docs-sidebar-close { display: none; }
     }
   </style>
@@ -337,19 +359,19 @@
   <div class="docs-wrapper">
     
     <!-- Mobile Document Menu Trigger -->
-    <button id="docsMenuBtn" class="docs-mobile-menu-btn sui-animate-blur-in">
+    <button id="docsMenuBtn" type="button" class="docs-mobile-menu-btn" aria-expanded="false" aria-controls="docsSidebar">
       <span>Browse Documentation</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
 
     <!-- DOCS SIDEBAR -->
-    <aside id="docsSidebar" class="docs-sidebar sui-animate-slide-right">
+    <aside id="docsSidebar" class="docs-sidebar">
       
       <!-- Mobile Close (X) Header with Hard-bound ID -->
       <div class="docs-sidebar-close">
         <strong class="sui-text-lg">Documentation</strong>
-        <button id="closeDocsBtnReal" class="nav-mobile-btn" style="background: transparent; border: none; cursor: pointer; padding: 0.25rem;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <button id="closeDocsBtnReal" type="button" class="docs-close-btn" aria-label="Close documentation sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
 
@@ -453,7 +475,7 @@
       
       <div class="sui-border-t sui-border-subtle sui-mt-12 sui-pt-8 sui-flex sui-justify-between sui-items-center sui-flex-wrap sui-gap-4">
         <p class="sui-text-sm sui-text-muted">&copy; 2026 Sui.css Framework. Built for developers. Free and open source.</p>
-        <span class="sui-badge sui-badge-outline">SUI.css v2.0.0</span>
+        <span class="sui-badge sui-badge-outline">SUI.css v3.0.0</span>
       </div>
     </div>
   </footer>
@@ -468,33 +490,48 @@
       const globalDrawer = document.getElementById('globalMobileDrawer');
       
       function closeGlobal() {
-        if(globalDrawer) globalDrawer.classList.remove('is-open');
+        if (globalDrawer) globalDrawer.classList.remove('is-open');
       }
       if (globalMenuBtn) {
-        globalMenuBtn.addEventListener('click', () => globalDrawer.classList.add('is-open'));
+        globalMenuBtn.addEventListener('click', () => globalDrawer && globalDrawer.classList.add('is-open'));
       }
       document.getElementById('globalCloseBtn')?.addEventListener('click', closeGlobal);
       document.getElementById('globalCloseBackdrop')?.addEventListener('click', closeGlobal);
 
-      // 2. DOCS SIDEBAR DRAWER LOGIC (Left Side Menu with Hard-Bound IDs)
+      // 2. DOCS SIDEBAR DRAWER LOGIC (Left Side Menu)
       const docsMenuBtn = document.getElementById('docsMenuBtn');
       const docsSidebar = document.getElementById('docsSidebar');
       const docsOverlay = document.getElementById('docsSidebarOverlay');
       const closeDocsBtn = document.getElementById('closeDocsBtnReal');
 
       function openDocs() {
-        if(docsSidebar) docsSidebar.classList.add('is-open');
-        if(docsOverlay) docsOverlay.classList.add('is-open');
+        if (docsSidebar) docsSidebar.classList.add('is-open');
+        if (docsOverlay) docsOverlay.classList.add('is-open');
+        if (docsMenuBtn) docsMenuBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
       }
 
       function closeDocs() {
-        if(docsSidebar) docsSidebar.classList.remove('is-open');
-        if(docsOverlay) docsOverlay.classList.remove('is-open');
+        if (docsSidebar) docsSidebar.classList.remove('is-open');
+        if (docsOverlay) docsOverlay.classList.remove('is-open');
+        if (docsMenuBtn) docsMenuBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
       }
 
-      if (docsMenuBtn) docsMenuBtn.addEventListener('click', openDocs);
+      if (docsMenuBtn) {
+        docsMenuBtn.addEventListener('click', () => {
+          if (docsSidebar && docsSidebar.classList.contains('is-open')) closeDocs();
+          else openDocs();
+        });
+      }
       if (closeDocsBtn) closeDocsBtn.addEventListener('click', closeDocs);
       if (docsOverlay) docsOverlay.addEventListener('click', closeDocs);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeDocs();
+          closeGlobal();
+        }
+      });
 
       // 3. AUTO-CLOSE & ACTIVE STATE FOR SIDEBAR LINKS
       const docNavLinks = document.querySelectorAll('.docs-nav-link');
