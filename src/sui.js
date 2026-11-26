@@ -48,6 +48,21 @@
     }
   };
 
+  /* Shared Scroll Lock Counter (prevents Modal + Offcanvas + Command conflicts) */
+  const ScrollLock = {
+    _count: 0,
+    lock() {
+      this._count += 1;
+      document.body.style.overflow = 'hidden';
+    },
+    unlock() {
+      this._count = Math.max(0, this._count - 1);
+      if (this._count === 0) {
+        document.body.style.overflow = '';
+      }
+    }
+  };
+
   /* ==========================================================================
      2. THEME ENGINE (Unified data-theme with prefers-color-scheme sync)
      ========================================================================== */
@@ -123,15 +138,31 @@
      3. TOAST NOTIFICATION ENGINE (Supports both v2 .show() and v3 helpers)
      ========================================================================== */
   const Toast = {
+    _position: 'bottom-right',
+    setPosition(pos = 'bottom-right') {
+      this._position = pos;
+      const container = document.getElementById(SUI_CONFIG.toastContainerId);
+      if (container) {
+        container.classList.remove(
+          'sui-toast-top-right',
+          'sui-toast-top-left',
+          'sui-toast-top-center',
+          'sui-toast-bottom-left'
+        );
+        if (pos !== 'bottom-right') container.classList.add(`sui-toast-${pos}`);
+      }
+    },
     getContainer() {
       let container = document.getElementById(SUI_CONFIG.toastContainerId);
       if (!container) {
-        container = Utils.createElement('div', ['sui-toast-container'], {
+        const classes = ['sui-toast-container'];
+        if (this._position && this._position !== 'bottom-right') {
+          classes.push(`sui-toast-${this._position}`);
+        }
+        container = Utils.createElement('div', classes, {
           id: SUI_CONFIG.toastContainerId,
           role: 'status',
-          'aria-live': 'polite',
-          style:
-            'position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; width: calc(100% - 3rem); pointer-events: none;'
+          'aria-live': 'polite'
         });
         document.body.appendChild(container);
       }
@@ -252,7 +283,7 @@
         modal.classList.add('active');
       }
       modal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
+      if (existingIdx === -1) ScrollLock.lock();
 
       // Flush style/layout so visibility: visible is active before focusing
       Utils.triggerReflow(modal);
@@ -289,8 +320,8 @@
         this._stack.splice(idx, 1);
       }
 
-      if (this._stack.length === 0) {
-        document.body.style.overflow = '';
+      if (idx !== -1) {
+        ScrollLock.unlock();
       }
 
       if (
@@ -487,7 +518,23 @@
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.close();
+        if (e.key === 'Escape') {
+          this.close();
+          return;
+        }
+        const openDd = document.querySelector('.sui-dropdown.is-open');
+        if (!openDd) return;
+        if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) {
+          const items = Array.from(openDd.querySelectorAll('.sui-dropdown-item:not([disabled])'));
+          if (items.length === 0) return;
+          e.preventDefault();
+          const currentIdx = items.indexOf(document.activeElement);
+          let nextIdx = 0;
+          if (e.key === 'ArrowDown') nextIdx = (currentIdx + 1) % items.length;
+          else if (e.key === 'ArrowUp') nextIdx = currentIdx <= 0 ? items.length - 1 : currentIdx - 1;
+          else if (e.key === 'End') nextIdx = items.length - 1;
+          items[nextIdx].focus();
+        }
       });
     }
   };
@@ -579,6 +626,24 @@
           const targetPanel = document.getElementById(targetId);
           if (targetPanel) targetPanel.classList.add('active');
         }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        const currentTab = e.target && typeof e.target.closest === 'function' ? e.target.closest('.sui-tab, .tab-btn') : null;
+        if (!currentTab || !['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+        const container = currentTab.closest('.sui-tabs, .sui-tabs-container, .showcase-tabs');
+        if (!container) return;
+        const tabs = Array.from(container.querySelectorAll('.sui-tab:not([disabled]), .tab-btn:not([disabled])'));
+        if (tabs.length < 2) return;
+        e.preventDefault();
+        const idx = tabs.indexOf(currentTab);
+        let nextIdx = idx;
+        if (e.key === 'ArrowRight') nextIdx = (idx + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') nextIdx = 0;
+        else if (e.key === 'End') nextIdx = tabs.length - 1;
+        tabs[nextIdx].focus();
+        if (typeof tabs[nextIdx].click === 'function') tabs[nextIdx].click();
       });
     }
   };
@@ -829,7 +894,7 @@
       backdrop.classList.add('is-open');
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
+      ScrollLock.lock();
       Utils.triggerReflow(panel);
 
       const focusable = panel.querySelector(
@@ -848,8 +913,10 @@
       panel.classList.remove('is-open');
       panel.setAttribute('aria-hidden', 'true');
       if (this._backdrop) this._backdrop.classList.remove('is-open');
-      if (this._active === panel) this._active = null;
-      document.body.style.overflow = '';
+      if (this._active === panel) {
+        this._active = null;
+        ScrollLock.unlock();
+      }
 
       if (
         this._returnFocusTo &&
@@ -1023,6 +1090,139 @@
   };
 
   /* ==========================================================================
+     17. COMMAND PALETTE ENGINE (Cmd+K / Ctrl+K Spotlight) & CHIPS
+     ========================================================================== */
+  const Command = {
+    _active: null,
+    _returnFocusTo: null,
+    open(target = null, trigger = null) {
+      const palette = target
+        ? (typeof target === 'string' ? document.getElementById(target) : target)
+        : document.querySelector('.sui-command');
+      if (!palette) return false;
+      if (this._active === palette) return true;
+
+      this._returnFocusTo = trigger || document.activeElement;
+      this._active = palette;
+      palette.classList.add('is-open');
+      palette.setAttribute('aria-hidden', 'false');
+      ScrollLock.lock();
+      Utils.triggerReflow(palette);
+
+      const input = palette.querySelector('.sui-command-input');
+      if (input) {
+        input.value = '';
+        this.filter(palette, '');
+        if (typeof input.focus === 'function') input.focus();
+      }
+      return true;
+    },
+    close(target = null) {
+      const palette = target
+        ? (typeof target === 'string' ? document.getElementById(target) : target)
+        : this._active;
+      if (!palette || !palette.classList.contains('is-open')) return false;
+
+      palette.classList.remove('is-open');
+      palette.setAttribute('aria-hidden', 'true');
+      if (this._active === palette) {
+        this._active = null;
+        ScrollLock.unlock();
+      }
+      if (this._returnFocusTo && typeof this._returnFocusTo.focus === 'function' && document.contains(this._returnFocusTo)) {
+        this._returnFocusTo.focus();
+      }
+      this._returnFocusTo = null;
+      return true;
+    },
+    filter(palette, query) {
+      const q = String(query || '').trim().toLowerCase();
+      const items = Array.from(palette.querySelectorAll('.sui-command-item, [data-sui-command-item]'));
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const hay = `${item.textContent || ''} ${item.getAttribute('data-sui-keywords') || ''}`.toLowerCase();
+        const show = !q || hay.includes(q);
+        item.style.display = show ? '' : 'none';
+        item.classList.remove('is-active');
+        if (show) {
+          if (visibleCount === 0) item.classList.add('is-active');
+          visibleCount += 1;
+        }
+      });
+      const empty = palette.querySelector('.sui-command-empty');
+      if (empty) empty.style.display = visibleCount === 0 ? '' : 'none';
+      return visibleCount;
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const openBtn = e.target.closest('[data-sui-command-target]');
+        if (openBtn) {
+          e.preventDefault();
+          this.open(openBtn.getAttribute('data-sui-command-target'), openBtn);
+          return;
+        }
+        if (e.target.classList.contains('sui-command')) {
+          this.close(e.target);
+          return;
+        }
+        const chipClose = e.target.closest('[data-sui-dismiss="chip"], .sui-chip-close');
+        if (chipClose) {
+          const chip = chipClose.closest('.sui-chip');
+          if (chip && chip.parentNode) chip.parentNode.removeChild(chip);
+        }
+      });
+
+      document.addEventListener('input', (e) => {
+        const input = e.target.closest('.sui-command-input');
+        if (!input) return;
+        const palette = input.closest('.sui-command');
+        if (palette) this.filter(palette, input.value);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          const defaultPalette = document.querySelector('.sui-command');
+          if (defaultPalette) {
+            e.preventDefault();
+            if (this._active) this.close(this._active);
+            else this.open(defaultPalette);
+          }
+          return;
+        }
+        if (!this._active) return;
+        if (e.key === 'Escape') {
+          this.close(this._active);
+          return;
+        }
+        const visibleItems = Array.from(
+          this._active.querySelectorAll('.sui-command-item, [data-sui-command-item]')
+        ).filter((el) => el.style.display !== 'none');
+        if (visibleItems.length === 0) return;
+
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const currentIdx = visibleItems.findIndex((el) => el.classList.contains('is-active'));
+          visibleItems.forEach((el) => el.classList.remove('is-active'));
+          const nextIdx =
+            e.key === 'ArrowDown'
+              ? (currentIdx + 1) % visibleItems.length
+              : currentIdx <= 0
+                ? visibleItems.length - 1
+                : currentIdx - 1;
+          visibleItems[nextIdx].classList.add('is-active');
+        } else if (e.key === 'Enter') {
+          const activeItem = visibleItems.find((el) => el.classList.contains('is-active'));
+          if (activeItem) {
+            e.preventDefault();
+            if (typeof activeItem.click === 'function') activeItem.click();
+            this.close(this._active);
+          }
+        }
+      });
+    }
+  };
+
+  /* ==========================================================================
      LIFECYCLE INITIALIZATION
      ========================================================================== */
   function initialize() {
@@ -1036,6 +1236,7 @@
     Popover.init();
     Carousel.init();
     ScrollSpy.init();
+    Command.init();
     Navbar.init();
     Dropdown.init();
     Accordion.init();
@@ -1079,6 +1280,7 @@
     popover: Popover,
     carousel: Carousel,
     scrollspy: ScrollSpy,
+    command: Command,
     navbar: Navbar,
     dropdown: Dropdown,
     accordion: Accordion,

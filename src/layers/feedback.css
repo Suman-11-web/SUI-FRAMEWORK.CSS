@@ -18,6 +18,7 @@
 }
 
 .sui-toast {
+  position: relative;
   pointer-events: auto;
   display: flex;
   align-items: center;
@@ -39,14 +40,15 @@
 .sui-toast-success {
   border-left: 4px solid var(--sui-color-success-500);
 }
-.sui-toast-error {
+.sui-toast-error,
+.sui-toast-danger {
   border-left: 4px solid var(--sui-color-danger-500);
 }
 .sui-toast-warning {
   border-left: 4px solid var(--sui-color-warning-500);
 }
 .sui-toast-info {
-  border-left: 4px solid var(--sui-color-primary-500);
+  border-left: 4px solid var(--sui-color-info-500);
 }
 
 /* --------------------------------------------------------------------------
@@ -234,3 +236,9 @@
   from { background-position: 1rem 0; }
   to { background-position: 0 0; }
 }
+
+/* Toast Container Position Modifiers */
+.sui-toast-top-right { top: var(--sui-space-6); right: var(--sui-space-6); bottom: auto; left: auto; flex-direction: column; }
+.sui-toast-top-left { top: var(--sui-space-6); left: var(--sui-space-6); bottom: auto; right: auto; flex-direction: column; }
+.sui-toast-top-center { top: var(--sui-space-6); left: 50%; right: auto; bottom: auto; transform: translateX(-50%); flex-direction: column; }
+.sui-toast-bottom-left { bottom: var(--sui-space-6); left: var(--sui-space-6); top: auto; right: auto; }

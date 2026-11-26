@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | SUI.css</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css">
+</head>
+<body class="sui-flex sui-items-center sui-justify-center sui-min-h-dvh sui-bg-gradient-subtle sui-p-4">
+
+  <main class="sui-card sui-w-full sui-max-w-sm">
+    <h1 class="sui-text-3xl sui-tracking-tight">Welcome back</h1>
+
+    <form id="login" class="sui-form" method="post">
+      <div class="sui-form-group">
+        <label for="email" class="sui-label">Email address</label>
+        <input id="email" class="sui-input" type="email"
+               placeholder="you@example.com" autocomplete="username" required>
+      </div>
+
+      <div class="sui-form-group">
+        <label for="password" class="sui-label">Password</label>
+        <input id="password" class="sui-input" type="password"
+               autocomplete="current-password" required>
+
+        <label class="sui-flex sui-items-center sui-gap-2 sui-text-sm">
+          <input id="show-password" type="checkbox" class="sui-checkbox">
+          Show password
+        </label>
+      </div>
+
+      <button type="submit" class="sui-btn sui-btn-primary sui-w-full">
+        Sign in
+      </button>
+    </form>
+
+    <p id="status" role="status" class="sui-text-sm" hidden></p>
+  </main>
+
+  <script>
+    const password = document.getElementById('password');
+    const toggle = document.getElementById('show-password');
+
+    toggle.onchange = () => {
+      password.type = toggle.checked ? 'text' : 'password';
+    };
+
+    document.getElementById('login').onsubmit = event => {
+      event.preventDefault();
+      const status = document.getElementById('status');
+      status.hidden = false;
+      status.textContent = 'Demo complete. No credentials were sent.';
+      password.value = '';
+      password.type = 'password';
+      toggle.checked = false;
+    };
+  </script>
+</body>
+</html>

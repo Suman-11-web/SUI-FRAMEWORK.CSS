@@ -122,6 +122,17 @@ assert('dist/sui.min.css includes Tailwind-parity utilities (ring, divide-y, spa
   distCss.includes('.sui-aspect-video') &&
   distCss.includes('.sui-text-gradient')
 );
+assert('dist/sui.min.css removes stale position:fixed from .sui-toast so toasts stack cleanly', !/\.sui-toast\{[^}]*position:fixed/.test(distCss));
+assert('dist/sui.min.css collapses .sui-accordion-content by default (max-height:0)', /\.sui-accordion-content\{[^}]*max-height:0/.test(distCss));
+assert('dist/sui.min.css includes v3 premium components (command, stepper, chip, stat-card, empty-state, kbd, toast-top-right)',
+  distCss.includes('.sui-command') &&
+  distCss.includes('.sui-stepper') &&
+  distCss.includes('.sui-chip') &&
+  distCss.includes('.sui-stat-card') &&
+  distCss.includes('.sui-empty-state') &&
+  distCss.includes('.sui-kbd') &&
+  distCss.includes('.sui-toast-top-right')
+);
 
 // 6. Verify README.md has no broken markdown links inside HTML attributes
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
@@ -331,7 +342,7 @@ const doc = {
     (docListeners.click || []).forEach((fn) => fn(evt));
   },
   dispatchKey: (key) => {
-    const evt = { key, preventDefault: () => {} };
+    const evt = { key, target: doc.activeElement, preventDefault: () => {} };
     (docListeners.keydown || []).forEach((fn) => fn(evt));
   }
 };
@@ -429,6 +440,47 @@ body.appendChild(popPanel);
 SUI.popover.toggle('pop-test', openB);
 assert('SUI.popover.toggle opens popover and Escape closes it',
   popPanel.classList.contains('is-open') && (doc.dispatchKey('Escape'), !popPanel.classList.contains('is-open'))
+);
+
+// Nested Offcanvas + Modal shared ScrollLock test
+SUI.offcanvas.open('drawer-test', openA);
+SUI.modal.open('modal-a', openB);
+SUI.modal.close('modal-a');
+const stillLockedAfterModal = body.style.overflow === 'hidden';
+SUI.offcanvas.close('drawer-test');
+const unlockedAfterBoth = body.style.overflow === '';
+assert('Shared ScrollLock keeps body locked until both Modal and Offcanvas close', stillLockedAfterModal && unlockedAfterBoth);
+
+// Toast positioning test
+SUI.toast.setPosition('top-right');
+assert('SUI.toast.setPosition applies .sui-toast-top-right class to toast container',
+  doc.getElementById('sui-toast-container')?.classList.contains('sui-toast-top-right')
+);
+
+// Command Palette (Cmd+K) open, filter & Escape test
+const cmdEl = doc.createElement('div');
+cmdEl.setAttribute('id', 'cmd-test');
+cmdEl.classList.add('sui-command');
+const cmdInput = doc.createElement('input');
+cmdInput.classList.add('sui-command-input');
+const cmdItem1 = doc.createElement('button');
+cmdItem1.classList.add('sui-command-item');
+cmdItem1.textContent = 'Toggle Dark Mode';
+const cmdItem2 = doc.createElement('button');
+cmdItem2.classList.add('sui-command-item');
+cmdItem2.textContent = 'Open Settings';
+cmdEl.appendChild(cmdInput);
+cmdEl.appendChild(cmdItem1);
+cmdEl.appendChild(cmdItem2);
+body.appendChild(cmdEl);
+
+SUI.command.open('cmd-test', openA);
+const cmdOpened = cmdEl.classList.contains('is-open') && doc.activeElement === cmdInput;
+const filteredCount = SUI.command.filter(cmdEl, 'dark');
+doc.dispatchKey('Escape');
+const cmdClosed = !cmdEl.classList.contains('is-open') && doc.activeElement === openA && body.style.overflow === '';
+assert('SUI.command opens, focuses input, filters items, and closes on Escape with focus restore',
+  cmdOpened && filteredCount === 1 && cmdClosed
 );
 
 console.log(`\nSUI.css Automated Verification: ${checks.filter((c) => c.pass).length}/${checks.length} passed\n`);

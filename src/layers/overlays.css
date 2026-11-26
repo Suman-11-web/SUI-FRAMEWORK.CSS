@@ -373,10 +373,16 @@
 
 .sui-accordion-content {
   overflow: hidden;
+  max-height: 0;
   padding: 0 var(--sui-space-6);
   color: var(--sui-text-muted);
   font-size: 0.9rem;
   line-height: 1.6;
+  transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+}
+
+.sui-accordion-body > .sui-accordion-content {
+  max-height: none;
 }
 
 .sui-accordion-item.is-open .sui-accordion-content {
@@ -515,4 +521,99 @@
   transform: translateY(0) scale(1);
   pointer-events: auto;
   transition: opacity 0.2s ease, transform 0.2s var(--sui-ease-smooth), visibility 0s linear 0s;
+}
+
+/* --------------------------------------------------------------------------
+   6. COMMAND PALETTE (Cmd+K / Ctrl+K Spotlight Modal)
+   -------------------------------------------------------------------------- */
+.sui-command {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: min(14vh, 120px) var(--sui-space-4) var(--sui-space-4);
+  background: var(--sui-overlay-backdrop, oklch(0% 0 0 / 0.55));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.sui-command.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.2s ease, visibility 0s linear 0s;
+}
+
+.sui-command-dialog {
+  width: 100%;
+  max-width: 580px;
+  background: var(--sui-surface);
+  border: 1px solid var(--sui-border);
+  border-radius: var(--sui-radius-xl);
+  box-shadow: var(--sui-shadow-2xl);
+  overflow: hidden;
+  transform: scale(0.97) translateY(-8px);
+  transition: transform 0.2s var(--sui-ease-smooth);
+}
+
+.sui-command.is-open .sui-command-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.sui-command-input {
+  width: 100%;
+  padding: var(--sui-space-4) var(--sui-space-5);
+  border: none;
+  border-bottom: 1px solid var(--sui-border);
+  background: transparent;
+  color: var(--sui-text);
+  font-size: var(--sui-text-base);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sui-command-list {
+  max-height: 340px;
+  overflow-y: auto;
+  padding: var(--sui-space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sui-command-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sui-space-3);
+  width: 100%;
+  padding: var(--sui-space-2-5) var(--sui-space-3);
+  border: none;
+  border-radius: var(--sui-radius-md);
+  background: transparent;
+  color: var(--sui-text);
+  font-size: var(--sui-text-sm);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.12s ease;
+}
+
+.sui-command-item:hover,
+.sui-command-item.is-active {
+  background: var(--sui-primary-subtle);
+  color: var(--sui-color-primary-600);
+}
+
+.sui-command-empty {
+  padding: var(--sui-space-6);
+  text-align: center;
+  font-size: var(--sui-text-sm);
+  color: var(--sui-text-muted);
 }
