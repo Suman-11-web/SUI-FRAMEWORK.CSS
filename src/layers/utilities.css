@@ -650,3 +650,62 @@
 .sui-hover-bg-subtle:hover { background-color: var(--sui-surface-hover); }
 .sui-search-result { display: flex; align-items: center; gap: var(--sui-space-3); padding: var(--sui-space-2) var(--sui-space-3); border-radius: var(--sui-radius-md); color: var(--sui-text); text-decoration: none; cursor: pointer; transition: background-color var(--sui-duration-fast) ease; }
 .sui-search-result:hover { background-color: var(--sui-surface-hover); }
+
+/* --------------------------------------------------------------------------
+   13. TAILWIND-PARITY UTILITIES (Rings, Divide, Space-Between, Object, Aspect, Gradients, States)
+   -------------------------------------------------------------------------- */
+/* Focus & Shadow Rings */
+.sui-ring-0 { box-shadow: 0 0 0 0px transparent; }
+.sui-ring-1 { box-shadow: 0 0 0 1px var(--sui-ring); }
+.sui-ring-2 { box-shadow: 0 0 0 2px var(--sui-ring); }
+.sui-ring-4 { box-shadow: 0 0 0 4px var(--sui-ring); }
+.sui-ring-primary { --sui-ring: oklch(from var(--sui-color-primary-500) l c h / 0.45); }
+.sui-ring-success { --sui-ring: oklch(from var(--sui-color-success-500) l c h / 0.45); }
+.sui-ring-danger  { --sui-ring: oklch(from var(--sui-color-danger-500) l c h / 0.45); }
+.sui-focus-ring-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(from var(--sui-color-primary-500) l c h / 0.35); }
+
+/* Divide Utilities */
+.sui-divide-y > * + * { border-top: 1px solid var(--sui-border); }
+.sui-divide-x > * + * { border-left: 1px solid var(--sui-border); }
+.sui-divide-dashed > * + * { border-style: dashed; }
+
+/* Stack Space-Between Utilities */
+.sui-space-y-1 > * + * { margin-top: var(--sui-space-1); }
+.sui-space-y-2 > * + * { margin-top: var(--sui-space-2); }
+.sui-space-y-3 > * + * { margin-top: var(--sui-space-3); }
+.sui-space-y-4 > * + * { margin-top: var(--sui-space-4); }
+.sui-space-y-6 > * + * { margin-top: var(--sui-space-6); }
+.sui-space-y-8 > * + * { margin-top: var(--sui-space-8); }
+.sui-space-x-2 > * + * { margin-left: var(--sui-space-2); }
+.sui-space-x-3 > * + * { margin-left: var(--sui-space-3); }
+.sui-space-x-4 > * + * { margin-left: var(--sui-space-4); }
+.sui-space-x-6 > * + * { margin-left: var(--sui-space-6); }
+
+/* Object Fit & Position */
+.sui-object-cover   { object-fit: cover; }
+.sui-object-contain { object-fit: contain; }
+.sui-object-fill    { object-fit: fill; }
+.sui-object-none    { object-fit: none; }
+.sui-object-center  { object-position: center; }
+
+/* Aspect Ratios */
+.sui-aspect-auto   { aspect-ratio: auto; }
+.sui-aspect-square { aspect-ratio: 1 / 1; }
+.sui-aspect-video  { aspect-ratio: 16 / 9; }
+.sui-aspect-4\/3  { aspect-ratio: 4 / 3; }
+
+/* Gradients & Text Gradients */
+.sui-bg-gradient-primary { background-image: linear-gradient(135deg, var(--sui-color-primary-500), var(--sui-color-accent-500)); }
+.sui-bg-gradient-subtle  { background-image: linear-gradient(180deg, var(--sui-surface), var(--sui-bg)); }
+.sui-text-gradient {
+  background-image: linear-gradient(135deg, var(--sui-color-primary-500), var(--sui-color-accent-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Interactive State Utilities */
+.sui-hover-scale { transition: transform var(--sui-duration-fast) var(--sui-ease-smooth); }
+.sui-hover-scale:hover { transform: scale(1.02); }
+.sui-active-scale:active { transform: scale(0.98); }
+.sui-disabled { opacity: 0.55; pointer-events: none; cursor: not-allowed; }

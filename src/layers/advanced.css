@@ -292,3 +292,34 @@ select.sui-select-custom::picker(select) {
   color: var(--sui-bg);
   font-weight: bold;
 }
+
+/* Carousel Navigation & Indicators (JS-powered in sui.js) */
+.sui-carousel-wrapper {
+  position: relative;
+}
+.sui-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sui-space-3);
+  margin-top: var(--sui-space-4);
+}
+.sui-carousel-indicators {
+  display: flex;
+  align-items: center;
+  gap: var(--sui-space-2);
+}
+.sui-carousel-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: var(--sui-border-strong);
+  cursor: pointer;
+  transition: width 0.25s var(--sui-ease-smooth), background-color 0.25s ease;
+}
+.sui-carousel-dot.is-active {
+  width: 1.5rem;
+  background: var(--sui-color-primary-500);
+}

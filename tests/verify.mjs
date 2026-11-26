@@ -105,6 +105,21 @@ assert('dist/sui.min.css .sui-hidden has no !important', !distCss.includes('.sui
 assert('dist/sui.min.css keeps plain HTML in light mode by default (no :root:not([data-theme=light]) dark hijack)', !distCss.includes(":root:not([data-theme=light])") && !distCss.includes(":root:not([data-theme='light'])"));
 assert('dist/sui.min.css uses color-scheme:light by default', distCss.includes('color-scheme:light') && !distCss.includes('color-scheme:light dark'));
 assert('dist/sui.min.css makes .sui-modal.is-open visibility immediate (0s)', /\.sui-modal\.is-open\{[^}]*visibility\s+0s/.test(distCss) || /\.sui-modal\.is-open\{[^}]*visibility:visible/.test(distCss));
+assert('dist/sui.min.css includes Bootstrap-parity components (offcanvas, list-group, pagination, form-floating, btn-close)',
+  distCss.includes('.sui-offcanvas') &&
+  distCss.includes('.sui-list-group') &&
+  distCss.includes('.sui-pagination') &&
+  distCss.includes('.sui-form-floating') &&
+  distCss.includes('.sui-btn-close')
+);
+assert('dist/sui.min.css includes Tailwind-parity utilities (ring, divide-y, space-y, object-cover, aspect-video, text-gradient)',
+  distCss.includes('.sui-ring-2') &&
+  distCss.includes('.sui-divide-y') &&
+  distCss.includes('.sui-space-y-4') &&
+  distCss.includes('.sui-object-cover') &&
+  distCss.includes('.sui-aspect-video') &&
+  distCss.includes('.sui-text-gradient')
+);
 
 // 6. Verify README.md has no broken markdown links inside HTML attributes
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
@@ -379,6 +394,40 @@ assert('Closing Modal B restores focus to openB and unlocks body overflow', !mod
 // Toast test
 const toastEl = SUI.toast.success('Saved!');
 assert('SUI.toast.success creates toast inside #sui-toast-container with aria-live', Boolean(toastEl && doc.getElementById('sui-toast-container')?.getAttribute('aria-live') === 'polite'));
+
+// Offcanvas + Popover + Alert API checks
+assert('SUI v3.0.0 exposes offcanvas, alert, popover, carousel, and scrollspy APIs',
+  typeof SUI.offcanvas?.open === 'function' &&
+  typeof SUI.alert?.dismiss === 'function' &&
+  typeof SUI.popover?.toggle === 'function' &&
+  typeof SUI.carousel?.goTo === 'function' &&
+  typeof SUI.scrollspy?.init === 'function'
+);
+
+const offcanvasEl = doc.createElement('div');
+offcanvasEl.setAttribute('id', 'drawer-test');
+offcanvasEl.classList.add('sui-offcanvas', 'sui-offcanvas-end');
+const offBtn = doc.createElement('button');
+offcanvasEl.appendChild(offBtn);
+body.appendChild(offcanvasEl);
+
+SUI.offcanvas.open('drawer-test', openA);
+assert('SUI.offcanvas.open opens drawer, focuses first control, and locks body overflow',
+  offcanvasEl.classList.contains('is-open') && doc.activeElement === offBtn && body.style.overflow === 'hidden'
+);
+doc.dispatchKey('Escape');
+assert('Escape closes active Offcanvas, restores focus, and unlocks body overflow',
+  !offcanvasEl.classList.contains('is-open') && doc.activeElement === openA && body.style.overflow === ''
+);
+
+const popPanel = doc.createElement('div');
+popPanel.setAttribute('id', 'pop-test');
+popPanel.classList.add('sui-popover-panel');
+body.appendChild(popPanel);
+SUI.popover.toggle('pop-test', openB);
+assert('SUI.popover.toggle opens popover and Escape closes it',
+  popPanel.classList.contains('is-open') && (doc.dispatchKey('Escape'), !popPanel.classList.contains('is-open'))
+);
 
 console.log(`\nSUI.css Automated Verification: ${checks.filter((c) => c.pass).length}/${checks.length} passed\n`);
 for (const c of checks) {

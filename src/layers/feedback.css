@@ -185,3 +185,52 @@
   .sui-progress-bar,
   .sui-toast { transition: none !important; }
 }
+
+/* Dismissible Alerts */
+.sui-alert-dismissible {
+  padding-right: 2.75rem;
+  position: relative;
+}
+.sui-alert-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: currentColor;
+  opacity: 0.7;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.25rem;
+  border-radius: var(--sui-radius-sm);
+}
+.sui-alert-close:hover { opacity: 1; background: oklch(0% 0 0 / 0.08); }
+.sui-alert-close:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* Extended Progress Variants */
+.sui-progress-warning { background: var(--sui-color-warning-500); }
+.sui-progress-info { background: var(--sui-color-info-500); }
+
+.sui-progress-striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+.sui-progress-animated {
+  animation: sui-progress-stripes 1s linear infinite;
+}
+
+@keyframes sui-progress-stripes {
+  from { background-position: 1rem 0; }
+  to { background-position: 0 0; }
+}

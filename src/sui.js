@@ -343,8 +343,28 @@
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this._stack.length > 0) {
-          this.close(this._stack[this._stack.length - 1].modal);
+        if (this._stack.length === 0) return;
+        const activeModal = this._stack[this._stack.length - 1].modal;
+        if (e.key === 'Escape') {
+          this.close(activeModal);
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusables = Array.from(
+            activeModal.querySelectorAll(
+              'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
         }
       });
     }
@@ -782,6 +802,227 @@
   };
 
   /* ==========================================================================
+     13. OFFCANVAS / DRAWER ENGINE (Bootstrap Parity)
+     ========================================================================== */
+  const Offcanvas = {
+    _active: null,
+    _returnFocusTo: null,
+    _backdrop: null,
+    _ensureBackdrop() {
+      if (!this._backdrop) {
+        this._backdrop = document.querySelector('.sui-offcanvas-backdrop');
+        if (!this._backdrop) {
+          this._backdrop = Utils.createElement('div', ['sui-offcanvas-backdrop']);
+          document.body.appendChild(this._backdrop);
+        }
+      }
+      return this._backdrop;
+    },
+    open(target, trigger = null) {
+      const panel = typeof target === 'string' ? document.getElementById(target) : target;
+      if (!panel) return false;
+      if (this._active && this._active !== panel) this.close(this._active);
+
+      this._returnFocusTo = trigger || document.activeElement;
+      this._active = panel;
+      const backdrop = this._ensureBackdrop();
+      backdrop.classList.add('is-open');
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      Utils.triggerReflow(panel);
+
+      const focusable = panel.querySelector(
+        'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable && typeof focusable.focus === 'function') focusable.focus();
+      window.dispatchEvent(new CustomEvent('sui:offcanvas-open', { detail: { id: panel.id, element: panel } }));
+      return true;
+    },
+    close(target = null) {
+      const panel = target
+        ? (typeof target === 'string' ? document.getElementById(target) : target)
+        : this._active;
+      if (!panel) return false;
+
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+      if (this._backdrop) this._backdrop.classList.remove('is-open');
+      if (this._active === panel) this._active = null;
+      document.body.style.overflow = '';
+
+      if (
+        this._returnFocusTo &&
+        typeof this._returnFocusTo.focus === 'function' &&
+        document.contains(this._returnFocusTo)
+      ) {
+        this._returnFocusTo.focus();
+      }
+      this._returnFocusTo = null;
+      window.dispatchEvent(new CustomEvent('sui:offcanvas-close', { detail: { id: panel.id, element: panel } }));
+      return true;
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-sui-offcanvas-target]');
+        if (trigger) {
+          e.preventDefault();
+          this.open(trigger.getAttribute('data-sui-offcanvas-target'), trigger);
+          return;
+        }
+        const closeBtn = e.target.closest('[data-sui-offcanvas-close]');
+        if (closeBtn) {
+          e.preventDefault();
+          this.close(closeBtn.closest('.sui-offcanvas'));
+          return;
+        }
+        if (e.target.classList.contains('sui-offcanvas-backdrop')) {
+          this.close();
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this._active) this.close(this._active);
+      });
+    }
+  };
+
+  /* ==========================================================================
+     14. DISMISSIBLE ALERT & POPOVER ENGINES
+     ========================================================================== */
+  const Alert = {
+    dismiss(alertEl) {
+      if (!alertEl) return false;
+      alertEl.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+      alertEl.style.opacity = '0';
+      alertEl.style.transform = 'translateY(-4px)';
+      setTimeout(() => {
+        if (alertEl.parentNode) alertEl.parentNode.removeChild(alertEl);
+      }, 200);
+      return true;
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-sui-dismiss="alert"], .sui-alert-close');
+        if (!btn) return;
+        e.preventDefault();
+        const alertEl = btn.closest('.sui-alert');
+        if (alertEl) this.dismiss(alertEl);
+      });
+    }
+  };
+
+  const Popover = {
+    closeAll() {
+      document.querySelectorAll('.sui-popover-panel.is-open').forEach((p) => {
+        p.classList.remove('is-open');
+        const trigger = document.querySelector(`[data-sui-popover-target="${p.id}"]`);
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    },
+    toggle(targetId, trigger = null) {
+      const panel = document.getElementById(targetId);
+      if (!panel) return false;
+      const willOpen = !panel.classList.contains('is-open');
+      this.closeAll();
+      if (willOpen) {
+        panel.classList.add('is-open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      }
+      return willOpen;
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-sui-popover-target]');
+        if (trigger) {
+          e.preventDefault();
+          this.toggle(trigger.getAttribute('data-sui-popover-target'), trigger);
+          return;
+        }
+        if (!e.target.closest('.sui-popover-panel')) {
+          this.closeAll();
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeAll();
+      });
+    }
+  };
+
+  /* ==========================================================================
+     15. CAROUSEL ENGINE
+     ========================================================================== */
+  const Carousel = {
+    goTo(wrapper, index) {
+      if (!wrapper) return;
+      const track = wrapper.querySelector('.sui-carousel');
+      const slides = track ? Array.from(track.querySelectorAll('.sui-carousel-slide')) : [];
+      if (!track || slides.length === 0) return;
+
+      const clamped = ((index % slides.length) + slides.length) % slides.length;
+      wrapper.setAttribute('data-sui-carousel-index', String(clamped));
+      const targetSlide = slides[clamped];
+      if (typeof track.scrollTo === 'function') {
+        track.scrollTo({ left: targetSlide.offsetLeft, behavior: Utils.prefersReducedMotion() ? 'auto' : 'smooth' });
+      }
+      wrapper.querySelectorAll('.sui-carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === clamped);
+        dot.setAttribute('aria-current', i === clamped ? 'true' : 'false');
+      });
+    },
+    init() {
+      document.addEventListener('click', (e) => {
+        const prev = e.target.closest('[data-sui-carousel-prev]');
+        const next = e.target.closest('[data-sui-carousel-next]');
+        const dot = e.target.closest('[data-sui-carousel-slide-to]');
+        if (!prev && !next && !dot) return;
+
+        const wrapper = (prev || next || dot).closest('.sui-carousel-wrapper');
+        if (!wrapper) return;
+        const current = parseInt(wrapper.getAttribute('data-sui-carousel-index') || '0', 10);
+
+        if (prev) this.goTo(wrapper, current - 1);
+        else if (next) this.goTo(wrapper, current + 1);
+        else if (dot) this.goTo(wrapper, parseInt(dot.getAttribute('data-sui-carousel-slide-to') || '0', 10));
+      });
+    }
+  };
+
+  /* ==========================================================================
+     16. SCROLLSPY ENGINE
+     ========================================================================== */
+  const ScrollSpy = {
+    init() {
+      const navs = document.querySelectorAll('[data-sui-scrollspy]');
+      if (navs.length === 0 || !('IntersectionObserver' in window)) return;
+
+      navs.forEach((nav) => {
+        const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
+        const targets = links
+          .map((link) => {
+            const id = link.getAttribute('href').slice(1);
+            const section = id ? document.getElementById(id) : null;
+            return section ? { link, section } : null;
+          })
+          .filter(Boolean);
+
+        if (targets.length === 0) return;
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              links.forEach((l) => l.classList.remove('active'));
+              const match = targets.find((t) => t.section === entry.target);
+              if (match) match.link.classList.add('active');
+            });
+          },
+          { rootMargin: '-25% 0px -65% 0px' }
+        );
+        targets.forEach((t) => observer.observe(t.section));
+      });
+    }
+  };
+
+  /* ==========================================================================
      LIFECYCLE INITIALIZATION
      ========================================================================== */
   function initialize() {
@@ -790,6 +1031,11 @@
 
     ThemeEngine.init();
     Modal.init();
+    Offcanvas.init();
+    Alert.init();
+    Popover.init();
+    Carousel.init();
+    ScrollSpy.init();
     Navbar.init();
     Dropdown.init();
     Accordion.init();
@@ -828,6 +1074,11 @@
     init: initialize,
     theme: ThemeEngine,
     modal: Modal,
+    offcanvas: Offcanvas,
+    alert: Alert,
+    popover: Popover,
+    carousel: Carousel,
+    scrollspy: ScrollSpy,
     navbar: Navbar,
     dropdown: Dropdown,
     accordion: Accordion,

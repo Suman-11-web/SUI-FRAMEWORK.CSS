@@ -327,3 +327,76 @@
   color: #fff;
   border-color: var(--sui-color-primary-500);
 }
+
+/* --------------------------------------------------------------------------
+   6. FLOATING LABELS & BOOTSTRAP VALIDATION ALIASES
+   -------------------------------------------------------------------------- */
+.sui-form-floating {
+  position: relative;
+  width: 100%;
+}
+
+.sui-form-floating > .sui-input,
+.sui-form-floating > .sui-select,
+.sui-form-floating > .sui-textarea {
+  height: calc(3.35rem + 2px);
+  padding: 1.45rem 1rem 0.45rem;
+}
+
+.sui-form-floating > .sui-textarea {
+  min-height: 6rem;
+  height: auto;
+}
+
+.sui-form-floating > label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.95rem 1rem;
+  color: var(--sui-text-muted);
+  pointer-events: none;
+  transform-origin: 0 0;
+  transition: opacity 0.15s ease, transform 0.15s var(--sui-ease-smooth);
+}
+
+.sui-form-floating > .sui-input::placeholder,
+.sui-form-floating > .sui-textarea::placeholder {
+  color: transparent;
+}
+
+.sui-form-floating > .sui-input:focus ~ label,
+.sui-form-floating > .sui-input:not(:placeholder-shown) ~ label,
+.sui-form-floating > .sui-textarea:focus ~ label,
+.sui-form-floating > .sui-textarea:not(:placeholder-shown) ~ label,
+.sui-form-floating > .sui-select ~ label {
+  opacity: 0.78;
+  transform: scale(0.82) translateY(-0.55rem) translateX(0.15rem);
+}
+
+.sui-input.is-invalid,
+.sui-select.is-invalid,
+.sui-textarea.is-invalid {
+  border-color: var(--sui-color-danger-500);
+  box-shadow: 0 0 0 1px var(--sui-color-danger-500) inset;
+}
+
+.sui-input.is-valid,
+.sui-select.is-valid,
+.sui-textarea.is-valid {
+  border-color: var(--sui-color-success-500);
+  box-shadow: 0 0 0 1px var(--sui-color-success-500) inset;
+}
+
+.sui-invalid-feedback {
+  font-size: 0.75rem;
+  color: var(--sui-color-danger-500);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.sui-valid-feedback {
+  font-size: 0.75rem;
+  color: var(--sui-color-success-500);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
