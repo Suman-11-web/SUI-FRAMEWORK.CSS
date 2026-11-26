@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    <url>
-        <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/</loc>
-    </url>
-
-    <url>
-        <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/docs/index.html</loc>
-    </url>
-
-    <url>
-        <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/buttons.html</loc>
-    </url>
-
-    <url>
-        <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/utilities.html</loc>
-    </url>
-
-    <url>
-        <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/animations.html</loc>
-    </url>
-
-    <url>
-        <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/advanced.html</loc>
-    </url>
-
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/docs/index.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/how-to-use.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/buttons.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/cards.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/forms.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/layout.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/navigation.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/utilities.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/animations.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/advanced.html</loc>
+  </url>
+  <url>
+    <loc>https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/example/icons.html</loc>
+  </url>
 </urlset>

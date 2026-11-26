@@ -167,7 +167,7 @@
     <div style="display: flex; align-items: center; gap: 0.5rem;">
         <button type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle" aria-label="Toggle theme">Theme</button>
         <span class="sui-badge sui-badge-primary sui-hidden sui-md-inline-flex" style="background: oklch(from var(--sui-color-primary-500) l c h / 0.1); color: var(--sui-color-primary-500);">v3.0 Architecture</span>
-        <a class="sui-btn sui-btn-outline sui-btn-sm nav-github-btn" href="https://github.com" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="sui-btn sui-btn-outline sui-btn-sm nav-github-btn" href="https://github.com/Suman-11-web/SUI-FRAMEWORK.CSS" target="_blank" rel="noopener">GitHub ↗</a>
         <button class="menu-btn" id="menuBtn" aria-label="Open documentation menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
@@ -195,8 +195,8 @@
     <a class="nav-link" href="#customization"><span class="nav-number">10</span>Customization</a>
     <a class="nav-link" href="#production"><span class="nav-number">11</span>Production</a>
     <a class="nav-link" href="#complete-example"><span class="nav-number">12</span>Complete Example</a>
-    <div class="sidebar-label">back to home </div>
-    <a class="nav-link" href="./index.html"><span class="nav-number">10</span>home page</a>
+    <div class="sidebar-label">Navigation</div>
+    <a class="nav-link" href="./index.html"><span class="nav-number">&larr;</span>Home Page</a>
 </aside>
 
 <!-- =============================================================
@@ -406,7 +406,7 @@
                 </div>
                 <pre><code style="color: #ededed;"><span class="sui-hl-tag">:root</span> {
     <span class="sui-hl-attr">--sui-brand-hue</span>: <span class="sui-hl-string">250</span>;
-    <span class="sui-hl-attr">--sui-primary-500</span>: <span class="sui-hl-string">oklch(60% 0.2 var(--sui-brand-hue))</span>;
+    <span class="sui-hl-attr">--sui-color-primary-500</span>: <span class="sui-hl-string">oklch(60% 0.2 var(--sui-brand-hue))</span>;
     <span class="sui-hl-attr">--sui-success</span>: <span class="sui-hl-string">oklch(65% 0.15 150)</span>;
     <span class="sui-hl-attr">--sui-danger</span>: <span class="sui-hl-string">oklch(60% 0.2 25)</span>;
     
@@ -602,7 +602,7 @@
                 <div>⚠</div>
                 <div>
                     <strong class="sui-block sui-mb-1">Mobile First Architecture</strong>
-                    <p class="sui-text-sm sui-text-muted sui-m-0">Sui.css uses mobile-first media queries. Use the <span class="inline-code">md:</span> prefix to apply changes on desktop and tablet screens.</p>
+                    <p class="sui-text-sm sui-text-muted sui-m-0">Sui.css uses mobile-first media queries. Use the <span class="inline-code">sui-md-*</span> prefix to apply changes on desktop and tablet screens.</p>
                 </div>
             </div>
 
@@ -777,6 +777,8 @@ ls dist/</code></pre>
 
     </div>
 </main>
+
+<script defer src="dist/sui.min.js"></script>
 
 <!-- =============================================================
      JAVASCRIPT

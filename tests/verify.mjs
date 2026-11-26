@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
 const failures = [];
@@ -83,7 +84,7 @@ for (const rel of htmlFiles) {
     if (idx >= 2 && content.slice(idx - 2, idx) === '--') continue;
     if (idx >= 5 && content.slice(idx - 5, idx) === 'data-') continue;
     const after = content.slice(idx + cls.length, idx + cls.length + 2);
-    if (after.startsWith('-*') || after.startsWith('/')) continue;
+    if (after.startsWith('-*') || after.startsWith('/') || after.startsWith('-[') || after.startsWith(':')) continue;
     if (
       cls.endsWith('.css') ||
       cls.endsWith('.js') ||
@@ -385,6 +386,11 @@ const sandbox = {
     constructor(type, init) {
       this.type = type;
       this.detail = init?.detail;
+      this.cancelable = Boolean(init?.cancelable);
+      this.defaultPrevented = false;
+    }
+    preventDefault() {
+      if (this.cancelable) this.defaultPrevented = true;
     }
   },
   getComputedStyle: () => ({ position: 'relative' }),
@@ -394,10 +400,15 @@ const sandbox = {
   clearTimeout
 };
 sandbox.window = sandbox;
+sandbox.innerWidth = 1024;
+sandbox.innerHeight = 768;
 sandbox.globalThis = sandbox;
 sandbox.self = sandbox;
 sandbox.matchMedia = () => ({ matches: false, addEventListener: () => {} });
-sandbox.dispatchEvent = (ev) => (winListeners[ev.type] || []).forEach((fn) => fn(ev));
+sandbox.dispatchEvent = (ev) => {
+  (winListeners[ev.type] || []).forEach((fn) => fn(ev));
+  return !ev.defaultPrevented;
+};
 sandbox.addEventListener = (ev, fn) => (winListeners[ev] ||= []).push(fn);
 
 vm.runInNewContext(distJs, sandbox);
@@ -582,6 +593,112 @@ const destroyedClean = body.style.overflow === '' && (docListeners.click || []).
 SUI.init();
 const reboundClean = SUI.modal.open('modal-a', openA) && SUI.modal.close('modal-a') && body.style.overflow === '';
 assert('SUI.destroy() removes all global listeners & unlocks scroll; SUI.init() cleanly re-initializes', destroyedClean && reboundClean);
+
+// New Bootstrap + Tailwind parity CSS checks
+assert('dist/sui.min.css includes modal-fullscreen, navbar-expand-lg, outline color buttons, logical ms/me, stretched-link, vr, ratio',
+  distCss.includes('.sui-modal-fullscreen') &&
+  distCss.includes('.sui-navbar-expand-lg') &&
+  distCss.includes('.sui-btn-outline-success') &&
+  distCss.includes('.sui-ms-4') &&
+  distCss.includes('.sui-stretched-link') &&
+  distCss.includes('.sui-vr') &&
+  distCss.includes('.sui-ratio-16x9') &&
+  distCss.includes('.sui-flip-top')
+);
+assert('dist/sui.min.css includes transforms, filters, gap-x, col-span-full, bg-primary-10, 2xl, and @container utilities',
+  distCss.includes('.sui-rotate-45') &&
+  distCss.includes('.sui-blur-md') &&
+  distCss.includes('.sui-gap-x-4') &&
+  distCss.includes('.sui-col-span-full') &&
+  distCss.includes('.sui-bg-primary-10') &&
+  distCss.includes('.sui-2xl-grid') &&
+  distCss.includes('.sui-cq-md-grid-cols-3')
+);
+
+// TypeScript definitions & CLI file checks
+assert('dist/sui.d.ts exists and exports SuiRuntime',
+  fs.existsSync(path.join(root, 'dist/sui.d.ts')) &&
+  fs.readFileSync(path.join(root, 'dist/sui.d.ts'), 'utf8').includes('interface SuiRuntime')
+);
+assert('bin/sui-cli.mjs exists for tree-shaking and arbitrary-value JIT',
+  fs.existsSync(path.join(root, 'bin/sui-cli.mjs'))
+);
+
+// Instance Registry + Cancelable before-close event test
+const modalInst = SUI.modal.getOrCreateInstance('modal-a', { backdrop: 'static' });
+assert('SUI.modal.getOrCreateInstance returns reusable instance and applies static backdrop option',
+  Boolean(modalInst && modalInst === SUI.modal.getOrCreateInstance('modal-a') && modalA.getAttribute('data-sui-backdrop') === 'static')
+);
+
+let blockClose = true;
+sandbox.addEventListener('sui:modal-before-close', (e) => {
+  if (blockClose) e.preventDefault();
+});
+modalInst.open(openA);
+const blocked = !modalInst.close() && modalA.classList.contains('is-open');
+blockClose = false;
+const closedAfterAllow = modalInst.close() && !modalA.classList.contains('is-open');
+assert('Cancelable sui:modal-before-close blocks close when preventDefault() is called', blocked && closedAfterAllow);
+
+// Smart Edge-Flip Positioner test
+const edgePanel = doc.createElement('div');
+edgePanel.getBoundingClientRect = () => ({ top: 600, bottom: 900, left: 950, right: 1200, width: 250, height: 220 });
+SUI.positioner.adjust(edgePanel);
+const flipped = edgePanel.classList.contains('sui-flip-top') && edgePanel.classList.contains('sui-flip-end');
+SUI.positioner.reset(edgePanel);
+assert('SUI.positioner.adjust flips panels overflowing bottom/right viewport edges', flipped && !edgePanel.classList.contains('sui-flip-top'));
+
+// Docs CDN links, Copy buttons, Guide runtime, Sitemap, and CLI JIT checks
+const docsHtmlContent = fs.readFileSync(path.join(root, "docs/index.html"), "utf8");
+const docsJsContent = fs.readFileSync(path.join(root, "docs/docs.js"), "utf8");
+const howToUseContent = fs.readFileSync(path.join(root, "how-to-use.html"), "utf8");
+const sitemapContent = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
+
+assert(
+  "docs/index.html installation snippet uses jsDelivr @v3.0.0 CDN links (no local ./dist/ paths)",
+  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css") &&
+  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js") &&
+  !docsHtmlContent.includes('"./dist/sui.min.css"') &&
+  !docsHtmlContent.includes('"./dist/sui.min.js"')
+);
+
+const codeBarsCount = (docsHtmlContent.match(/class="docs-code-bar"/g) || []).length;
+const copyBtnsCount = (docsHtmlContent.match(/btn-copy-code/g) || []).length;
+assert(
+  "All docs/index.html code bars have Copy buttons wired in docs/docs.js",
+  codeBarsCount > 0 && copyBtnsCount === codeBarsCount && docsJsContent.includes(".btn-copy-code"),
+  copyBtnsCount + "/" + codeBarsCount + " code bars"
+);
+
+assert(
+  "how-to-use.html loads dist/sui.min.js and links to the actual repository",
+  howToUseContent.includes("<script defer src=\"dist/sui.min.js\"></script>") &&
+  howToUseContent.includes("Suman-11-web/SUI-FRAMEWORK.CSS") &&
+  !/nav-github-btn" href="[^"]+\.com"/.test(howToUseContent)
+);
+
+const sitemapUrls = (sitemapContent.match(/<loc>/g) || []).length;
+assert("sitemap.xml lists all 12 live HTML pages", sitemapUrls === 12, sitemapUrls + " URLs");
+
+const tmpHtml = "/tmp/sui_verify_jit.html";
+const tmpOut = "/tmp/sui_verify_jit.css";
+fs.writeFileSync(
+  tmpHtml,
+  "<div class=\"sui-flex sui-md-w-1/2 sui-w-[342px] sui-hover:sui-bg-[#123456]\">Test</div>",
+  "utf8"
+);
+execFileSync(process.execPath, [path.join(root, "bin/sui-cli.mjs"), "--content", tmpHtml, "--output", tmpOut], { cwd: root });
+const jitOut = fs.readFileSync(tmpOut, "utf8");
+assert(
+  "bin/sui-cli.mjs purges unused utilities, keeps escaped sui-md-w-1/2, and compiles arbitrary JIT rules",
+  jitOut.length < distCss.length &&
+  jitOut.includes(".sui-md-w-1\\/2") &&
+  jitOut.includes(".sui-w-\\[342px\\]{width:342px}") &&
+  jitOut.includes(".sui-hover\\:sui-bg-\\[\\#123456\\]:hover{background-color:#123456}"),
+  distCss.length + " B -> " + jitOut.length + " B"
+);
+fs.unlinkSync(tmpHtml);
+fs.unlinkSync(tmpOut);
 
 console.log(`\nSUI.css Automated Verification: ${checks.filter((c) => c.pass).length}/${checks.length} passed\n`);
 for (const c of checks) {

@@ -30,6 +30,7 @@
   let domObserver = null;
   const activeObservers = new Set();
   const activeTimers = new Set();
+  const activeIntervals = new Set();
 
   /* ==========================================================================
      1. UTILITIES, TIMERS & SHARED SCROLL LOCK
@@ -62,6 +63,11 @@
     emit(name, detail = {}, target = window) {
       if (!target || typeof target.dispatchEvent !== 'function') return;
       target.dispatchEvent(new CustomEvent(name, { detail, bubbles: true }));
+    },
+    emitCancelable(name, detail = {}, target = window) {
+      if (!target || typeof target.dispatchEvent !== 'function') return true;
+      const ev = new CustomEvent(name, { detail, bubbles: true, cancelable: true });
+      return target.dispatchEvent(ev);
     },
     setTimer(fn, ms) {
       const id = setTimeout(() => {
@@ -115,6 +121,56 @@
       }
     }
   };
+
+  /* Smart Viewport Edge-Flip Positioner for Dropdowns & Popovers */
+  const Positioner = {
+    reset(panel) {
+      if (!panel) return;
+      panel.classList.remove('sui-flip-top', 'sui-flip-end');
+    },
+    adjust(panel) {
+      if (!panel || typeof panel.getBoundingClientRect !== 'function') return;
+      this.reset(panel);
+      const rect = panel.getBoundingClientRect();
+      const vw = (typeof window !== 'undefined' && window.innerWidth) || 1024;
+      const vh = (typeof window !== 'undefined' && window.innerHeight) || 768;
+      if (rect.bottom > vh - 8 && rect.top > rect.height) {
+        panel.classList.add('sui-flip-top');
+      }
+      if (rect.right > vw - 8 && rect.left > rect.width * 0.5) {
+        panel.classList.add('sui-flip-end');
+      }
+    }
+  };
+
+  /* Instance Registry Factory (Bootstrap-style getOrCreateInstance + options) */
+  function createInstanceRegistry(api) {
+    const instances = new WeakMap();
+    return function getOrCreateInstance(target, options = {}) {
+      const el = typeof target === 'string' ? document.getElementById(target) : target;
+      if (!el) return null;
+      if (instances.has(el)) {
+        const existing = instances.get(el);
+        Object.assign(existing.options, options);
+        return existing;
+      }
+      const inst = {
+        element: el,
+        options: { ...options },
+        open: (trig) => api.open(el, trig),
+        close: () => api.close(el),
+        toggle: (trig) => api.toggle(el, trig),
+        dispose: () => {
+          api.close(el);
+          instances.delete(el);
+        }
+      };
+      if (options.backdrop === 'static') el.setAttribute('data-sui-backdrop', 'static');
+      if (options.keyboard === false) el.setAttribute('data-sui-keyboard', 'false');
+      instances.set(el, inst);
+      return inst;
+    };
+  }
 
   /* ==========================================================================
      2. THEME ENGINE (light | dark | oled | auto/system)
@@ -371,6 +427,7 @@
         return true;
       }
 
+      if (!Utils.emitCancelable('sui:modal-before-open', { id: modal.id, element: modal })) return false;
       const returnFocusTo = triggerElement || document.activeElement;
       this._stack.push({ modal, returnFocusTo });
 
@@ -407,6 +464,7 @@
       const idx = this._stack.findIndex((entry) => entry.modal === modal);
       const wasOpen = idx !== -1 || modal.classList.contains('is-open') || modal.classList.contains('active');
       if (!wasOpen) return false;
+      if (!Utils.emitCancelable('sui:modal-before-close', { id: modal.id, element: modal })) return false;
 
       modal.classList.remove('is-open', 'active');
       modal.setAttribute('aria-hidden', 'true');
@@ -545,6 +603,7 @@
       const panel = typeof target === 'string' ? document.getElementById(target) : target;
       if (!panel) return false;
       if (this._active === panel) return true;
+      if (!Utils.emitCancelable('sui:offcanvas-before-open', { id: panel.id, element: panel })) return false;
       if (this._active && this._active !== panel) this.close(this._active);
 
       this._returnFocusTo = trigger || document.activeElement;
@@ -553,6 +612,7 @@
       backdrop.classList.add('is-open');
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
+      Positioner.adjust(panel);
       ScrollLock.lock();
       Utils.triggerReflow(panel);
 
@@ -570,9 +630,11 @@
           : target
         : this._active;
       if (!panel || (this._active !== panel && !panel.classList.contains('is-open'))) return false;
+      if (!Utils.emitCancelable('sui:offcanvas-before-close', { id: panel.id, element: panel })) return false;
 
       panel.classList.remove('is-open');
       panel.setAttribute('aria-hidden', 'true');
+      Positioner.reset(panel);
       if (this._backdrop) this._backdrop.classList.remove('is-open');
       if (this._active === panel) {
         this._active = null;
@@ -706,7 +768,10 @@
     open(target, trigger = null) {
       const dd = typeof target === 'string' ? document.getElementById(target) : target;
       if (!dd) return false;
+      if (!Utils.emitCancelable('sui:dropdown-before-open', { id: dd.id, element: dd })) return false;
       dd.classList.add('is-open');
+      const menu = dd.querySelector('.sui-dropdown-menu');
+      if (menu) Positioner.adjust(menu);
       const trig =
         trigger ||
         (dd.id ? document.querySelector(`[data-sui-dropdown-trigger="${dd.id}"]`) : null);
@@ -721,7 +786,10 @@
       if (target) {
         const dd = typeof target === 'string' ? document.getElementById(target) : target;
         if (!dd || !dd.classList.contains('is-open')) return false;
+        if (!Utils.emitCancelable('sui:dropdown-before-close', { id: dd.id, element: dd })) return false;
         dd.classList.remove('is-open');
+        const menu = dd.querySelector('.sui-dropdown-menu');
+        if (menu) Positioner.reset(menu);
         const trig =
           this._triggers.get(dd) ||
           (dd.id ? document.querySelector(`[data-sui-dropdown-trigger="${dd.id}"]`) : null);
@@ -965,6 +1033,7 @@
       this.closeAll(false);
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
+      Positioner.adjust(panel);
       const trig =
         trigger ||
         (panel.id ? document.querySelector(`[data-sui-popover-target="${panel.id}"]`) : null);
@@ -980,6 +1049,7 @@
       if (!panel || !panel.classList.contains('is-open')) return false;
       panel.classList.remove('is-open');
       panel.setAttribute('aria-hidden', 'true');
+      Positioner.reset(panel);
       const trig = this._triggers.get(panel);
       this._triggers.delete(panel);
       if (trig) {
@@ -1301,7 +1371,29 @@
       });
       Utils.emit('sui:carousel-change', { index: clamped, wrapper });
     },
+    hydrate(root = document) {
+      root.querySelectorAll('.sui-carousel-wrapper[data-sui-interval]').forEach((wrapper) => {
+        if (wrapper._suiAutoplayInit) return;
+        const ms = parseInt(wrapper.getAttribute('data-sui-interval') || '0', 10);
+        if (!ms || ms < 500 || Utils.prefersReducedMotion()) return;
+        wrapper._suiAutoplayInit = true;
+        let paused = false;
+        const timerId = setInterval(() => {
+          if (paused || !document.contains(wrapper)) return;
+          const current = parseInt(wrapper.getAttribute('data-sui-carousel-index') || '0', 10);
+          this.goTo(wrapper, current + 1);
+        }, ms);
+        activeIntervals.add(timerId);
+        wrapper.addEventListener('mouseenter', () => { paused = true; });
+        wrapper.addEventListener('mouseleave', () => { paused = false; });
+        wrapper.addEventListener('focusin', () => { paused = true; });
+        wrapper.addEventListener('focusout', () => { paused = false; });
+      });
+    },
     init() {
+      this.hydrate(document);
+      let touchStartX = 0;
+
       Utils.listen(document, 'click', (e) => {
         const prev = Utils.closestTarget(e, '[data-sui-carousel-prev]');
         const next = Utils.closestTarget(e, '[data-sui-carousel-next]');
@@ -1316,6 +1408,30 @@
         else if (next) this.goTo(wrapper, current + 1);
         else if (dot) this.goTo(wrapper, parseInt(dot.getAttribute('data-sui-carousel-slide-to') || '0', 10));
       });
+
+      Utils.listen(document, 'keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        const wrapper = Utils.closestTarget(e, '.sui-carousel-wrapper');
+        if (!wrapper) return;
+        e.preventDefault();
+        const current = parseInt(wrapper.getAttribute('data-sui-carousel-index') || '0', 10);
+        this.goTo(wrapper, e.key === 'ArrowRight' ? current + 1 : current - 1);
+      });
+
+      Utils.listen(document, 'touchstart', (e) => {
+        const wrapper = Utils.closestTarget(e, '.sui-carousel-wrapper');
+        if (wrapper && e.touches && e.touches[0]) touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+
+      Utils.listen(document, 'touchend', (e) => {
+        const wrapper = Utils.closestTarget(e, '.sui-carousel-wrapper');
+        if (!wrapper || !e.changedTouches || !e.changedTouches[0]) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) >= 40) {
+          const current = parseInt(wrapper.getAttribute('data-sui-carousel-index') || '0', 10);
+          this.goTo(wrapper, dx < 0 ? current + 1 : current - 1);
+        }
+      }, { passive: true });
     }
   };
 
@@ -1366,8 +1482,18 @@
             entries.forEach((entry) => {
               if (!entry.isIntersecting) return;
               links.forEach((l) => l.classList.remove('active'));
+              nav.querySelectorAll('.has-active-child').forEach((g) => g.classList.remove('has-active-child'));
               const match = targets.find((t) => t.section === entry.target);
-              if (match) match.link.classList.add('active');
+              if (match) {
+                match.link.classList.add('active');
+                let parent = match.link.parentElement;
+                while (parent && parent !== nav) {
+                  if (parent.matches && parent.matches('li, .docs-nav-group, [data-sui-scrollspy-group]')) {
+                    parent.classList.add('has-active-child');
+                  }
+                  parent = parent.parentElement;
+                }
+              }
             });
           },
           { rootMargin: '-25% 0px -65% 0px' }
@@ -1622,6 +1748,7 @@
     // Safe to call repeatedly for newly injected Flask/Django/HTMX fragments
     const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
     TabEngine.hydrate(scope);
+    Carousel.hydrate(scope);
     FormUtilities.hydrate(scope);
     ScrollEngine.hydrate(scope);
     ScrollSpy.hydrate(scope);
@@ -1644,6 +1771,8 @@
     activeObservers.clear();
     activeTimers.forEach((id) => clearTimeout(id));
     activeTimers.clear();
+    activeIntervals.forEach((id) => clearInterval(id));
+    activeIntervals.clear();
     Toast._timers.clear();
 
     Modal._stack = [];
@@ -1666,8 +1795,13 @@
     }
   }
 
+  Modal.getOrCreateInstance = createInstanceRegistry(Modal);
+  Offcanvas.getOrCreateInstance = createInstanceRegistry(Offcanvas);
+  Dropdown.getOrCreateInstance = createInstanceRegistry(Dropdown);
+
   return {
     version: '3.0.0',
+    positioner: Positioner,
     init: initialize,
     destroy,
     theme: ThemeEngine,

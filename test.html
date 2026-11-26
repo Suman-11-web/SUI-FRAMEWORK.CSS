@@ -1,71 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
-
+<html data-theme="oled"> 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sui.css Project</title>
+    
+    <!-- SUI CSS v3.0.0 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css">
 </head>
 <body>
-  
-
-<button class="sui-btn sui-btn-primary">
-  Get Started
-</button>
-
-
-<button type="button" class="sui-btn sui-btn-primary" data-sui-modal-target="demoModal">Open Modal</button>
-
-<div id="demoModal" class="sui-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="demoModalTitle">
-  <div class="sui-modal-overlay"></div>
-  <div class="sui-modal-dialog">
-    <div class="sui-modal-header">
-      <h3 id="demoModalTitle">Confirm Action</h3>
-      <button type="button" class="sui-modal-close" data-sui-modal-close aria-label="Close">&times;</button>
-    </div>
-    <div class="sui-modal-body">
-      <input type="text" class="sui-input" placeholder="Auto-focused on open">
-    </div>
-    <div class="sui-modal-footer">
-      <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-sui-modal-close>Cancel</button>
-      <button type="button" class="sui-btn sui-btn-primary sui-btn-sm" data-sui-modal-close>Save</button>
-    </div>
-  </div>
+    <h1>Hello Sui.css</h1>
+    
+    <!-- SUI JS v3.0.0 -->
+    <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"></script>
+    <div class="sui-form-floating">
+  <input id="email" type="email" class="sui-input" placeholder="name@example.com">
+  <label for="email">Email address</label>
 </div>
+<input class="sui-input is-invalid"><span class="sui-invalid-feedback">Invalid</span>
 
-
-
-<div class="sui-dropdown" id="accountMenu">
-  <button type="button" class="sui-btn sui-btn-outline" data-sui-dropdown-trigger="accountMenu" aria-expanded="false">
-    Account &#9662;
-  </button>
-  <div class="sui-dropdown-menu" role="menu">
-    <button type="button" class="sui-dropdown-item" role="menuitem">Settings</button>
-    <button type="button" class="sui-dropdown-item" role="menuitem">Billing</button>
-    <div class="sui-dropdown-divider"></div>
-    <button type="button" class="sui-dropdown-item" role="menuitem">Log out</button>
-  </div>
-</div>
-
-
-
-<link rel="stylesheet" href="./dist/sui.min.css">
-<script defer src="./dist/sui.min.js"></script>
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    window.addEventListener('sui:modal-close', (e) => {
-      SUI.toast.info(`Closed modal #${e.detail.id}`, 'Lifecycle');
-    });
-
-    // After injecting server-rendered HTML into #fragment:
-    const host = document.getElementById('fragment');
-    if (host) SUI.init(host);
-
-    // Switch to OS-following theme:
-    SUI.theme.set('auto');
-  });
-</script>
-
+SUI.alert
 </body>
 </html>

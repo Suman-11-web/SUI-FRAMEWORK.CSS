@@ -400,3 +400,13 @@
   font-weight: 500;
   margin-top: 0.25rem;
 }
+
+/* Select & Input Group Sizing Variants */
+.sui-select-sm { padding: 0.38rem 2rem 0.38rem 0.75rem; font-size: 0.85rem; border-radius: var(--sui-radius-sm); }
+.sui-select-lg { padding: 0.82rem 2.75rem 0.82rem 1.25rem; font-size: 1.05rem; border-radius: var(--sui-radius-lg); }
+.sui-input-group-sm .sui-input,
+.sui-input-group-sm .sui-input-prefix,
+.sui-input-group-sm .sui-input-suffix { padding-block: 0.38rem; font-size: 0.85rem; }
+.sui-input-group-lg .sui-input,
+.sui-input-group-lg .sui-input-prefix,
+.sui-input-group-lg .sui-input-suffix { padding-block: 0.82rem; font-size: 1.05rem; }

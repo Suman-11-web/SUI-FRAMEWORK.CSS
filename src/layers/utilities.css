@@ -709,3 +709,182 @@
 .sui-hover-scale:hover { transform: scale(1.02); }
 .sui-active-scale:active { transform: scale(0.98); }
 .sui-disabled { opacity: 0.55; pointer-events: none; cursor: not-allowed; }
+
+/* --------------------------------------------------------------------------
+   14. LOGICAL RTL SPACING & BOOTSTRAP HELPERS (ms/me/ps/pe, stretched-link, vr, ratio)
+   -------------------------------------------------------------------------- */
+.sui-ms-0 { margin-inline-start: 0px; }
+.sui-ms-1 { margin-inline-start: var(--sui-space-1); }
+.sui-ms-2 { margin-inline-start: var(--sui-space-2); }
+.sui-ms-3 { margin-inline-start: var(--sui-space-3); }
+.sui-ms-4 { margin-inline-start: var(--sui-space-4); }
+.sui-ms-6 { margin-inline-start: var(--sui-space-6); }
+.sui-ms-auto { margin-inline-start: auto; }
+
+.sui-me-0 { margin-inline-end: 0px; }
+.sui-me-1 { margin-inline-end: var(--sui-space-1); }
+.sui-me-2 { margin-inline-end: var(--sui-space-2); }
+.sui-me-3 { margin-inline-end: var(--sui-space-3); }
+.sui-me-4 { margin-inline-end: var(--sui-space-4); }
+.sui-me-6 { margin-inline-end: var(--sui-space-6); }
+.sui-me-auto { margin-inline-end: auto; }
+
+.sui-ps-0 { padding-inline-start: 0px; }
+.sui-ps-2 { padding-inline-start: var(--sui-space-2); }
+.sui-ps-4 { padding-inline-start: var(--sui-space-4); }
+.sui-ps-6 { padding-inline-start: var(--sui-space-6); }
+
+.sui-pe-0 { padding-inline-end: 0px; }
+.sui-pe-2 { padding-inline-end: var(--sui-space-2); }
+.sui-pe-4 { padding-inline-end: var(--sui-space-4); }
+.sui-pe-6 { padding-inline-end: var(--sui-space-6); }
+
+/* Stretched Link, Vertical Rule & Embed Ratios */
+.sui-stretched-link::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+}
+.sui-vr {
+  display: inline-block;
+  align-self: stretch;
+  width: 1px;
+  min-height: 1em;
+  background-color: var(--sui-border-strong);
+  opacity: 0.75;
+}
+.sui-ratio {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.sui-ratio > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.sui-ratio-1x1  { aspect-ratio: 1 / 1; }
+.sui-ratio-4x3  { aspect-ratio: 4 / 3; }
+.sui-ratio-16x9 { aspect-ratio: 16 / 9; }
+.sui-ratio-21x9 { aspect-ratio: 21 / 9; }
+
+/* --------------------------------------------------------------------------
+   15. TAILWIND COMPLETE: TRANSFORMS, FILTERS, GRID/FLEX, LISTS, SHADES & STATES
+   -------------------------------------------------------------------------- */
+/* Transforms */
+.sui-scale-90  { transform: scale(0.9); }
+.sui-scale-95  { transform: scale(0.95); }
+.sui-scale-100 { transform: scale(1); }
+.sui-scale-105 { transform: scale(1.05); }
+.sui-scale-110 { transform: scale(1.1); }
+.sui-rotate-0   { transform: rotate(0deg); }
+.sui-rotate-45  { transform: rotate(45deg); }
+.sui-rotate-90  { transform: rotate(90deg); }
+.sui-rotate-180 { transform: rotate(180deg); }
+.sui--rotate-45 { transform: rotate(-45deg); }
+.sui--rotate-90 { transform: rotate(-90deg); }
+.sui-translate-x-0  { transform: translateX(0); }
+.sui-translate-x-2  { transform: translateX(var(--sui-space-2)); }
+.sui-translate-x-4  { transform: translateX(var(--sui-space-4)); }
+.sui--translate-x-2 { transform: translateX(calc(var(--sui-space-2) * -1)); }
+.sui-translate-y-0  { transform: translateY(0); }
+.sui-translate-y-2  { transform: translateY(var(--sui-space-2)); }
+.sui-translate-y-4  { transform: translateY(var(--sui-space-4)); }
+.sui--translate-y-2 { transform: translateY(calc(var(--sui-space-2) * -1)); }
+
+/* Filters */
+.sui-blur-none { filter: blur(0); }
+.sui-blur-sm   { filter: blur(4px); }
+.sui-blur-md   { filter: blur(8px); }
+.sui-blur-lg   { filter: blur(16px); }
+.sui-blur-xl   { filter: blur(24px); }
+.sui-grayscale { filter: grayscale(100%); }
+.sui-brightness-75  { filter: brightness(0.75); }
+.sui-brightness-100 { filter: brightness(1); }
+.sui-brightness-110 { filter: brightness(1.1); }
+.sui-brightness-125 { filter: brightness(1.25); }
+.sui-contrast-75  { filter: contrast(0.75); }
+.sui-contrast-100 { filter: contrast(1); }
+.sui-contrast-125 { filter: contrast(1.25); }
+
+/* Grid, Flex, List & SR-Only Completeness */
+.sui-gap-x-1 { column-gap: var(--sui-space-1); }
+.sui-gap-x-2 { column-gap: var(--sui-space-2); }
+.sui-gap-x-3 { column-gap: var(--sui-space-3); }
+.sui-gap-x-4 { column-gap: var(--sui-space-4); }
+.sui-gap-x-6 { column-gap: var(--sui-space-6); }
+.sui-gap-x-8 { column-gap: var(--sui-space-8); }
+.sui-gap-y-1 { row-gap: var(--sui-space-1); }
+.sui-gap-y-2 { row-gap: var(--sui-space-2); }
+.sui-gap-y-3 { row-gap: var(--sui-space-3); }
+.sui-gap-y-4 { row-gap: var(--sui-space-4); }
+.sui-gap-y-6 { row-gap: var(--sui-space-6); }
+.sui-gap-y-8 { row-gap: var(--sui-space-8); }
+
+.sui-col-span-full { grid-column: 1 / -1; }
+.sui-row-span-1 { grid-row: span 1 / span 1; }
+.sui-row-span-2 { grid-row: span 2 / span 2; }
+.sui-row-span-3 { grid-row: span 3 / span 3; }
+.sui-row-span-4 { grid-row: span 4 / span 4; }
+.sui-row-span-full { grid-row: 1 / -1; }
+
+.sui-place-self-auto    { place-self: auto; }
+.sui-place-self-start   { place-self: start; }
+.sui-place-self-end     { place-self: end; }
+.sui-place-self-center  { place-self: center; }
+.sui-place-self-stretch { place-self: stretch; }
+
+.sui-list-none    { list-style-type: none; padding-left: 0; }
+.sui-list-disc    { list-style-type: disc; padding-left: 1.25rem; }
+.sui-list-decimal { list-style-type: decimal; padding-left: 1.25rem; }
+
+.sui-not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Semantic Shade & Opacity Utilities */
+.sui-bg-primary-50  { background-color: var(--sui-color-primary-50); }
+.sui-bg-primary-100 { background-color: var(--sui-color-primary-100); }
+.sui-bg-primary-500 { background-color: var(--sui-color-primary-500); }
+.sui-bg-primary-600 { background-color: var(--sui-color-primary-600); }
+.sui-bg-primary-900 { background-color: var(--sui-color-primary-900); }
+.sui-bg-success-50  { background-color: var(--sui-color-success-50); }
+.sui-bg-success-500 { background-color: var(--sui-color-success-500); }
+.sui-bg-danger-50   { background-color: var(--sui-color-danger-50); }
+.sui-bg-danger-500  { background-color: var(--sui-color-danger-500); }
+.sui-bg-warning-50  { background-color: var(--sui-color-warning-50); }
+.sui-bg-warning-500 { background-color: var(--sui-color-warning-500); }
+.sui-bg-info-50     { background-color: var(--sui-color-info-50); }
+.sui-bg-info-500    { background-color: var(--sui-color-info-500); }
+
+.sui-bg-primary-10 { background-color: oklch(from var(--sui-color-primary-500) l c h / 0.10); }
+.sui-bg-primary-20 { background-color: oklch(from var(--sui-color-primary-500) l c h / 0.20); }
+.sui-bg-success-10 { background-color: oklch(from var(--sui-color-success-500) l c h / 0.10); }
+.sui-bg-danger-10  { background-color: oklch(from var(--sui-color-danger-500) l c h / 0.10); }
+.sui-bg-warning-10 { background-color: oklch(from var(--sui-color-warning-500) l c h / 0.10); }
+.sui-bg-info-10    { background-color: oklch(from var(--sui-color-info-500) l c h / 0.10); }
+.sui-border-primary-30 { border-color: oklch(from var(--sui-color-primary-500) l c h / 0.30); }
+.sui-border-danger-30  { border-color: oklch(from var(--sui-color-danger-500) l c h / 0.30); }
+
+/* State Variant Helpers (hover, focus, group-hover, peer-checked, odd/even) */
+.sui-hover-opacity-80:hover { opacity: 0.8; }
+.sui-hover-text-primary:hover { color: var(--sui-color-primary-500); }
+.sui-hover-border-primary:hover { border-color: var(--sui-color-primary-500); }
+.sui-hover-bg-primary:hover { background-color: var(--sui-color-primary-500); color: #ffffff; }
+.sui-focus-border-primary:focus { border-color: var(--sui-color-primary-500); }
+.sui-group:hover .sui-group-hover-opacity-100 { opacity: 1; }
+.sui-group:hover .sui-group-hover-translate-x-1 { transform: translateX(0.25rem); }
+.sui-group:hover .sui-group-hover-text-primary { color: var(--sui-color-primary-500); }
+.sui-peer:checked ~ .sui-peer-checked-bg-primary { background-color: var(--sui-color-primary-500); color: #ffffff; }
+.sui-odd-bg-subtle > *:nth-child(odd) { background-color: var(--sui-surface-hover); }
+.sui-even-bg-subtle > *:nth-child(even) { background-color: var(--sui-surface-hover); }

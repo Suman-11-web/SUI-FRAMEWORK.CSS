@@ -635,3 +635,54 @@
 .sui-tooltip-right.is-tooltip-open::after {
   transform: translateY(-50%) translateX(0);
 }
+
+/* Modal Layout & Size Variants (Bootstrap Parity) */
+.sui-modal-top {
+  align-items: flex-start;
+  padding-top: var(--sui-space-12);
+}
+.sui-modal-dialog-centered {
+  margin-block: auto;
+}
+.sui-modal-dialog-scrollable .sui-modal-dialog {
+  max-height: calc(100dvh - var(--sui-space-8));
+  overflow: hidden;
+}
+.sui-modal-dialog-scrollable .sui-modal-body {
+  overflow-y: auto;
+}
+.sui-modal-fullscreen {
+  padding: 0;
+}
+.sui-modal-fullscreen .sui-modal-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  border-radius: 0;
+  border: none;
+}
+@media (max-width: 767.98px) {
+  .sui-modal-fullscreen-md-down { padding: 0; }
+  .sui-modal-fullscreen-md-down .sui-modal-dialog {
+    width: 100vw; max-width: none; height: 100dvh; max-height: none; border-radius: 0; border: none;
+  }
+}
+@media (max-width: 991.98px) {
+  .sui-modal-fullscreen-lg-down { padding: 0; }
+  .sui-modal-fullscreen-lg-down .sui-modal-dialog {
+    width: 100vw; max-width: none; height: 100dvh; max-height: none; border-radius: 0; border: none;
+  }
+}
+
+/* Smart Edge-Flip Positioning Helpers (Applied automatically by SUI.js Positioner) */
+.sui-dropdown-menu.sui-flip-top,
+.sui-popover-panel.sui-flip-top {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+.sui-dropdown-menu.sui-flip-end,
+.sui-popover-panel.sui-flip-end {
+  left: auto;
+  right: 0;
+}

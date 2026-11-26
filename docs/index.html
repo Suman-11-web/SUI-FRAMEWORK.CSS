@@ -66,6 +66,7 @@
           <a href="#feedback" class="docs-nav-link">Alerts, Toasts &amp; Progress</a>
           <a href="#carousel" class="docs-nav-link">Carousel &amp; Motion</a>
           <a href="#js-api" class="docs-nav-link">JavaScript API (window.SUI)</a>
+          <a href="#dx-tooling" class="docs-nav-link">CLI Purger, JIT &amp; TypeScript</a>
         </div>
         <div class="docs-nav-group">
           <div class="docs-nav-title">Standalone Examples</div>
@@ -105,17 +106,17 @@
 
       <section id="installation" class="docs-section">
         <h2 class="sui-text-2xl">Installation &amp; Quick Start</h2>
-        <p class="docs-section-lead">Include <code>dist/sui.min.css</code> in your page head—no build step required. Add <code>dist/sui.min.js</code> only if you use interactive components (modals, offcanvas, toasts, dropdowns, navbar toggle).</p>
+        <p class="docs-section-lead">Paste the jsDelivr CDN links below into any HTML page—no build step or local files required. Add <code>sui.min.js</code> for interactive components (modals, offcanvas, toasts, dropdowns, navbar toggle).</p>
         <div class="docs-demo">
           <div class="docs-code-bar">
-            <span>HTML — Quick Start (v3.0.0)</span>
+            <span>HTML — Quick Start via jsDelivr CDN (v3.0.0)</span>
             <button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button>
           </div>
           <pre class="docs-code-pre"><code>&lt;!-- 1. Core Stylesheet (Required) --&gt;
-&lt;link rel="stylesheet" href="./dist/sui.min.css"&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css"&gt;
 
 &lt;!-- 2. Interactive Runtime (Optional — use defer in &lt;head&gt; or before &lt;/body&gt;) --&gt;
-&lt;script defer src="./dist/sui.min.js"&gt;&lt;/script&gt;</code></pre>
+&lt;script defer src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"&gt;&lt;/script&gt;</code></pre>
         </div>
       </section>
 
@@ -136,7 +137,7 @@
               <span class="sui-badge sui-badge-success">Your Custom CSS</span>
             </div>
           </div>
-          <div class="docs-code-bar"><span>CSS — Custom Overrides Without !important</span></div>
+          <div class="docs-code-bar"><span>CSS — Custom Overrides Without !important</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>:root { --sui-brand-hue: 165; }
 .sui-card { border-radius: 1.25rem; }</code></pre>
         </div>
@@ -167,7 +168,7 @@
               <div class="docs-swatch" style="background: var(--sui-color-info-500);"><span>Info</span><code>info-500</code></div>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Theme Modes</span></div>
+          <div class="docs-code-bar"><span>HTML — Theme Modes</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;html data-theme="light"&gt; &lt;!-- Default --&gt;
 &lt;html data-theme="dark"&gt;  &lt;!-- Dark Mode --&gt;
 &lt;html data-theme="oled"&gt;  &lt;!-- True Black OLED --&gt;
@@ -198,7 +199,7 @@
               <div class="sui-card sui-p-4 sui-text-center">Col 4</div>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Responsive Grid</span></div>
+          <div class="docs-code-bar"><span>HTML — Responsive Grid</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;div class="sui-grid sui-grid-cols-1 sui-sm-grid-cols-2 sui-lg-grid-cols-4 sui-gap-4"&gt;
   &lt;div class="sui-card"&gt;Col 1&lt;/div&gt;
 &lt;/div&gt;</code></pre>
@@ -221,7 +222,7 @@
               <div class="sui-p-3">Row 3 inside <code>.sui-divide-y</code></div>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Utilities Composition</span></div>
+          <div class="docs-code-bar"><span>HTML — Utilities Composition</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;div class="sui-p-4 sui-rounded-lg sui-ring-2 sui-ring-primary"&gt;Focus Ring&lt;/div&gt;
 &lt;h3 class="sui-text-2xl sui-font-bold sui-text-gradient"&gt;Gradient Heading&lt;/h3&gt;
 &lt;div class="sui-divide-y"&gt;&lt;div&gt;Row 1&lt;/div&gt;&lt;div&gt;Row 2&lt;/div&gt;&lt;/div&gt;</code></pre>
@@ -258,7 +259,7 @@
               <span class="sui-badge sui-badge-info">Info</span>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Buttons &amp; Badges</span></div>
+          <div class="docs-code-bar"><span>HTML — Buttons &amp; Badges</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;button class="sui-btn sui-btn-primary"&gt;Primary&lt;/button&gt;
 &lt;button class="sui-btn sui-btn-info"&gt;Info&lt;/button&gt;
 &lt;span class="sui-badge sui-badge-success sui-badge-dot"&gt;Live&lt;/span&gt;</code></pre>
@@ -303,7 +304,7 @@
               </nav>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Card, List Group &amp; Pagination</span></div>
+          <div class="docs-code-bar"><span>HTML — Card, List Group &amp; Pagination</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;article class="sui-card"&gt;&lt;div class="sui-card-body"&gt;&lt;h3 class="sui-card-title"&gt;Title&lt;/h3&gt;&lt;/div&gt;&lt;/article&gt;
 &lt;ul class="sui-list-group"&gt;&lt;li class="sui-list-group-item active"&gt;Item&lt;/li&gt;&lt;/ul&gt;
 &lt;ul class="sui-pagination"&gt;&lt;li class="sui-page-item active"&gt;&lt;a class="sui-page-link"&gt;1&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</code></pre>
@@ -338,7 +339,7 @@
               </div>
             </form>
           </div>
-          <div class="docs-code-bar"><span>HTML — Floating Label &amp; Validation</span></div>
+          <div class="docs-code-bar"><span>HTML — Floating Label &amp; Validation</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;div class="sui-form-floating"&gt;
   &lt;input id="email" type="email" class="sui-input" placeholder="name@example.com"&gt;
   &lt;label for="email"&gt;Email address&lt;/label&gt;
@@ -372,7 +373,7 @@
               <button type="button" class="sui-tab" role="tab" aria-selected="false">Tokens</button>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Responsive Navbar</span></div>
+          <div class="docs-code-bar"><span>HTML — Responsive Navbar</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;nav class="sui-navbar"&gt;
   &lt;a class="sui-navbar-brand" href="#"&gt;Brand&lt;/a&gt;
   &lt;button class="sui-navbar-toggle" aria-expanded="false" aria-controls="navMenu"&gt;&amp;#9776;&lt;/button&gt;
@@ -397,7 +398,7 @@
               </table>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Responsive Table</span></div>
+          <div class="docs-code-bar"><span>HTML — Responsive Table</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;div class="sui-table-wrapper"&gt;
   &lt;table class="sui-table-styled sui-table-striped sui-table-hover"&gt;...&lt;/table&gt;
 &lt;/div&gt;</code></pre>
@@ -442,7 +443,7 @@
               </div>
             </div>
           </div>
-          <div class="docs-code-bar"><span>HTML — Modal &amp; Offcanvas Triggers</span></div>
+          <div class="docs-code-bar"><span>HTML — Modal &amp; Offcanvas Triggers</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>&lt;button class="sui-btn sui-btn-primary" data-sui-modal-target="myModal"&gt;Open Modal&lt;/button&gt;
 &lt;button class="sui-btn sui-btn-secondary" data-sui-offcanvas-target="myDrawer"&gt;Open Drawer&lt;/button&gt;</code></pre>
         </div>
@@ -467,7 +468,7 @@
               <div class="sui-progress-bar sui-progress-striped sui-progress-animated" style="width: 72%;"></div>
             </div>
           </div>
-          <div class="docs-code-bar"><span>JS &amp; HTML — Toasts &amp; Animated Progress</span></div>
+          <div class="docs-code-bar"><span>JS &amp; HTML — Toasts &amp; Animated Progress</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>SUI.toast.success('Changes saved!', 'Saved');
 &lt;div class="sui-progress"&gt;
   &lt;div class="sui-progress-bar sui-progress-striped sui-progress-animated" style="width: 72%"&gt;&lt;/div&gt;
@@ -504,7 +505,7 @@
         <h2 class="sui-text-2xl">JavaScript API Reference (<code>window.SUI</code>)</h2>
         <p class="docs-section-lead">Every interactive module is auto-initialized on load and exposed cleanly on <code>window.SUI</code> (v3.0.0).</p>
         <div class="docs-demo">
-          <div class="docs-code-bar"><span>JS — Programmatic Lifecycle &amp; Dynamic Fragment Example</span></div>
+          <div class="docs-code-bar"><span>JS — Programmatic Lifecycle &amp; Dynamic Fragment Example</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
           <pre class="docs-code-pre"><code>// Open a modal and listen for its lifecycle event
 window.addEventListener('sui:modal-close', (e) =&gt; console.log('Closed:', e.detail.id));
 SUI.modal.open('myModal');
@@ -535,6 +536,41 @@ SUI.destroy();</code></pre>
               <tr><td><code>SUI.init / destroy</code></td><td><code>SUI.init(root?)</code>, <code>SUI.destroy()</code></td><td>Idempotent setup for dynamic HTML fragments (Flask/Django) and full listener/timer cleanup</td></tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      
+      <section id="dx-tooling" class="docs-section">
+        <h2 class="sui-text-2xl">CLI Tree-Shaker, Arbitrary Values &amp; TypeScript</h2>
+        <p class="docs-section-lead">Keep zero-build CDN simplicity in development, or run SUI's zero-dependency CLI purger for ultra-small production builds with arbitrary values like <code>sui-w-[342px]</code> and state prefixes.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <div class="sui-flex sui-flex-wrap sui-gap-3 sui-items-center">
+              <span class="sui-badge sui-badge-primary">dist/sui.d.ts TypeScript Types</span>
+              <span class="sui-badge sui-badge-success">npx sui-css Purger + JIT</span>
+              <span class="sui-badge sui-badge-info">Smart Edge-Flip Positioner</span>
+              <span class="sui-badge sui-badge-accent">Cancelable before-* Events</span>
+              <span class="sui-badge sui-badge-outline">Instance Registry (getOrCreateInstance)</span>
+            </div>
+            <div class="sui-flex sui-flex-wrap sui-gap-2 sui-items-center">
+              <button type="button" class="sui-btn sui-btn-outline-primary sui-btn-sm">Outline Primary</button>
+              <button type="button" class="sui-btn sui-btn-outline-success sui-btn-sm">Outline Success</button>
+              <button type="button" class="sui-btn sui-btn-outline-danger sui-btn-sm">Outline Danger</button>
+              <button type="button" class="sui-btn sui-btn-outline-warning sui-btn-sm">Outline Warning</button>
+              <button type="button" class="sui-btn sui-btn-outline-info sui-btn-sm">Outline Info</button>
+              <span class="sui-vr"></span>
+              <span class="sui-chip sui-chip-primary">Removable Chip <button type="button" class="sui-chip-close" data-sui-dismiss="chip" aria-label="Remove">&times;</button></span>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>CLI &amp; JS — Tree-Shaking, Cancelable Events &amp; Instance Registry</span><button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button></div>
+          <pre class="docs-code-pre"><code># Purge unused utilities &amp; compile arbitrary values (sui-w-[342px], sui-hover:sui-bg-[#123456])
+npm run purge -- --content "index.html,docs/index.html" --output dist/sui.purged.css
+
+// Bootstrap-style Instance Registry + Cancelable before-close event
+const modal = SUI.modal.getOrCreateInstance('myModal', { backdrop: 'static' });
+window.addEventListener('sui:modal-before-close', (e) =&gt; {
+  if (hasUnsavedChanges) e.preventDefault();
+});</code></pre>
         </div>
       </section>
 

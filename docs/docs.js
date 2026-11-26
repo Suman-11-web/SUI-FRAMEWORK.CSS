@@ -71,4 +71,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('demoForm')?.addEventListener('submit', (e) => e.preventDefault());
+
+  document.querySelectorAll('.btn-copy-code').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const demo = btn.closest('.docs-demo');
+      const codeEl = demo?.querySelector('.docs-code-pre code');
+      if (!codeEl) return;
+      const text = codeEl.textContent || '';
+      try {
+        if (window.SUI?.clipboard?.text) {
+          await window.SUI.clipboard.text(text);
+        } else {
+          await navigator.clipboard.writeText(text);
+        }
+        const prev = btn.textContent;
+        btn.textContent = 'Copied \u2713';
+        setTimeout(() => {
+          btn.textContent = prev || 'Copy';
+        }, 1600);
+      } catch {
+        btn.textContent = 'Failed';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+        }, 1600);
+      }
+    });
+  });
 });
