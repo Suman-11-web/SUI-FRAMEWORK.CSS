@@ -1,552 +1,570 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SUI.css Documentation — Modern CSS Framework</title>
-  
+  <title>SUI.css v3.0.0 — Official Documentation</title>
+  <meta name="description" content="Complete documentation for SUI.css v3.0.0: 8-layer CSS cascade, OKLCH design tokens, Bootstrap-parity components, Tailwind-parity utilities, and zero-dependency JS runtime.">
   <link rel="stylesheet" href="../dist/sui.min.css">
-
-
-
-
-
-
-<meta name="description"
-      content="Learn how to use SUI.css with installation, CDN setup, components, utilities, layouts, animations, and practical examples.">
-
-<meta name="keywords"
-      content="SUI.css documentation, SUI.css tutorial, CSS framework documentation, CSS utilities, CSS components">
-
-<meta name="author" content="SUI.css">
-
-<meta name="robots" content="index, follow">
-
-<link rel="canonical"
-      href="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/docs/index.html">
-
-<meta property="og:type" content="website">
-<meta property="og:title"
-      content="SUI.css Documentation">
-<meta property="og:description"
-      content="Learn how to install and use SUI.css with practical documentation and examples.">
-<meta property="og:url"
-      content="https://suman-11-web.github.io/SUI-FRAMEWORK.CSS/docs/index.html">
-<meta property="og:site_name" content="SUI.css">
-<meta property="og:image"
-      content="./logosui.png">
-
-
-
-
-
-  
-  <style>
-    /* ==========================================================================
-       PREMIUM DOCS ARCHITECTURE (ULTRA PRO MAX)
-       ========================================================================== */
-    body { 
-      margin: 0; 
-      background-color: var(--sui-bg); 
-      font-family: system-ui, -apple-system, sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* --------------------------------------------------------------------------
-       BULLETPROOF FLOATING ISLAND NAVBAR (GLOBAL)
-       -------------------------------------------------------------------------- */
-    .sui-floating-nav {
-      position: fixed;
-      top: 1.5rem;
-      left: 0;
-      right: 0;
-      margin-inline: auto; 
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      box-sizing: border-box;
-      width: max-content;
-      max-width: calc(100vw - 2rem);
-      padding: 0.5rem 0.5rem 0.5rem 1rem;
-      background: oklch(from var(--sui-surface) l c h / 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--sui-border);
-      border-radius: 9999px;
-      box-shadow: 0 20px 40px -10px oklch(0% 0 0 / 0.15);
-    }
-
-    .nav-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--sui-text); flex-shrink: 0; }
-    .nav-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
-    .nav-pill-link { position: relative; padding: 0.4rem 0.9rem; font-size: 0.85rem; font-weight: 500; color: var(--sui-text-muted); text-decoration: none; border-radius: 999px; transition: color 0.3s ease; z-index: 1; white-space: nowrap; }
-    .nav-pill-link:hover { color: var(--sui-text); background: var(--sui-surface-hover); }
-    .nav-pill-link.active { color: var(--sui-text); background: var(--sui-border-subtle); }
-
-    .nav-desktop-menu { display: none; }
-    .nav-mobile-btn { display: flex; align-items: center; justify-content: center; background: var(--sui-surface-hover); border: 1px solid var(--sui-border); padding: 0.5rem; border-radius: 50%; cursor: pointer; color: var(--sui-text); transition: background 0.2s ease; }
-    .nav-mobile-btn:hover { background: var(--sui-border); }
-    
-    @media (min-width: 992px) {
-      .nav-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
-      .nav-mobile-btn { display: none !important; }
-    }
-
-    /* Global Mobile Drawer */
-    .mobile-drawer { position: fixed; inset: 0; z-index: 9999; display: flex; justify-content: flex-end; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease; }
-    .mobile-drawer.is-open { visibility: visible; opacity: 1; pointer-events: auto; }
-    .drawer-backdrop { position: absolute; inset: 0; background: oklch(0% 0 0 / 0.5); backdrop-filter: blur(4px); cursor: pointer; }
-    .drawer-panel { position: relative; width: 280px; height: 100%; background: var(--sui-surface); border-left: 1px solid var(--sui-border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: -10px 0 30px oklch(0% 0 0 / 0.2); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
-    .mobile-drawer.is-open .drawer-panel { transform: translateX(0); }
-
-    /* --------------------------------------------------------------------------
-       DOCS LAYOUT ENGINE
-       -------------------------------------------------------------------------- */
-    .docs-wrapper {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 8rem var(--sui-space-6) 4rem; 
-      display: flex;
-      align-items: flex-start;
-      gap: var(--sui-space-8);
-      min-height: 100vh;
-      position: relative;
-    }
-
-    /* Sidebar (Sticky Desktop) */
-    .docs-sidebar {
-      width: 260px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 6rem;
-      max-height: calc(100vh - 8rem);
-      overflow-y: auto;
-      padding-right: 1rem;
-      border-right: 1px solid var(--sui-border-subtle);
-      z-index: 50;
-    }
-
-    /* Sidebar Links */
-    .nav-category {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--sui-text-muted);
-      margin: 1.5rem 0 0.5rem 0.5rem;
-      font-weight: 700;
-    }
-    
-    .docs-nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 0.75rem;
-      margin-bottom: 0.25rem;
-      border-radius: var(--sui-radius-md);
-      color: var(--sui-text);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow: hidden;
-    }
-
-    .docs-nav-link svg {
-      width: 1.1rem;
-      height: 1.1rem;
-      flex-shrink: 0;
-      opacity: 0.6;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-
-    .docs-nav-link span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .docs-nav-link:hover { background: var(--sui-surface-hover); transform: translateX(4px); }
-    .docs-nav-link:hover svg { opacity: 1; transform: scale(1.1); }
-    
-    .docs-nav-link.active {
-      background: var(--sui-color-primary-500);
-      color: white;
-      box-shadow: 0 4px 12px oklch(from var(--sui-color-primary-500) l c h / 0.35);
-      transform: translateX(4px);
-    }
-    .docs-nav-link.active svg { opacity: 1; }
-
-    /* Main Content */
-    .docs-main {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Interactive Preview Iframe */
-    .docs-iframe {
-      width: 100%;
-      height: 75vh;
-      min-height: 700px;
-      border: 1px solid var(--sui-border);
-      border-radius: var(--sui-radius-xl);
-      background-color: var(--sui-bg);
-      box-shadow: var(--sui-shadow-md);
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-    .docs-iframe:hover {
-      box-shadow: var(--sui-shadow-lg);
-      border-color: var(--sui-border-strong);
-    }
-
-    /* Docs Mobile Toggle */
-    .docs-mobile-menu-btn {
-      display: none;
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.5rem;
-      background: var(--sui-surface);
-      border: 1px solid var(--sui-border-strong);
-      border-radius: var(--sui-radius-lg);
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-      color: var(--sui-text);
-      cursor: pointer;
-    }
-
-    /* Docs Mobile Backdrop Overlay */
-    .docs-sidebar-overlay {
-      position: fixed;
-      inset: 0;
-      background: oklch(0% 0 0 / 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 250;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      display: none;
-    }
-    .docs-sidebar-overlay.is-open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* ==========================================================================
-       MOBILE RESPONSIVENESS
-       ========================================================================== */
-    .docs-close-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.25rem;
-      height: 2.25rem;
-      background: var(--sui-surface-hover);
-      border: 1px solid var(--sui-border);
-      border-radius: var(--sui-radius-md);
-      color: var(--sui-text);
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .docs-close-btn:hover { background: var(--sui-border); }
-
-    @media (max-width: 991.98px) {
-      .docs-wrapper { flex-direction: column; padding-top: 6rem; gap: 1rem; }
-      
-      .docs-mobile-menu-btn { display: flex; }
-      .docs-sidebar-overlay { display: block; }
-      
-      .docs-sidebar {
-        position: fixed;
-        top: 0; left: 0; bottom: 0;
-        width: min(300px, 85vw);
-        max-height: 100vh;
-        background: oklch(from var(--sui-surface) l c h / 0.96);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        padding: 2rem 1.5rem;
-        border-right: 1px solid var(--sui-border);
-        box-shadow: var(--sui-shadow-2xl);
-        transform: translateX(-100%);
-        visibility: hidden;
-        pointer-events: none;
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.3s;
-        z-index: 350;
-      }
-
-      .docs-sidebar.is-open {
-        transform: translateX(0);
-        visibility: visible;
-        pointer-events: auto;
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
-      }
-      
-      .docs-sidebar-close {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--sui-border);
-      }
-
-      .docs-iframe { height: 85vh; min-height: 500px; }
-    }
-    
-    @media (min-width: 992px) {
-      .docs-sidebar-close { display: none; }
-    }
-  </style>
+  <link rel="stylesheet" href="./docs.css">
 </head>
-<body>
+<body class="sui-bg sui-text">
+  <a href="#docs-main" class="sui-skip-link">Skip to documentation</a>
 
-  <!-- =======================================================================
-       GLOBAL NAVBAR
-       ======================================================================= -->
-  <nav class="sui-floating-nav sui-animate-slide-up">
-    <a href="../index.html" class="nav-brand">
-      <div class="sui-avatar sui-animate-glow" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
-      <strong style="font-size: 0.95rem;">SUI.css</strong>
-    </a>
-    
-    <div class="nav-desktop-menu">
-      <a href="../index.html" class="nav-pill-link">Home</a>
-      <a href="index.html" class="nav-pill-link active">Docs</a>
-      <a href="../example/buttons.html" class="nav-pill-link">Components</a>
-      <a href="../example/utilities.html" class="nav-pill-link">Utilities</a>
-      <a href="../example/animations.html" class="nav-pill-link">Animations</a>
-      <a href="../example/advanced.html" class="nav-pill-link">Examples</a>
+  <header class="docs-topbar">
+    <div class="sui-flex sui-items-center sui-gap-3">
+      <button id="docsMenuToggle" type="button" class="docs-menu-toggle" aria-label="Open documentation menu" aria-expanded="false" aria-controls="docsSidebar">&#9776;</button>
+      <a href="../index.html" class="docs-brand">
+        <img src="./logosui.png" alt="SUI.css Logo" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+        <span>SUI.css</span>
+        <span class="sui-badge sui-badge-primary">v3.0.0</span>
+      </a>
     </div>
-    
-    <div class="nav-actions">
-      <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full nav-github-btn" style="padding: 0.4rem 1rem; font-size: 0.85rem;">GitHub &rarr;</a>
-      <button id="globalMenuBtn" class="nav-mobile-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      </button>
+    <div class="docs-topbar-actions">
+      <a href="../index.html" class="sui-btn sui-btn-ghost sui-btn-sm sui-hidden sui-md-inline-flex">Home</a>
+      <a href="../how-to-use.html" class="sui-btn sui-btn-ghost sui-btn-sm sui-hidden sui-md-inline-flex">Guide</a>
+      <a href="../tests/regression.html" class="sui-btn sui-btn-ghost sui-btn-sm sui-hidden sui-md-inline-flex">QA Suite</a>
+      <button type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle" aria-label="Toggle light and dark theme">Theme</button>
     </div>
-  </nav>
+  </header>
 
-  <!-- GLOBAL MOBILE DRAWER (Right Side) -->
-  <div id="globalMobileDrawer" class="mobile-drawer">
-    <div class="drawer-backdrop" id="globalCloseBackdrop"></div>
-    <div class="drawer-panel">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 1.1rem; color: var(--sui-text);">SUI.css</strong>
-        <button id="globalCloseBtn" class="nav-mobile-btn" style="border: none; background: transparent;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
+  <div id="docsBackdrop" class="docs-backdrop"></div>
+
+  <div class="docs-shell">
+    <aside id="docsSidebar" class="docs-sidebar" aria-label="Documentation sections">
+      <div class="docs-sidebar-header">
+        <strong>Documentation</strong>
+        <button id="docsSidebarClose" type="button" class="sui-btn-close" aria-label="Close sidebar"></button>
       </div>
-      <nav style="display: flex; flex-direction: column; gap: 0.5rem;">
-        <a href="../index.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Home</a>
-        <a href="index.html" class="sui-btn sui-btn-primary sui-w-full sui-justify-start">Docs</a>
-        <a href="../example/buttons.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Components</a>
-        <a href="../example/utilities.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Utilities</a>
-        <a href="../example/animations.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Animations</a>
-        <a href="../example/advanced.html" class="sui-btn sui-btn-outline sui-w-full sui-justify-start" style="border: none;">Examples</a>
-      </nav>
-    </div>
-  </div>
-
-  <!-- =======================================================================
-       DOCS LAYOUT
-       ======================================================================= -->
-  
-  <!-- Hard-bound Backdrop for Docs Sidebar (Mobile Only) -->
-  <div id="docsSidebarOverlay" class="docs-sidebar-overlay"></div>
-
-  <div class="docs-wrapper">
-    
-    <!-- Mobile Document Menu Trigger -->
-    <button id="docsMenuBtn" type="button" class="docs-mobile-menu-btn" aria-expanded="false" aria-controls="docsSidebar">
-      <span>Browse Documentation</span>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </button>
-
-    <!-- DOCS SIDEBAR -->
-    <aside id="docsSidebar" class="docs-sidebar">
-      
-      <!-- Mobile Close (X) Header with Hard-bound ID -->
-      <div class="docs-sidebar-close">
-        <strong class="sui-text-lg">Documentation</strong>
-        <button id="closeDocsBtnReal" type="button" class="docs-close-btn" aria-label="Close documentation sidebar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
+      <div class="docs-search-box">
+        <input id="docsSearch" type="search" class="sui-search sui-input-sm" placeholder="Filter sections..." aria-label="Filter documentation sections">
       </div>
-
-      <nav id="docsSidebarNav">
-        <div class="nav-category" style="margin-top: 0;">Components</div>
-        
-        <a href="../example/buttons.html" target="preview-frame" class="docs-nav-link active">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M9 12h6"></path></svg>
-          <span>Buttons & Badges</span>
-        </a>
-        
-        <a href="../example/cards.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><rect x="7" y="7" width="3" height="9"></rect><rect x="14" y="7" width="3" height="5"></rect></svg>
-          <span>Cards & Panels</span>
-        </a>
-        
-        <a href="../example/forms.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-          <span>Form Controls</span>
-        </a>
-        
-        <div class="nav-category" style="margin-top: 2rem;">Architecture</div>
-        
-        <a href="../example/layout.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-          <span>Layout Engine</span>
-        </a>
-
-        <a href="../example/utilities.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-          <span>Utility Classes</span>
-        </a>
-        
-        <a href="../example/animations.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          <span>Motion & Spring</span>
-        </a>
-        
-        <a href="../example/advanced.html" target="preview-frame" class="docs-nav-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-          <span>Advanced Logic</span>
-        </a>
+      <nav id="docsNav" data-sui-scrollspy>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Getting Started</div>
+          <a href="#whats-new" class="docs-nav-link active">What's New in v3.0.0 <span class="sui-badge sui-badge-success">New</span></a>
+          <a href="#installation" class="docs-nav-link">Installation &amp; Setup</a>
+          <a href="#cascade" class="docs-nav-link">8-Layer @layer Cascade</a>
+          <a href="#tokens" class="docs-nav-link">OKLCH Tokens &amp; Themes</a>
+        </div>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Layout &amp; Utilities</div>
+          <a href="#layout" class="docs-nav-link">Grid &amp; Responsive Breakpoints</a>
+          <a href="#utilities" class="docs-nav-link">Tailwind-Parity Utilities</a>
+        </div>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Components</div>
+          <a href="#buttons" class="docs-nav-link">Buttons &amp; Badges</a>
+          <a href="#cards" class="docs-nav-link">Cards, Lists &amp; Pagination</a>
+          <a href="#forms" class="docs-nav-link">Forms &amp; Floating Labels</a>
+          <a href="#navigation" class="docs-nav-link">Navbar, Breadcrumbs &amp; Tabs</a>
+          <a href="#tables" class="docs-nav-link">Tables &amp; Icons</a>
+        </div>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Interactive &amp; JS</div>
+          <a href="#overlays" class="docs-nav-link">Modals, Offcanvas &amp; Popovers</a>
+          <a href="#feedback" class="docs-nav-link">Alerts, Toasts &amp; Progress</a>
+          <a href="#carousel" class="docs-nav-link">Carousel &amp; Motion</a>
+          <a href="#js-api" class="docs-nav-link">JavaScript API (window.SUI)</a>
+        </div>
+        <div class="docs-nav-group">
+          <div class="docs-nav-title">Standalone Examples</div>
+          <a href="../example/buttons.html" class="docs-nav-link">Buttons Demo &nearr;</a>
+          <a href="../example/cards.html" class="docs-nav-link">Cards Demo &nearr;</a>
+          <a href="../example/forms.html" class="docs-nav-link">Forms Demo &nearr;</a>
+          <a href="../example/navigation.html" class="docs-nav-link">Navigation Demo &nearr;</a>
+          <a href="../example/icons.html" class="docs-nav-link">Icons Demo &nearr;</a>
+        </div>
       </nav>
     </aside>
-    
-    <!-- MAIN CONTENT AREA (Iframe Integration) -->
-    <main class="docs-main sui-animate-blur-in sui-delay-1">
-      <div class="sui-mb-6 sui-hidden md:sui-block">
-        <h1 class="sui-text-3xl sui-mb-2">Documentation Hub</h1>
-        <p class="sui-text-muted">Select a module from the sidebar to view the interactive documentation and code examples.</p>
-      </div>
 
-      <!-- Iframe to load existing pages dynamically -->
-      <iframe 
-        name="preview-frame" 
-        src="../example/cards.html" 
-        class="docs-iframe" 
-        title="Component Preview Window">
-      </iframe>
+    <main id="docs-main" class="docs-content">
+      <section id="whats-new" class="docs-section">
+        <span class="sui-badge sui-badge-primary sui-mb-3">RELEASE v3.0.0</span>
+        <h1 class="sui-text-4xl sui-mb-3">SUI.css v3.0.0 Documentation</h1>
+        <p class="docs-section-lead">Bootstrap-grade interactive components + Tailwind-grade utility ergonomics, built on perceptual OKLCH colors, native CSS <code>@layer</code> cascade, and zero runtime dependencies.</p>
+        <div class="sui-grid sui-grid-cols-1 sui-md-grid-cols-2 sui-gap-4">
+          <article class="sui-card">
+            <h3 class="sui-card-title">Real 8-Layer @layer Cascade</h3>
+            <p class="sui-text-muted sui-text-sm">Utilities always override components without <code>!important</code>, and your own unlayered CSS automatically overrides SUI.</p>
+          </article>
+          <article class="sui-card">
+            <h3 class="sui-card-title">Light Mode by Default</h3>
+            <p class="sui-text-muted sui-text-sm">Plain HTML pages stay crisp light by default. Opt into <code>data-theme="dark"</code>, <code>"oled"</code>, or <code>"auto"</code> whenever you want.</p>
+          </article>
+          <article class="sui-card">
+            <h3 class="sui-card-title">Bootstrap 5 Component Parity</h3>
+            <p class="sui-text-muted sui-text-sm">Offcanvas drawers, Popovers, Dismissible Alerts, Floating Labels, List Groups, Pagination, Responsive Navbar, Carousel, ScrollSpy, and Modal Tab focus traps.</p>
+          </article>
+          <article class="sui-card">
+            <h3 class="sui-card-title">Tailwind Utility Parity</h3>
+            <p class="sui-text-muted sui-text-sm">Includes <code>sui-ring-*</code>, <code>sui-divide-*</code>, <code>sui-space-y/x-*</code>, <code>sui-object-*</code>, <code>sui-aspect-*</code>, gradients, and <code>sm/md/lg/xl</code> responsive utilities.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="installation" class="docs-section">
+        <h2 class="sui-text-2xl">Installation &amp; Quick Start</h2>
+        <p class="docs-section-lead">Include <code>dist/sui.min.css</code> in your page head—no build step required. Add <code>dist/sui.min.js</code> only if you use interactive components (modals, offcanvas, toasts, dropdowns, navbar toggle).</p>
+        <div class="docs-demo">
+          <div class="docs-code-bar">
+            <span>HTML — Quick Start (v3.0.0)</span>
+            <button type="button" class="sui-btn sui-btn-ghost sui-btn-xs btn-copy-code" style="color: #e2e8f0;">Copy</button>
+          </div>
+          <pre class="docs-code-pre"><code>&lt;!-- 1. Core Stylesheet (Required) --&gt;
+&lt;link rel="stylesheet" href="./dist/sui.min.css"&gt;
+
+&lt;!-- 2. Interactive Runtime (Optional) --&gt;
+&lt;script src="./dist/sui.min.js"&gt;&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="cascade" class="docs-section">
+        <h2 class="sui-text-2xl">8-Layer @layer Cascade</h2>
+        <p class="docs-section-lead">Explicit cascade layers eliminate specificity wars across components, overlays, utilities, and your custom CSS.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview">
+            <div class="sui-flex sui-flex-wrap sui-gap-2 sui-items-center">
+              <span class="sui-badge sui-badge-outline">1. reset</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-outline">2. tokens</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-outline">3. base</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-outline">4. layout</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-info">5. components</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-info">6. overlays</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-accent">7. animations</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-primary">8. utilities</span><span>&rarr;</span>
+              <span class="sui-badge sui-badge-success">Your Custom CSS</span>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>CSS — Custom Overrides Without !important</span></div>
+          <pre class="docs-code-pre"><code>:root { --sui-brand-hue: 165; }
+.sui-card { border-radius: 1.25rem; }</code></pre>
+        </div>
+      </section>
+
+      <section id="tokens" class="docs-section">
+        <h2 class="sui-text-2xl">OKLCH Design Tokens &amp; Theming</h2>
+        <p class="docs-section-lead">Drag the slider below to rebrand the entire documentation portal live using <code>--sui-brand-hue</code>.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <div class="sui-flex sui-flex-wrap sui-items-center sui-justify-between sui-gap-4">
+              <div class="sui-flex sui-items-center sui-gap-3" style="flex: 1; min-width: 220px;">
+                <label for="hueSlider" class="sui-label" style="white-space: nowrap;">Live Brand Hue: <strong id="hueValue">255</strong>&deg;</label>
+                <input id="hueSlider" type="range" class="sui-range" min="0" max="360" value="255">
+              </div>
+              <div class="sui-flex sui-flex-wrap sui-gap-2">
+                <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-demo-theme="light">Light</button>
+                <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-demo-theme="dark">Dark</button>
+                <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-demo-theme="oled">OLED</button>
+              </div>
+            </div>
+            <div class="docs-swatch-grid">
+              <div class="docs-swatch" style="background: var(--sui-color-primary-500);"><span>Primary</span><code>primary-500</code></div>
+              <div class="docs-swatch" style="background: var(--sui-color-accent-500);"><span>Accent</span><code>accent-500</code></div>
+              <div class="docs-swatch" style="background: var(--sui-color-success-500);"><span>Success</span><code>success-500</code></div>
+              <div class="docs-swatch" style="background: var(--sui-color-warning-500);"><span>Warning</span><code>warning-500</code></div>
+              <div class="docs-swatch" style="background: var(--sui-color-danger-500);"><span>Danger</span><code>danger-500</code></div>
+              <div class="docs-swatch" style="background: var(--sui-color-info-500);"><span>Info</span><code>info-500</code></div>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Theme Modes</span></div>
+          <pre class="docs-code-pre"><code>&lt;html data-theme="light"&gt; &lt;!-- Default --&gt;
+&lt;html data-theme="dark"&gt;  &lt;!-- Dark Mode --&gt;
+&lt;html data-theme="oled"&gt;  &lt;!-- True Black OLED --&gt;
+&lt;html data-theme="auto"&gt;  &lt;!-- Follows OS prefers-color-scheme --&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="layout" class="docs-section">
+        <h2 class="sui-text-2xl">Grid &amp; Responsive Breakpoints</h2>
+        <p class="docs-section-lead">Mobile-first responsive modifiers live at the end of <code>@layer utilities</code> so classes like <code>sui-hidden sui-md-flex</code> always work cleanly.</p>
+        <div class="sui-table-wrapper sui-mb-6">
+          <table class="sui-table-styled">
+            <thead><tr><th>Prefix</th><th>Min Width</th><th>Example Classes</th></tr></thead>
+            <tbody>
+              <tr><td><code>sui-sm-*</code></td><td><code>576px</code></td><td><code>sui-sm-flex</code>, <code>sui-sm-grid-cols-2</code>, <code>sui-sm-p-6</code></td></tr>
+              <tr><td><code>sui-md-*</code></td><td><code>768px</code></td><td><code>sui-md-flex</code>, <code>sui-md-hidden</code>, <code>sui-md-grid-cols-3</code>, <code>sui-md-gap-6</code></td></tr>
+              <tr><td><code>sui-lg-*</code></td><td><code>992px</code></td><td><code>sui-lg-grid-cols-4</code>, <code>sui-lg-grid-cols-12</code>, <code>sui-lg-p-10</code></td></tr>
+              <tr><td><code>sui-xl-*</code></td><td><code>1200px</code></td><td><code>sui-xl-grid-cols-6</code>, <code>sui-xl-gap-8</code>, <code>sui-xl-p-12</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="docs-demo">
+          <div class="docs-demo-preview">
+            <div class="sui-grid sui-grid-cols-1 sui-sm-grid-cols-2 sui-lg-grid-cols-4 sui-gap-4">
+              <div class="sui-card sui-p-4 sui-text-center">Col 1</div>
+              <div class="sui-card sui-p-4 sui-text-center">Col 2</div>
+              <div class="sui-card sui-p-4 sui-text-center">Col 3</div>
+              <div class="sui-card sui-p-4 sui-text-center">Col 4</div>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Responsive Grid</span></div>
+          <pre class="docs-code-pre"><code>&lt;div class="sui-grid sui-grid-cols-1 sui-sm-grid-cols-2 sui-lg-grid-cols-4 sui-gap-4"&gt;
+  &lt;div class="sui-card"&gt;Col 1&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="utilities" class="docs-section">
+        <h2 class="sui-text-2xl">Tailwind-Parity Utilities</h2>
+        <p class="docs-section-lead">Combine SUI components with single-purpose utilities for rings, dividers, stack spacing, object fit, aspect ratios, gradients, and hover states.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <div class="sui-flex sui-flex-wrap sui-gap-4 sui-items-center">
+              <div class="sui-p-4 sui-rounded-lg sui-bg-surface sui-ring-2 sui-ring-primary"><code>.sui-ring-2 .sui-ring-primary</code></div>
+              <div class="sui-p-4 sui-rounded-lg sui-bg-gradient-primary sui-hover-scale" style="color: #fff; font-weight: 600;"><code>.sui-bg-gradient-primary</code></div>
+              <span class="sui-text-2xl sui-font-bold sui-text-gradient">Gradient Heading</span>
+            </div>
+            <div class="sui-card sui-p-0 sui-divide-y">
+              <div class="sui-p-3">Row 1 inside <code>.sui-divide-y</code></div>
+              <div class="sui-p-3">Row 2 inside <code>.sui-divide-y</code></div>
+              <div class="sui-p-3">Row 3 inside <code>.sui-divide-y</code></div>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Utilities Composition</span></div>
+          <pre class="docs-code-pre"><code>&lt;div class="sui-p-4 sui-rounded-lg sui-ring-2 sui-ring-primary"&gt;Focus Ring&lt;/div&gt;
+&lt;h3 class="sui-text-2xl sui-font-bold sui-text-gradient"&gt;Gradient Heading&lt;/h3&gt;
+&lt;div class="sui-divide-y"&gt;&lt;div&gt;Row 1&lt;/div&gt;&lt;div&gt;Row 2&lt;/div&gt;&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="buttons" class="docs-section">
+        <h2 class="sui-text-2xl">Buttons &amp; Badges</h2>
+        <p class="docs-section-lead">Semantic color variants, sizes, loading and disabled states, close buttons, and pill badges.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <div class="sui-flex sui-flex-wrap sui-gap-3 sui-items-center">
+              <button type="button" class="sui-btn sui-btn-primary">Primary</button>
+              <button type="button" class="sui-btn sui-btn-secondary">Secondary</button>
+              <button type="button" class="sui-btn sui-btn-outline">Outline</button>
+              <button type="button" class="sui-btn sui-btn-ghost">Ghost</button>
+              <button type="button" class="sui-btn sui-btn-subtle">Subtle</button>
+              <button type="button" class="sui-btn sui-btn-success">Success</button>
+              <button type="button" class="sui-btn sui-btn-warning">Warning</button>
+              <button type="button" class="sui-btn sui-btn-danger">Danger</button>
+              <button type="button" class="sui-btn sui-btn-info">Info</button>
+              <button type="button" class="sui-btn sui-btn-primary" disabled>Disabled</button>
+              <button type="button" class="sui-btn sui-btn-primary sui-btn-loading">Loading</button>
+              <button type="button" class="sui-btn-close" aria-label="Close"></button>
+            </div>
+            <div class="sui-flex sui-flex-wrap sui-gap-2 sui-items-center">
+              <span class="sui-badge">Default</span>
+              <span class="sui-badge sui-badge-primary">Primary</span>
+              <span class="sui-badge sui-badge-accent">Accent</span>
+              <span class="sui-badge sui-badge-outline">Outline</span>
+              <span class="sui-badge sui-badge-success sui-badge-dot">Live</span>
+              <span class="sui-badge sui-badge-warning">Warning</span>
+              <span class="sui-badge sui-badge-danger">Danger</span>
+              <span class="sui-badge sui-badge-info">Info</span>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Buttons &amp; Badges</span></div>
+          <pre class="docs-code-pre"><code>&lt;button class="sui-btn sui-btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="sui-btn sui-btn-info"&gt;Info&lt;/button&gt;
+&lt;span class="sui-badge sui-badge-success sui-badge-dot"&gt;Live&lt;/span&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="cards" class="docs-section">
+        <h2 class="sui-text-2xl">Cards, List Groups &amp; Pagination</h2>
+        <p class="docs-section-lead">Bootstrap-familiar structural components with overflow-safe layouts (<code>min-width: 0</code>) and dark/OLED support.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-grid sui-grid-cols-1 sui-md-grid-cols-2 sui-gap-6">
+            <article class="sui-card">
+              <div class="sui-card-header">
+                <div>
+                  <h3 class="sui-card-title">Pro Analytics Plan</h3>
+                  <p class="sui-card-subtitle">Updated for v3.0.0</p>
+                </div>
+                <span class="sui-badge sui-badge-primary">Popular</span>
+              </div>
+              <div class="sui-card-body">
+                <p class="sui-text-muted sui-text-sm">Includes OKLCH design tokens, layered utilities, and zero-dependency JS interactions.</p>
+              </div>
+              <div class="sui-card-footer">
+                <span class="sui-text-sm sui-text-muted">MIT License</span>
+                <button type="button" class="sui-btn sui-btn-primary sui-btn-sm">Select</button>
+              </div>
+            </article>
+            <div class="sui-space-y-4">
+              <ul class="sui-list-group sui-list-group-numbered">
+                <li class="sui-list-group-item sui-list-group-item-action active">Layered Cascade Engine</li>
+                <li class="sui-list-group-item sui-list-group-item-action">Offcanvas &amp; Modals</li>
+                <li class="sui-list-group-item disabled">Legacy Polyfill (Disabled)</li>
+              </ul>
+              <nav aria-label="Pagination example">
+                <ul class="sui-pagination">
+                  <li class="sui-page-item disabled"><a class="sui-page-link" href="#cards">Prev</a></li>
+                  <li class="sui-page-item active"><a class="sui-page-link" href="#cards">1</a></li>
+                  <li class="sui-page-item"><a class="sui-page-link" href="#cards">2</a></li>
+                  <li class="sui-page-item"><a class="sui-page-link" href="#cards">3</a></li>
+                  <li class="sui-page-item"><a class="sui-page-link" href="#cards">Next</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Card, List Group &amp; Pagination</span></div>
+          <pre class="docs-code-pre"><code>&lt;article class="sui-card"&gt;&lt;div class="sui-card-body"&gt;&lt;h3 class="sui-card-title"&gt;Title&lt;/h3&gt;&lt;/div&gt;&lt;/article&gt;
+&lt;ul class="sui-list-group"&gt;&lt;li class="sui-list-group-item active"&gt;Item&lt;/li&gt;&lt;/ul&gt;
+&lt;ul class="sui-pagination"&gt;&lt;li class="sui-page-item active"&gt;&lt;a class="sui-page-link"&gt;1&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="forms" class="docs-section">
+        <h2 class="sui-text-2xl">Forms &amp; Floating Labels</h2>
+        <p class="docs-section-lead">Accessible inputs, floating labels (<code>.sui-form-floating</code>), validation states (<code>.is-valid</code> / <code>.is-invalid</code>), switches, and checkboxes.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview">
+            <form id="demoForm" class="sui-form">
+              <div class="sui-grid sui-grid-cols-1 sui-md-grid-cols-2 sui-gap-4">
+                <div class="sui-form-floating">
+                  <input id="demoFloatEmail" type="email" class="sui-input" placeholder="name@example.com">
+                  <label for="demoFloatEmail">Email address (Floating Label)</label>
+                </div>
+                <div class="sui-form-group">
+                  <input type="text" class="sui-input is-valid" value="suman_dev" aria-label="Valid username">
+                  <span class="sui-valid-feedback">Looks good!</span>
+                </div>
+              </div>
+              <div class="sui-grid sui-grid-cols-1 sui-md-grid-cols-2 sui-gap-4">
+                <div class="sui-form-group">
+                  <input type="text" class="sui-input is-invalid" value="invalid@" aria-label="Invalid input">
+                  <span class="sui-invalid-feedback">Please enter a valid domain.</span>
+                </div>
+                <div class="sui-flex sui-items-center sui-gap-4">
+                  <label class="sui-flex sui-items-center sui-gap-2"><input type="checkbox" class="sui-checkbox" checked> Checkbox</label>
+                  <label class="sui-flex sui-items-center sui-gap-2"><input type="checkbox" class="sui-switch" checked> Switch</label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Floating Label &amp; Validation</span></div>
+          <pre class="docs-code-pre"><code>&lt;div class="sui-form-floating"&gt;
+  &lt;input id="email" type="email" class="sui-input" placeholder="name@example.com"&gt;
+  &lt;label for="email"&gt;Email address&lt;/label&gt;
+&lt;/div&gt;
+&lt;input class="sui-input is-invalid"&gt;&lt;span class="sui-invalid-feedback"&gt;Invalid&lt;/span&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="navigation" class="docs-section">
+        <h2 class="sui-text-2xl">Responsive Navbar, Breadcrumbs &amp; Tabs</h2>
+        <p class="docs-section-lead"><code>.sui-navbar</code> collapses automatically below <code>768px</code> and toggles via <code>.sui-navbar-toggle</code> with <code>aria-expanded</code> and <code>Escape</code> support.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <nav class="sui-navbar sui-rounded-lg" aria-label="Demo navbar" style="border: 1px solid var(--sui-border);">
+              <a href="#navigation" class="sui-navbar-brand">Brand</a>
+              <button type="button" class="sui-navbar-toggle" aria-label="Toggle demo menu" aria-expanded="false" aria-controls="docsInlineNavMenu">&#9776;</button>
+              <ul id="docsInlineNavMenu" class="sui-navbar-menu">
+                <li class="sui-navbar-item"><a href="#navigation" class="sui-navbar-link" aria-current="page">Overview</a></li>
+                <li class="sui-navbar-item"><a href="#navigation" class="sui-navbar-link">Pricing</a></li>
+                <li class="sui-navbar-item"><a href="#navigation" class="sui-navbar-link">Docs</a></li>
+              </ul>
+            </nav>
+            <ol class="sui-breadcrumb">
+              <li class="sui-breadcrumb-item"><a href="../index.html">Home</a></li>
+              <li class="sui-breadcrumb-item"><a href="#navigation">Components</a></li>
+              <li class="sui-breadcrumb-item" aria-current="page">Navigation</li>
+            </ol>
+            <div class="sui-tabs" role="tablist">
+              <button type="button" class="sui-tab sui-tab-active" role="tab" aria-selected="true">Design</button>
+              <button type="button" class="sui-tab" role="tab" aria-selected="false">Code</button>
+              <button type="button" class="sui-tab" role="tab" aria-selected="false">Tokens</button>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Responsive Navbar</span></div>
+          <pre class="docs-code-pre"><code>&lt;nav class="sui-navbar"&gt;
+  &lt;a class="sui-navbar-brand" href="#"&gt;Brand&lt;/a&gt;
+  &lt;button class="sui-navbar-toggle" aria-expanded="false" aria-controls="navMenu"&gt;&amp;#9776;&lt;/button&gt;
+  &lt;ul id="navMenu" class="sui-navbar-menu"&gt;...&lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="tables" class="docs-section">
+        <h2 class="sui-text-2xl">Tables &amp; SVG Icons</h2>
+        <p class="docs-section-lead">Horizontal-scroll-safe tables via <code>.sui-table-wrapper</code> + <code>.sui-table-styled</code>.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview">
+            <div class="sui-table-wrapper">
+              <table class="sui-table-styled sui-table-striped sui-table-hover">
+                <thead><tr><th>Layer</th><th>Purpose</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><code>reset</code></td><td>Baseline normalization &amp; reduced motion</td><td><span class="sui-badge sui-badge-success">Active</span></td></tr>
+                  <tr><td><code>tokens</code></td><td>OKLCH color scales &amp; fluid typography</td><td><span class="sui-badge sui-badge-success">Active</span></td></tr>
+                  <tr><td><code>utilities</code></td><td>Final cascade layer + responsive modifiers</td><td><span class="sui-badge sui-badge-primary">v3.0.0</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Responsive Table</span></div>
+          <pre class="docs-code-pre"><code>&lt;div class="sui-table-wrapper"&gt;
+  &lt;table class="sui-table-styled sui-table-striped sui-table-hover"&gt;...&lt;/table&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="overlays" class="docs-section">
+        <h2 class="sui-text-2xl">Modals, Offcanvas, Dropdowns, Popovers &amp; Accordions</h2>
+        <p class="docs-section-lead">Every interactive overlay supports keyboard focus management, <code>Escape</code> dismissal, and ARIA state sync.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <div class="sui-flex sui-flex-wrap sui-gap-3 sui-items-center">
+              <button type="button" class="sui-btn sui-btn-primary" data-sui-modal-target="docsDemoModal">Open Modal</button>
+              <button type="button" class="sui-btn sui-btn-secondary" data-sui-offcanvas-target="docsDemoOffcanvas">Open Offcanvas Drawer</button>
+              <div class="sui-dropdown" id="docsDemoDropdown">
+                <button type="button" class="sui-btn sui-btn-outline" data-sui-dropdown-trigger="docsDemoDropdown" aria-expanded="false">Dropdown &#9662;</button>
+                <div class="sui-dropdown-menu">
+                  <div class="sui-dropdown-header">Actions</div>
+                  <button type="button" class="sui-dropdown-item">Workspace Settings</button>
+                  <button type="button" class="sui-dropdown-item">Team Members</button>
+                  <div class="sui-dropdown-divider"></div>
+                  <button type="button" class="sui-dropdown-item">Preferences</button>
+                </div>
+              </div>
+              <div class="sui-popover-wrap">
+                <button type="button" class="sui-btn sui-btn-outline" data-sui-popover-target="docsDemoPopover" aria-expanded="false">Toggle Popover</button>
+                <div id="docsDemoPopover" class="sui-popover-panel">
+                  <strong class="sui-block sui-mb-2">SUI.popover</strong>
+                  <p class="sui-text-xs sui-text-muted">Click outside or press Escape to dismiss.</p>
+                </div>
+              </div>
+              <button type="button" class="sui-btn sui-btn-ghost sui-tooltip-top" data-sui-tooltip="Keyboard &amp; hover tooltip">Hover or Focus Me</button>
+            </div>
+            <div class="sui-accordion">
+              <div class="sui-accordion-item">
+                <button type="button" class="sui-accordion-header" aria-expanded="false">Does SUI.css work without JavaScript?</button>
+                <div class="sui-accordion-content"><p class="sui-text-sm sui-text-muted">Yes! All tokens, layouts, utilities, buttons, cards, forms, and responsive rules work with CSS only.</p></div>
+              </div>
+              <div class="sui-accordion-item">
+                <button type="button" class="sui-accordion-header" aria-expanded="false">How does Modal keyboard accessibility work?</button>
+                <div class="sui-accordion-content"><p class="sui-text-sm sui-text-muted">Opening focuses the first interactive control, Tab cycles inside the dialog, and Escape closes while restoring focus to the trigger button.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>HTML — Modal &amp; Offcanvas Triggers</span></div>
+          <pre class="docs-code-pre"><code>&lt;button class="sui-btn sui-btn-primary" data-sui-modal-target="myModal"&gt;Open Modal&lt;/button&gt;
+&lt;button class="sui-btn sui-btn-secondary" data-sui-offcanvas-target="myDrawer"&gt;Open Drawer&lt;/button&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="feedback" class="docs-section">
+        <h2 class="sui-text-2xl">Alerts, Toasts &amp; Progress</h2>
+        <p class="docs-section-lead">Trigger live toasts, dismissible alerts, and striped animated progress bars.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview sui-space-y-4">
+            <div class="sui-alert sui-alert-info sui-alert-dismissible">
+              <div><strong>Heads up!</strong> Click the close button to dismiss this alert smoothly via <code>SUI.alert</code>.</div>
+              <button type="button" class="sui-alert-close" data-sui-dismiss="alert" aria-label="Dismiss alert">&times;</button>
+            </div>
+            <div class="sui-flex sui-flex-wrap sui-gap-2">
+              <button type="button" class="sui-btn sui-btn-success sui-btn-sm" data-demo-toast="success">Success Toast</button>
+              <button type="button" class="sui-btn sui-btn-info sui-btn-sm" data-demo-toast="info">Info Toast</button>
+              <button type="button" class="sui-btn sui-btn-warning sui-btn-sm" data-demo-toast="warning">Warning Toast</button>
+              <button type="button" class="sui-btn sui-btn-danger sui-btn-sm" data-demo-toast="error">Error Toast</button>
+            </div>
+            <div class="sui-progress">
+              <div class="sui-progress-bar sui-progress-striped sui-progress-animated" style="width: 72%;"></div>
+            </div>
+          </div>
+          <div class="docs-code-bar"><span>JS &amp; HTML — Toasts &amp; Animated Progress</span></div>
+          <pre class="docs-code-pre"><code>SUI.toast.success('Changes saved!', 'Saved');
+&lt;div class="sui-progress"&gt;
+  &lt;div class="sui-progress-bar sui-progress-striped sui-progress-animated" style="width: 72%"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="carousel" class="docs-section">
+        <h2 class="sui-text-2xl">Carousel &amp; Motion</h2>
+        <p class="docs-section-lead">Smooth scroll-snap carousel with prev/next buttons and indicator dots, respecting <code>prefers-reduced-motion</code>.</p>
+        <div class="docs-demo">
+          <div class="docs-demo-preview">
+            <div class="sui-carousel-wrapper" data-sui-carousel-index="0">
+              <div class="sui-carousel">
+                <div class="sui-carousel-slide"><div class="sui-card sui-p-6"><strong>Slide 1</strong><p class="sui-text-muted sui-text-sm">Zero-dependency scroll-snap track.</p></div></div>
+                <div class="sui-carousel-slide"><div class="sui-card sui-p-6"><strong>Slide 2</strong><p class="sui-text-muted sui-text-sm">Hardware-accelerated smooth transitions.</p></div></div>
+                <div class="sui-carousel-slide"><div class="sui-card sui-p-6"><strong>Slide 3</strong><p class="sui-text-muted sui-text-sm">Accessible controls &amp; indicators.</p></div></div>
+              </div>
+              <div class="sui-carousel-controls">
+                <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-sui-carousel-prev>&larr; Prev</button>
+                <div class="sui-carousel-indicators">
+                  <button type="button" class="sui-carousel-dot is-active" data-sui-carousel-slide-to="0" aria-label="Slide 1"></button>
+                  <button type="button" class="sui-carousel-dot" data-sui-carousel-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" class="sui-carousel-dot" data-sui-carousel-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-sui-carousel-next>Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="js-api" class="docs-section">
+        <h2 class="sui-text-2xl">JavaScript API Reference (<code>window.SUI</code>)</h2>
+        <p class="docs-section-lead">Every interactive module is auto-initialized on load and exposed cleanly on <code>window.SUI</code> (v3.0.0).</p>
+        <div class="sui-table-wrapper">
+          <table class="sui-table-styled">
+            <thead><tr><th>Module</th><th>Methods / Attributes</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>SUI.theme</code></td><td><code>.set(mode)</code>, <code>.get()</code>, <code>.toggle()</code></td><td>Switches <code>data-theme</code> (<code>light</code>/<code>dark</code>/<code>oled</code>) &amp; persists to <code>localStorage</code></td></tr>
+              <tr><td><code>SUI.modal</code></td><td><code>.open(id)</code>, <code>.close(id)</code>, <code>[data-sui-modal-target]</code></td><td>Stacked modals with Tab focus trap, Escape, and focus restoration</td></tr>
+              <tr><td><code>SUI.offcanvas</code></td><td><code>.open(id)</code>, <code>.close(id)</code>, <code>[data-sui-offcanvas-target]</code></td><td>Slide-over drawers (start/end/top/bottom) with backdrop &amp; Escape</td></tr>
+              <tr><td><code>SUI.navbar</code></td><td><code>.toggle(btn)</code>, <code>.closeAll()</code>, <code>.sui-navbar-toggle</code></td><td>Mobile navbar collapse/expand with <code>aria-expanded</code> &amp; Escape</td></tr>
+              <tr><td><code>SUI.dropdown</code></td><td><code>.open(id)</code>, <code>.close(id)</code>, <code>[data-sui-dropdown-trigger]</code></td><td>Outside-click &amp; Escape-dismissible dropdown menus</td></tr>
+              <tr><td><code>SUI.popover</code></td><td><code>.toggle(id)</code>, <code>.closeAll()</code>, <code>[data-sui-popover-target]</code></td><td>Interactive click-triggered floating popovers</td></tr>
+              <tr><td><code>SUI.toast</code></td><td><code>.show({...})</code>, <code>.success()</code>, <code>.error()</code>, <code>.warning()</code>, <code>.info()</code></td><td>Accessible <code>aria-live="polite"</code> toast notifications</td></tr>
+              <tr><td><code>SUI.alert</code></td><td><code>.dismiss(el)</code>, <code>[data-sui-dismiss="alert"]</code></td><td>Smoothly removes dismissible alert banners</td></tr>
+              <tr><td><code>SUI.carousel</code></td><td><code>.goTo(wrapper, idx)</code>, <code>[data-sui-carousel-prev/next]</code></td><td>Scroll-snap carousel navigation &amp; dot sync</td></tr>
+              <tr><td><code>SUI.scrollspy</code></td><td><code>[data-sui-scrollspy]</code></td><td>Highlights active sidebar/nav links as sections scroll into view</td></tr>
+              <tr><td><code>SUI.clipboard</code></td><td><code>.text(str)</code>, <code>.element(sel)</code>, <code>[data-sui-copy]</code></td><td>One-click clipboard copy (also aliased as <code>SUI.copy</code>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="sui-pt-6 sui-flex sui-flex-wrap sui-justify-between sui-items-center sui-gap-4" style="border-top: 1px solid var(--sui-border);">
+        <span class="sui-text-sm sui-text-muted">&copy; 2026 SUI.css — Engineered by Suman M.</span>
+        <span class="sui-badge sui-badge-outline">SUI.css v3.0.0</span>
+      </footer>
     </main>
-    
   </div>
 
-  <!-- =======================================================================
-       GLOBAL ULTRA PRO MAX FOOTER
-       ======================================================================= -->
-  <footer class="sui-bg-surface sui-border-t sui-border-subtle sui-py-12">
-    <div style="max-width: 1400px; margin: 0 auto; padding: 0 var(--sui-space-6);">
-      <div class="sui-grid sui-gap-8 sui-text-left" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-        
-        <div class="sui-flex sui-flex-col sui-gap-4">
-          <div class="sui-flex sui-items-center sui-gap-2">
-            <div class="sui-avatar" style="width: 2rem; height: 2rem; background: var(--sui-color-primary-500); color: white;">S</div>
-            <strong class="sui-text-lg">Sui.css</strong>
-          </div>
-          <p class="sui-text-sm sui-text-muted">The ultra pro max CSS architecture for modern web applications.</p>
-        </div>
-
-        <div class="sui-flex sui-flex-col sui-gap-3">
-          <strong class="sui-text-sm">Modules</strong>
-          <a href="../example/buttons.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Buttons & Badges</a>
-          <a href="../example/cards.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Cards & Matrices</a>
-          <a href="../example/forms.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Form Controls</a>
-        </div>
-
-        <div class="sui-flex sui-flex-col sui-gap-3">
-          <strong class="sui-text-sm">Architecture</strong>
-          <a href="../example/layout.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Layout Engine</a>
-          <a href="../example/animations.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Motion & Spring</a>
-          <a href="../example/advanced.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Advanced Engine</a>
-        </div>
-
-        <div class="sui-flex sui-flex-col sui-gap-3">
-          <strong class="sui-text-sm">Resources</strong>
-          <a href="../how-to-use.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Setup Guide</a>
-          <a href="index.html" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">Documentation</a>
-          <a href="https://github.com/Suman-11-web" class="sui-text-sm sui-text-muted hover:sui-text-primary sui-no-underline">GitHub Repository</a>
-        </div>
-
+  <div id="docsDemoModal" class="sui-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="docsModalTitle">
+    <div class="sui-modal-overlay"></div>
+    <div class="sui-modal-dialog">
+      <div class="sui-modal-header">
+        <h3 id="docsModalTitle">SUI.css v3.0.0 Modal</h3>
+        <button type="button" class="sui-modal-close" data-sui-modal-close aria-label="Close modal">&times;</button>
       </div>
-      
-      <div class="sui-border-t sui-border-subtle sui-mt-12 sui-pt-8 sui-flex sui-justify-between sui-items-center sui-flex-wrap sui-gap-4">
-        <p class="sui-text-sm sui-text-muted">&copy; 2026 Sui.css Framework. Built for developers. Free and open source.</p>
-        <span class="sui-badge sui-badge-outline">SUI.css v3.0.0</span>
+      <div class="sui-modal-body sui-space-y-3">
+        <p class="sui-text-muted sui-text-sm">Try pressing <strong>Tab</strong> to verify focus trapping, or <strong>Escape</strong> to close and return focus to the button.</p>
+        <input type="text" class="sui-input" placeholder="Auto-focused input inside modal">
+      </div>
+      <div class="sui-modal-footer">
+        <button type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-sui-modal-close>Cancel</button>
+        <button type="button" class="sui-btn sui-btn-primary sui-btn-sm" data-sui-modal-close>Confirm</button>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- Scripts -->
+  <div id="docsDemoOffcanvas" class="sui-offcanvas sui-offcanvas-end" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="docsOffcanvasTitle">
+    <div class="sui-offcanvas-header">
+      <h3 id="docsOffcanvasTitle" class="sui-offcanvas-title">Offcanvas Drawer</h3>
+      <button type="button" class="sui-btn-close" data-sui-offcanvas-close aria-label="Close drawer"></button>
+    </div>
+    <div class="sui-offcanvas-body sui-space-y-4">
+      <p class="sui-text-sm sui-text-muted">Slide-over drawers support <code>start</code>, <code>end</code>, <code>top</code>, and <code>bottom</code> placements with Escape and backdrop dismissal.</p>
+      <ul class="sui-list-group">
+        <li class="sui-list-group-item">Workspace Settings</li>
+        <li class="sui-list-group-item">Team Members</li>
+        <li class="sui-list-group-item">Design Tokens</li>
+      </ul>
+      <button type="button" class="sui-btn sui-btn-primary sui-w-full" data-sui-offcanvas-close>Done</button>
+    </div>
+  </div>
+
   <script src="../dist/sui.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      
-      // 1. GLOBAL MOBILE DRAWER LOGIC (Right Side Nav)
-      const globalMenuBtn = document.getElementById('globalMenuBtn');
-      const globalDrawer = document.getElementById('globalMobileDrawer');
-      
-      function closeGlobal() {
-        if (globalDrawer) globalDrawer.classList.remove('is-open');
-      }
-      if (globalMenuBtn) {
-        globalMenuBtn.addEventListener('click', () => globalDrawer && globalDrawer.classList.add('is-open'));
-      }
-      document.getElementById('globalCloseBtn')?.addEventListener('click', closeGlobal);
-      document.getElementById('globalCloseBackdrop')?.addEventListener('click', closeGlobal);
-
-      // 2. DOCS SIDEBAR DRAWER LOGIC (Left Side Menu)
-      const docsMenuBtn = document.getElementById('docsMenuBtn');
-      const docsSidebar = document.getElementById('docsSidebar');
-      const docsOverlay = document.getElementById('docsSidebarOverlay');
-      const closeDocsBtn = document.getElementById('closeDocsBtnReal');
-
-      function openDocs() {
-        if (docsSidebar) docsSidebar.classList.add('is-open');
-        if (docsOverlay) docsOverlay.classList.add('is-open');
-        if (docsMenuBtn) docsMenuBtn.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeDocs() {
-        if (docsSidebar) docsSidebar.classList.remove('is-open');
-        if (docsOverlay) docsOverlay.classList.remove('is-open');
-        if (docsMenuBtn) docsMenuBtn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      }
-
-      if (docsMenuBtn) {
-        docsMenuBtn.addEventListener('click', () => {
-          if (docsSidebar && docsSidebar.classList.contains('is-open')) closeDocs();
-          else openDocs();
-        });
-      }
-      if (closeDocsBtn) closeDocsBtn.addEventListener('click', closeDocs);
-      if (docsOverlay) docsOverlay.addEventListener('click', closeDocs);
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeDocs();
-          closeGlobal();
-        }
-      });
-
-      // 3. AUTO-CLOSE & ACTIVE STATE FOR SIDEBAR LINKS
-      const docNavLinks = document.querySelectorAll('.docs-nav-link');
-      docNavLinks.forEach(link => {
-        link.addEventListener('click', function() {
-          docNavLinks.forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
-          
-          if (window.innerWidth < 992) {
-            closeDocs();
-          }
-        });
-      });
-
-    });
-  </script>
+  <script src="./docs.js"></script>
 </body>
 </html>

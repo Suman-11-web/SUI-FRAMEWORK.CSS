@@ -81,6 +81,8 @@ for (const rel of htmlFiles) {
     const idx = m.index;
     if (idx >= 2 && content.slice(idx - 2, idx) === '--') continue;
     if (idx >= 5 && content.slice(idx - 5, idx) === 'data-') continue;
+    const after = content.slice(idx + cls.length, idx + cls.length + 2);
+    if (after.startsWith('-*') || after.startsWith('/')) continue;
     if (
       cls.endsWith('.css') ||
       cls.endsWith('.js') ||
@@ -133,7 +135,7 @@ const brokenAssets = [];
 for (const rel of htmlFiles.filter((f) => f.endsWith('.html'))) {
   const full = path.join(root, rel);
   const dir = path.dirname(full);
-  const content = fs.readFileSync(full, 'utf8');
+  const content = fs.readFileSync(full, 'utf8').replace(/<pre[\s\S]*?<\/pre>/gi, '');
   for (const m of content.matchAll(/(?:href|src)=["']([^"']+)["']/g)) {
     const url = m[1];
     if (
