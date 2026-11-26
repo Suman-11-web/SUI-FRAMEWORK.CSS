@@ -108,6 +108,14 @@ assert('dist/sui.min.css does not force body{...overflow-x:hidden}', !/body\{[^}
 assert('dist/sui.min.css .sui-hidden has no !important', !distCss.includes('.sui-hidden{display:none!important}'));
 assert('dist/sui.min.css keeps plain HTML in light mode by default (no :root:not([data-theme=light]) dark hijack)', !distCss.includes(":root:not([data-theme=light])") && !distCss.includes(":root:not([data-theme='light'])"));
 assert('dist/sui.min.css uses color-scheme:light by default', distCss.includes('color-scheme:light') && !distCss.includes('color-scheme:light dark'));
+assert(
+  "Non-destructive reset: does not wipe borders/padding on *, plain tables, or plain lists",
+  !/:where\(\*\)\{[^}]*border:0/.test(distCss) &&
+  !/:where\(\*\)\{[^}]*padding:0/.test(distCss) &&
+  !/:where\(table\)\{[^}]*width:100%/.test(distCss) &&
+  !/:where\(td,th\)\{[^}]*padding:0/.test(distCss) &&
+  !/:where\(ul,ol\)\{list-style:none\}/.test(distCss)
+);
 assert('dist/sui.min.css makes .sui-modal.is-open visibility immediate (0s)', /\.sui-modal\.is-open\{[^}]*visibility\s+0s/.test(distCss) || /\.sui-modal\.is-open\{[^}]*visibility:visible/.test(distCss));
 assert('dist/sui.min.css includes Bootstrap-parity components (offcanvas, list-group, pagination, form-floating, btn-close)',
   distCss.includes('.sui-offcanvas') &&
@@ -151,9 +159,9 @@ assert('Zero stale v2.0.0 version badges across all HTML pages', staleV2Pages.le
 const staleV300Cdn = [];
 for (const rel of htmlFiles) {
   const c = fs.readFileSync(path.join(root, rel), "utf8");
-  if (c.includes("@v3.0.0")) staleV300Cdn.push(rel);
+  if ((c.includes("@v3.0.0") || c.includes("@v3.0.1"))) staleV300Cdn.push(rel);
 }
-assert("Zero stale @v3.0.0 CDN links across HTML/README files (all use @v3.0.1)", staleV300Cdn.length === 0, staleV300Cdn.join(", "));
+assert("Zero stale @v3.0.0 CDN links across HTML/README files (all use @v3.0.2)", staleV300Cdn.length === 0, staleV300Cdn.join(", "));
 
 // 6. Verify README.md has no broken markdown links inside HTML attributes
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
@@ -420,7 +428,7 @@ sandbox.addEventListener = (ev, fn) => (winListeners[ev] ||= []).push(fn);
 vm.runInNewContext(distJs, sandbox);
 
 const SUI = sandbox.SUI;
-assert('dist/sui.min.js exposes single unified window.SUI v3.0.0', SUI && SUI.version === '3.0.1', SUI?.version);
+assert('dist/sui.min.js exposes single unified window.SUI v3.0.0', SUI && SUI.version === '3.0.2', SUI?.version);
 assert('SUI.toast supports both v2 .show() and v3 .success()', typeof SUI.toast.show === 'function' && typeof SUI.toast.success === 'function');
 
 // Theme toggle test
@@ -676,9 +684,9 @@ const howToUseContent = fs.readFileSync(path.join(root, "how-to-use.html"), "utf
 const sitemapContent = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
 
 assert(
-  "docs/index.html installation snippet uses jsDelivr @v3.0.1 CDN links (no local ./dist/ paths)",
-  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.css") &&
-  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.js") &&
+  "docs/index.html installation snippet uses jsDelivr @v3.0.2 CDN links (no local ./dist/ paths)",
+  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.2/dist/sui.min.css") &&
+  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.2/dist/sui.min.js") &&
   !docsHtmlContent.includes('"./dist/sui.min.css"') &&
   !docsHtmlContent.includes('"./dist/sui.min.js"')
 );

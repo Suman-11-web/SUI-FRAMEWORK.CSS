@@ -1,6 +1,6 @@
 {
   "name": "sui-css",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Perceptual OKLCH CSS framework with 8-layer cascade, Bootstrap + Tailwind parity, TypeScript types, JIT purger CLI, and zero-dependency JS runtime.",
   "license": "MIT",
   "style": "dist/sui.min.css",
