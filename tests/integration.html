@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUI.js v3.0.0 — Fresh Consumer Integration Test</title>
+  <link rel="stylesheet" href="../dist/sui.min.css">
+  <script defer src="../dist/sui.min.js"></script>
+</head>
+<body class="sui-bg sui-text">
+  <main class="sui-container sui-py-12 sui-space-y-8">
+    <section class="sui-card">
+      <div class="sui-card-header">
+        <div>
+          <h1 class="sui-text-2xl">SUI.js Integration Test (Built Dist Only)</h1>
+          <p class="sui-text-sm sui-text-muted">Loads only <code>../dist/sui.min.css</code> and <code>&lt;script defer src="../dist/sui.min.js"&gt;</code>.</p>
+        </div>
+        <span id="int-badge" class="sui-badge sui-badge-primary">Running...</span>
+      </div>
+      <div class="sui-table-wrapper">
+        <table class="sui-table-styled">
+          <thead><tr><th>Check</th><th>Status</th><th>Detail</th></tr></thead>
+          <tbody id="int-results"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Unrelated plain controls (must NOT be hijacked by SUI.js) -->
+    <section class="sui-card">
+      <h2 class="sui-text-lg">1. Scope Isolation &amp; Theme Controls</h2>
+      <div class="sui-flex sui-flex-wrap sui-gap-3">
+        <button id="plain-btn" type="button">Plain Unrelated Button</button>
+        <button id="theme-auto-btn" type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle" data-sui-theme-set="auto">System Theme</button>
+        <button id="theme-light-btn" type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle" data-sui-theme-set="light">Light Theme</button>
+      </div>
+    </section>
+
+    <!-- Reference Modals & Offcanvas -->
+    <section class="sui-card">
+      <h2 class="sui-text-lg">2. Dual Modals, Static Backdrop &amp; Offcanvas</h2>
+      <div class="sui-flex sui-flex-wrap sui-gap-3">
+        <button id="open-m1" type="button" class="sui-btn sui-btn-primary" data-sui-modal-target="int-modal-1">Modal 1</button>
+        <button id="open-m2" type="button" class="sui-btn sui-btn-secondary" data-sui-modal-target="int-modal-2">Modal 2 (Static Backdrop)</button>
+        <button id="open-drawer" type="button" class="sui-btn sui-btn-outline" data-sui-offcanvas-target="int-drawer">Offcanvas Drawer</button>
+      </div>
+    </section>
+
+    <!-- Dropdowns, Popover, Tabs, Accordion -->
+    <section class="sui-card sui-space-y-4">
+      <h2 class="sui-text-lg">3. Dropdown, Popover, Tabs &amp; Accordion</h2>
+      <div class="sui-flex sui-flex-wrap sui-gap-3">
+        <div class="sui-dropdown" id="int-dd-1">
+          <button id="int-dd-btn" type="button" class="sui-btn sui-btn-outline" data-sui-dropdown-trigger="int-dd-1" aria-expanded="false">Menu 1</button>
+          <div class="sui-dropdown-menu">
+            <button id="int-dd-item-1" type="button" class="sui-dropdown-item">First Action</button>
+            <button id="int-dd-item-2" type="button" class="sui-dropdown-item">Second Action</button>
+          </div>
+        </div>
+        <div class="sui-popover-wrap">
+          <button id="int-pop-btn" type="button" class="sui-btn sui-btn-outline" data-sui-popover-target="int-pop" aria-expanded="false">Popover</button>
+          <div id="int-pop" class="sui-popover-panel">Popover body content</div>
+        </div>
+      </div>
+
+      <div class="sui-tabs" role="tablist">
+        <button id="int-tab-1" type="button" class="sui-tab sui-tab-active" role="tab" aria-selected="true" data-target="int-panel-1">Tab 1</button>
+        <button id="int-tab-2" type="button" class="sui-tab" role="tab" aria-selected="false" data-target="int-panel-2">Tab 2</button>
+      </div>
+      <div>
+        <div id="int-panel-1" class="tab-panel active">Panel 1</div>
+        <div id="int-panel-2" class="tab-panel">Panel 2</div>
+      </div>
+
+      <div class="sui-accordion">
+        <div id="int-acc-1" class="sui-accordion-item">
+          <button id="int-acc-btn-1" type="button" class="sui-accordion-header" aria-expanded="false">Section 1</button>
+          <div class="sui-accordion-content">Content 1</div>
+        </div>
+        <div id="int-acc-2" class="sui-accordion-item">
+          <button id="int-acc-btn-2" type="button" class="sui-accordion-header" aria-expanded="false">Section 2</button>
+          <div class="sui-accordion-content">Content 2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opt-in Form Enhancements + Dynamic Container -->
+    <section class="sui-card sui-space-y-4">
+      <h2 class="sui-text-lg">4. Opt-In Forms &amp; Dynamic Fragment Injection</h2>
+      <form id="int-form" class="sui-form" data-sui-validate>
+        <div class="sui-form-group">
+          <label for="int-bio" class="sui-label">Bio (<span id="int-bio-count">0 / 40</span>)</label>
+          <input id="int-bio" type="text" class="sui-input" maxlength="40" data-sui-counter="int-bio-count" required>
+        </div>
+        <div class="sui-form-group">
+          <label for="int-pass" class="sui-label">Password</label>
+          <div class="sui-flex sui-gap-2">
+            <input id="int-pass" type="password" class="sui-input" value="secret123">
+            <button id="int-pass-toggle" type="button" class="sui-btn sui-btn-outline sui-btn-sm" data-sui-toggle-password="int-pass" aria-pressed="false">Show</button>
+          </div>
+        </div>
+      </form>
+      <div id="dynamic-host"></div>
+    </section>
+  </main>
+
+  <!-- Modals & Offcanvas Markup -->
+  <div id="int-modal-1" class="sui-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="sui-modal-overlay"></div>
+    <div class="sui-modal-dialog">
+      <div class="sui-modal-header"><h3>Modal 1</h3><button type="button" class="sui-modal-close" data-sui-modal-close>&times;</button></div>
+      <div class="sui-modal-body"><input id="m1-input" type="text" class="sui-input"></div>
+    </div>
+  </div>
+
+  <div id="int-modal-2" class="sui-modal" role="dialog" aria-modal="true" aria-hidden="true" data-sui-backdrop="static">
+    <div class="sui-modal-overlay"></div>
+    <div class="sui-modal-dialog">
+      <div class="sui-modal-header"><h3>Modal 2</h3><button type="button" class="sui-modal-close" data-sui-modal-close>&times;</button></div>
+      <div class="sui-modal-body"><button id="m2-btn" type="button" class="sui-btn sui-btn-primary">Inside 2</button></div>
+    </div>
+  </div>
+
+  <div id="int-drawer" class="sui-offcanvas sui-offcanvas-end" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="sui-offcanvas-header"><h3 class="sui-offcanvas-title">Drawer</h3><button type="button" class="sui-btn-close" data-sui-offcanvas-close></button></div>
+    <div class="sui-offcanvas-body"><button id="drawer-btn" type="button" class="sui-btn sui-btn-primary">Inside Drawer</button></div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const checks = [];
+      const add = (name, pass, detail) => checks.push({ name, pass: Boolean(pass), detail });
+
+      // 1. Repeated init is idempotent (no duplicate listeners)
+      window.SUI.init();
+      window.SUI.init();
+      const ddBtn = document.getElementById('int-dd-btn');
+      const dd = document.getElementById('int-dd-1');
+      ddBtn.focus();
+      ddBtn.click();
+      const ddOpened = dd.classList.contains('is-open') && ddBtn.getAttribute('aria-expanded') === 'true';
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      const ddEscRestore = !dd.classList.contains('is-open') && document.activeElement === ddBtn;
+      add('Repeated init safe + Dropdown open/Escape/focus-restore', ddOpened && ddEscRestore, `open=${ddOpened}, escRestore=${ddEscRestore}`);
+
+      // 2. Tabs arrow-key navigation
+      const tab1 = document.getElementById('int-tab-1');
+      const tab2 = document.getElementById('int-tab-2');
+      tab1.focus();
+      tab1.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+      const tabMoved = tab2.getAttribute('aria-selected') === 'true' && document.getElementById('int-panel-2').classList.contains('active');
+      add('Tabs ArrowRight switches selected tab & panel', tabMoved, `tab2Selected=${tab2.getAttribute('aria-selected')}`);
+
+      // 3. Accordion single-open sync with aria-expanded
+      document.getElementById('int-acc-btn-1').click();
+      const acc1Open = document.getElementById('int-acc-1').classList.contains('is-open');
+      document.getElementById('int-acc-btn-2').click();
+      const accSingle = !document.getElementById('int-acc-1').classList.contains('is-open') && document.getElementById('int-acc-2').classList.contains('is-open');
+      add('Accordion single-open & aria-expanded sync', acc1Open && accSingle, `acc1Open=${acc1Open}, singleOpen=${accSingle}`);
+
+      // 4. Opt-in password toggle & character counter
+      const bio = document.getElementById('int-bio');
+      bio.value = 'Hello SUI';
+      bio.dispatchEvent(new Event('input', { bubbles: true }));
+      const countOk = document.getElementById('int-bio-count').textContent === '9 / 40';
+      document.getElementById('int-pass-toggle').click();
+      const passOk = document.getElementById('int-pass').type === 'text';
+      add('Opt-in character counter & password reveal', countOk && passOk, `counter=${document.getElementById('int-bio-count').textContent}, passType=${document.getElementById('int-pass').type}`);
+
+      // 5. Dynamic fragment injection (Flask/Django style) + DOM removal safety
+      const host = document.getElementById('dynamic-host');
+      host.innerHTML = `<button id="dyn-open" class="sui-btn sui-btn-sm" data-sui-modal-target="dyn-modal">Dyn</button>
+        <div id="dyn-modal" class="sui-modal"><div class="sui-modal-dialog"><button id="dyn-in">OK</button></div></div>`;
+      window.SUI.init(host);
+      document.getElementById('dyn-open').click();
+      const dynOpened = document.getElementById('dyn-modal').classList.contains('is-open') && document.body.style.overflow === 'hidden';
+      document.getElementById('dyn-modal').remove();
+      setTimeout(() => {
+        const unlockedAfterRemove = document.body.style.overflow === '';
+        add('Dynamic modal open & removing open modal unlocks scroll', dynOpened && unlockedAfterRemove, `dynOpened=${dynOpened}, unlockedAfterRemove=${unlockedAfterRemove}`);
+
+        // 6. Destroy & re-init lifecycle
+        window.SUI.destroy();
+        window.SUI.init();
+        const reinitOk = window.SUI.modal.open('int-modal-1') && window.SUI.modal.close('int-modal-1');
+        add('SUI.destroy() + SUI.init() clean round-trip', reinitOk, `reinitOk=${reinitOk}`);
+
+        const passed = checks.filter(c => c.pass).length;
+        document.getElementById('int-results').innerHTML = checks.map(c =>
+          `<tr><td>${c.name}</td><td>${c.pass ? 'PASS' : 'FAIL'}</td><td><code>${c.detail}</code></td></tr>`
+        ).join('');
+        const badge = document.getElementById('int-badge');
+        badge.textContent = `${passed} / ${checks.length} Passed`;
+        badge.className = `sui-badge ${passed === checks.length ? 'sui-badge-success' : 'sui-badge-danger'}`;
+      }, 20);
+    });
+  </script>
+</body>
+</html>

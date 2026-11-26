@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sui.css v2.0 — Complete setup and usage guide.">
+    <meta name="description" content="Sui.css v3.0 — Complete setup and usage guide.">
     <title>Sui.css — How to Use</title>
 
     <!-- Core Framework -->
@@ -160,12 +160,13 @@
         <div class="sui-avatar sui-animate-glow" style="width: 2.5rem; height: 2.5rem; background: var(--sui-color-primary-500); color: white; border-radius: 11px;">S</div>
         <div>
             <strong style="display: block; color: var(--sui-text); font-size: 0.95rem;">Sui.css</strong>
-            <span style="color: var(--sui-text-muted); font-size: 0.7rem;" class="sui-hidden md:sui-block">Simple • Utility • Interface</span>
+            <span style="color: var(--sui-text-muted); font-size: 0.7rem;" class="sui-hidden sui-md-block">Simple • Utility • Interface</span>
         </div>
     </a>
 
     <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <span class="sui-badge sui-badge-primary sui-hidden md:sui-inline-flex" style="background: oklch(from var(--sui-color-primary-500) l c h / 0.1); color: var(--sui-color-primary-500);">v2.0 Architecture</span>
+        <button type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-theme-toggle" aria-label="Toggle theme">Theme</button>
+        <span class="sui-badge sui-badge-primary sui-hidden sui-md-inline-flex" style="background: oklch(from var(--sui-color-primary-500) l c h / 0.1); color: var(--sui-color-primary-500);">v3.0 Architecture</span>
         <a class="sui-btn sui-btn-outline sui-btn-sm nav-github-btn" href="https://github.com" target="_blank" rel="noopener">GitHub ↗</a>
         <button class="menu-btn" id="menuBtn" aria-label="Open documentation menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -219,7 +220,7 @@
             </p>
 
             <div class="sui-flex sui-gap-2 sui-flex-wrap">
-                <span class="sui-badge">v2.0.0</span>
+                <span class="sui-badge">v3.0.0</span>
                 <span class="sui-badge">CSS Engine</span>
                 <span class="sui-badge">Responsive</span>
                 <span class="sui-badge">Utility-first</span>
@@ -285,8 +286,8 @@
                 </div>
             </div>
 
-            <!-- New v2.0.0 CDN Links -->
-            <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Global CDN (v2.0.0 jsDelivr)</h3>
+            <!-- New v3.0.0 CDN Links -->
+            <h3 class="sui-text-xl sui-mb-2 sui-mt-8">Global CDN (v3.0.0 jsDelivr)</h3>
             <p class="sui-text-sm sui-text-muted sui-mb-4">The new recommended CDN for maximum global delivery speeds.</p>
             <div class="code-block">
                 <div class="code-header">
@@ -367,13 +368,13 @@
     <span class="sui-hl-tag">&lt;meta</span> <span class="sui-hl-attr">name</span>=<span class="sui-hl-string">"viewport"</span> <span class="sui-hl-attr">content</span>=<span class="sui-hl-string">"width=device-width, initial-scale=1.0"</span><span class="sui-hl-tag">&gt;</span>
     <span class="sui-hl-tag">&lt;title&gt;</span>My Sui.css Project<span class="sui-hl-tag">&lt;/title&gt;</span>
     
-    <span class="sui-hl-comment">&lt;!-- SUI CSS v2.0.0 --&gt;</span>
+    <span class="sui-hl-comment">&lt;!-- SUI CSS v3.0.0 --&gt;</span>
     <span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
 <span class="sui-hl-tag">&lt;/head&gt;</span>
 <span class="sui-hl-tag">&lt;body&gt;</span>
     <span class="sui-hl-tag">&lt;h1&gt;</span>Hello Sui.css<span class="sui-hl-tag">&lt;/h1&gt;</span>
     
-    <span class="sui-hl-comment">&lt;!-- SUI JS v2.0.0 --&gt;</span>
+    <span class="sui-hl-comment">&lt;!-- SUI JS v3.0.0 --&gt;</span>
     <span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span>
 <span class="sui-hl-tag">&lt;/body&gt;</span>
 <span class="sui-hl-tag">&lt;/html&gt;</span></code></pre>
@@ -611,7 +612,7 @@
                     <button class="sui-btn sui-btn-outline sui-btn-sm copy-btn">Copy</button>
                 </div>
                 <pre><code style="color: #ededed;"><span class="sui-hl-comment">&lt;!-- Stack on mobile, flex row on desktop --&gt;</span>
-<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-flex-col md:sui-flex-row"</span><span class="sui-hl-tag">&gt;</span>
+<span class="sui-hl-tag">&lt;div</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-flex sui-flex-col sui-md-flex-row"</span><span class="sui-hl-tag">&gt;</span>
     <span class="sui-hl-tag">&lt;div&gt;</span>Content<span class="sui-hl-tag">&lt;/div&gt;</span>
     <span class="sui-hl-tag">&lt;div&gt;</span>Sidebar<span class="sui-hl-tag">&lt;/div&gt;</span>
 <span class="sui-hl-tag">&lt;/div&gt;</span></code></pre>
@@ -739,7 +740,7 @@ ls dist/</code></pre>
     <span class="sui-hl-tag">&lt;meta</span> <span class="sui-hl-attr">name</span>=<span class="sui-hl-string">"viewport"</span> <span class="sui-hl-attr">content</span>=<span class="sui-hl-string">"width=device-width, initial-scale=1.0"</span><span class="sui-hl-tag">&gt;</span>
     <span class="sui-hl-tag">&lt;title&gt;</span>Sui.css Project<span class="sui-hl-tag">&lt;/title&gt;</span>
     
-    <span class="sui-hl-comment">&lt;!-- SUI CSS v2.0.0 --&gt;</span>
+    <span class="sui-hl-comment">&lt;!-- SUI CSS v3.0.0 --&gt;</span>
     <span class="sui-hl-tag">&lt;link</span> <span class="sui-hl-attr">rel</span>=<span class="sui-hl-string">"stylesheet"</span> <span class="sui-hl-attr">href</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css"</span><span class="sui-hl-tag">&gt;</span>
 <span class="sui-hl-tag">&lt;/head&gt;</span>
 <span class="sui-hl-tag">&lt;body</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-bg"</span><span class="sui-hl-tag">&gt;</span>
@@ -751,7 +752,7 @@ ls dist/</code></pre>
         <span class="sui-hl-tag">&lt;button</span> <span class="sui-hl-attr">class</span>=<span class="sui-hl-string">"sui-btn sui-btn-primary sui-hover-lift"</span><span class="sui-hl-tag">&gt;</span>Get Started<span class="sui-hl-tag">&lt;/button&gt;</span>
     <span class="sui-hl-tag">&lt;/main&gt;</span>
     
-    <span class="sui-hl-comment">&lt;!-- SUI JS v2.0.0 --&gt;</span>
+    <span class="sui-hl-comment">&lt;!-- SUI JS v3.0.0 --&gt;</span>
     <span class="sui-hl-tag">&lt;script</span> <span class="sui-hl-attr">src</span>=<span class="sui-hl-string">"https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"</span><span class="sui-hl-tag">&gt;&lt;/script&gt;</span>
 <span class="sui-hl-tag">&lt;/body&gt;</span>
 <span class="sui-hl-tag">&lt;/html&gt;</span></code></pre>
@@ -771,7 +772,7 @@ ls dist/</code></pre>
         ====================================================== -->
         <footer class="sui-border-t sui-border-subtle sui-pt-8 sui-mt-12 sui-text-muted sui-text-sm">
             <p><strong class="sui-text">Sui.css</strong> — Simple Utility Interface CSS Framework.</p>
-            <p>Version 2.0.0 · Documentation </p>
+            <p>Version 3.0.0 · Documentation </p>
         </footer>
 
     </div>

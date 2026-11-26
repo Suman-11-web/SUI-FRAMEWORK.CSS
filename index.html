@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -147,7 +147,8 @@
     </div>
     
     <div class="nav-actions">
-      <span class="sui-badge sui-badge-primary sui-hidden md:sui-inline-flex" style="background: transparent; border: 1px solid var(--sui-border); display: none;">v2.0.0</span>
+      <button type="button" class="sui-btn sui-btn-outline sui-btn-sm sui-rounded-full sui-theme-toggle" aria-label="Toggle theme" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Theme</button>
+      <span class="sui-badge sui-badge-primary sui-hidden sui-md-inline-flex">v3.0.0</span>
       <a href="https://github.com/Suman-11-web" class="sui-btn sui-btn-primary sui-btn-sm sui-rounded-full nav-github-btn" style="padding: 0.4rem 1rem; font-size: 0.85rem; display: none;">GitHub &rarr;</a>
       
       <button id="mobileMenuBtn" class="nav-mobile-btn" aria-label="Open Menu">
@@ -193,7 +194,7 @@
     </div>
     
     <div class="hero-content" style="position: relative; z-index: 1;">
-      <span class="sui-badge sui-badge-primary sui-mb-6 sui-animate-spring-up">SUI.css v2.0.0</span>
+      <span class="sui-badge sui-badge-primary sui-mb-6 sui-animate-spring-up">SUI.css v3.0.0</span>
       
       <h1 class="sui-text-hero sui-mb-6 sui-max-w-4xl sui-text-balance sui-animate-spring-up sui-delay-1 sui-tracking-tighter">
         Build Modern Interfaces.<br />
@@ -209,7 +210,7 @@
         <a href="example/buttons.html" class="sui-btn sui-btn-outline sui-btn-lg sui-hover-lift sui-rounded-full sui-px-8 sui-bg-surface">Explore Components</a>
       </div>
       
-      <div class="sui-flex sui-flex-wrap sui-justify-center sui-items-center sui-gap-4 md:sui-gap-6 sui-mt-12 sui-animate-blur-in sui-delay-4 sui-opacity-80">
+      <div class="sui-flex sui-flex-wrap sui-justify-center sui-items-center sui-gap-4 sui-md-gap-6 sui-mt-12 sui-animate-blur-in sui-delay-4 sui-opacity-80">
         <div class="sui-text-sm sui-font-medium">✦ Native CSS</div>
         <div class="sui-text-sm sui-font-medium">✦ Responsive</div>
         <div class="sui-text-sm sui-font-medium">✦ Customizable</div>
@@ -413,7 +414,7 @@
         <a href="example/animations.html" class="sui-btn sui-btn-primary sui-rounded-full">Explore Animations &rarr;</a>
       </div>
       
-      <div class="sui-grid sui-gap-4 md:sui-gap-6 sui-text-center" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+      <div class="sui-grid sui-gap-4 sui-md-gap-6 sui-text-center" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
         <div class="sui-card sui-animate-blur-in">Fade In</div>
         <div class="sui-card sui-animate-spring-up">Slide Up</div>
         <div class="sui-card sui-hover-lift">Scale</div>
@@ -604,7 +605,7 @@
       <div class="sui-grid sui-gap-6" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
         
         <div class="sui-card sui-flex sui-flex-col sui-justify-center sui-items-center sui-text-center">
-          <div class="sui-text-hero sui-mb-2">v2.0.0</div>
+          <div class="sui-text-hero sui-mb-2">v3.0.0</div>
           <div class="sui-text-muted">Current Version</div>
           <div class="sui-text-hero sui-mt-6 sui-mb-2">CSS</div>
           <div class="sui-text-muted">Core Technology</div>
@@ -679,14 +680,14 @@
       <div class="sui-border-t sui-border-subtle sui-mt-12 sui-pt-8 sui-flex sui-justify-between sui-items-center sui-flex-wrap sui-gap-4">
         <p class="sui-text-sm sui-text-muted">&copy; 2026 Sui.css Framework. Built for developers. Free and open source.</p>
         <div class="sui-flex sui-gap-4">
-          <span class="sui-badge sui-badge-outline">SUI.css v2.0.0</span>
+          <span class="sui-badge sui-badge-outline">SUI.css v3.0.0</span>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- SUI Javascript Core -->
-  <script src="dist/sui.min.js"></script>
+  <script defer src="dist/sui.min.js"></script>
 
   <!-- =======================================================================
        JAVASCRIPT HELPERS (COPY BUTTONS & PLAYGROUND)
@@ -741,6 +742,7 @@
       if (editor && preview && highlightLayer) {
         const rawCode = editor.value;
         preview.innerHTML = rawCode;
+        if (window.SUI && typeof window.SUI.init === "function") window.SUI.init(preview);
         let colored = highlightHTML(rawCode);
         if(rawCode.endsWith("\n")) { colored += " "; }
         highlightLayer.innerHTML = colored;

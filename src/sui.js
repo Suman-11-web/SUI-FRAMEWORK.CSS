@@ -1,6 +1,7 @@
 /**
  * SUI.css - Interactive Runtime Engine v3.0.0
  * Architecture: Zero-Dependency Pure Vanilla JavaScript (Unified UMD)
+ * Supports: <script defer>, plain <script>, CommonJS, AMD, and dynamic HTML fragments
  * Author: Suman M. (Sui.css Core Team)
  */
 
@@ -9,7 +10,9 @@
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = api;
   } else if (typeof define === 'function' && define.amd) {
-    define(function () { return api; });
+    define(function () {
+      return api;
+    });
   }
   const root = typeof globalThis !== 'undefined' ? globalThis : global || self;
   if (root) root.SUI = api;
@@ -23,15 +26,25 @@
   };
 
   let initialized = false;
+  let globalController = null;
+  let domObserver = null;
+  const activeObservers = new Set();
+  const activeTimers = new Set();
 
   /* ==========================================================================
-     1. UTILITIES
+     1. UTILITIES, TIMERS & SHARED SCROLL LOCK
      ========================================================================== */
   const Utils = {
     prefersReducedMotion() {
       return (
         typeof window.matchMedia === 'function' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      );
+    },
+    isTouchDevice() {
+      return (
+        (typeof window !== 'undefined' && 'ontouchstart' in window) ||
+        (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0)
       );
     },
     createElement(tag, classes = [], attributes = {}) {
@@ -45,10 +58,44 @@
     },
     triggerReflow(element) {
       if (element) void element.offsetWidth;
+    },
+    emit(name, detail = {}, target = window) {
+      if (!target || typeof target.dispatchEvent !== 'function') return;
+      target.dispatchEvent(new CustomEvent(name, { detail, bubbles: true }));
+    },
+    setTimer(fn, ms) {
+      const id = setTimeout(() => {
+        activeTimers.delete(id);
+        fn();
+      }, ms);
+      activeTimers.add(id);
+      return id;
+    },
+    clearTimer(id) {
+      if (id != null) {
+        clearTimeout(id);
+        activeTimers.delete(id);
+      }
+    },
+    listen(target, event, handler, options) {
+      if (!target || typeof target.addEventListener !== 'function') return;
+      const opts =
+        typeof options === 'boolean'
+          ? { capture: options }
+          : { ...(options || {}) };
+      if (globalController && typeof AbortController !== 'undefined') {
+        opts.signal = globalController.signal;
+      }
+      target.addEventListener(event, handler, opts);
+    },
+    closestTarget(e, selector) {
+      return e && e.target && typeof e.target.closest === 'function'
+        ? e.target.closest(selector)
+        : null;
     }
   };
 
-  /* Shared Scroll Lock Counter (prevents Modal + Offcanvas + Command conflicts) */
+  /* Shared reference-counted ScrollLock across Modal, Offcanvas, and Command */
   const ScrollLock = {
     _count: 0,
     lock() {
@@ -60,13 +107,28 @@
       if (this._count === 0) {
         document.body.style.overflow = '';
       }
+    },
+    reset() {
+      this._count = 0;
+      if (typeof document !== 'undefined' && document.body) {
+        document.body.style.overflow = '';
+      }
     }
   };
 
   /* ==========================================================================
-     2. THEME ENGINE (Unified data-theme with prefers-color-scheme sync)
+     2. THEME ENGINE (light | dark | oled | auto/system)
      ========================================================================== */
   const ThemeEngine = {
+    _mode: 'light',
+    _mql: null,
+    _resolveEffective(mode) {
+      if (mode === 'auto' || mode === 'system') {
+        const prefersDark = Boolean(this._mql && this._mql.matches);
+        return prefersDark ? 'dark' : 'light';
+      }
+      return mode || 'light';
+    },
     init() {
       let stored = null;
       try {
@@ -74,37 +136,33 @@
       } catch (_) {
         /* ignore storage restrictions */
       }
-      const declaredTheme = document.documentElement.getAttribute('data-theme');
-      const mql =
+
+      const declared = document.documentElement.getAttribute('data-theme');
+      this._mql =
         typeof window.matchMedia === 'function'
           ? window.matchMedia('(prefers-color-scheme: dark)')
           : null;
-      let initialTheme = stored || declaredTheme || 'light';
-      if (initialTheme === 'auto') {
-        initialTheme = mql && mql.matches ? 'dark' : 'light';
-      }
 
-      this.set(initialTheme, false);
+      const initialMode = stored || declared || 'light';
+      this.set(initialMode, false);
 
-      if (mql && typeof mql.addEventListener === 'function') {
-        mql.addEventListener('change', (e) => {
-          let currentStored = null;
-          try {
-            currentStored = localStorage.getItem(SUI_CONFIG.themeKey);
-          } catch (_) {
-            /* ignore */
-          }
-          if (!currentStored && declaredTheme === 'auto') {
-            this.set(e.matches ? 'dark' : 'light', false);
+      if (this._mql && typeof this._mql.addEventListener === 'function') {
+        Utils.listen(this._mql, 'change', () => {
+          if (this._mode === 'auto' || this._mode === 'system') {
+            const effective = this._resolveEffective('auto');
+            document.documentElement.setAttribute('data-theme', effective);
+            Utils.emit('sui:theme-change', { theme: effective, mode: 'auto' });
           }
         });
       }
 
-      document.addEventListener('click', (e) => {
-        const toggleBtn = e.target.closest('.sui-theme-toggle');
+      Utils.listen(document, 'click', (e) => {
+        const toggleBtn = Utils.closestTarget(e, '.sui-theme-toggle, [data-sui-theme-toggle]');
         if (toggleBtn) {
           e.preventDefault();
-          this.toggle();
+          const explicitMode = toggleBtn.getAttribute('data-sui-theme-set');
+          if (explicitMode) this.set(explicitMode, true);
+          else this.toggle();
         }
       });
     },
@@ -115,17 +173,24 @@
         'light'
       );
     },
-    set(theme, store = true) {
-      document.documentElement.setAttribute('data-theme', theme);
+    getMode() {
+      return this._mode;
+    },
+    set(mode, store = true) {
+      const normalized = mode === 'system' ? 'auto' : mode || 'light';
+      this._mode = normalized;
+      const effective = this._resolveEffective(normalized);
+      document.documentElement.setAttribute('data-theme', effective);
       document.documentElement.removeAttribute('data-sui-theme');
       if (store) {
         try {
-          localStorage.setItem(SUI_CONFIG.themeKey, theme);
+          localStorage.setItem(SUI_CONFIG.themeKey, normalized);
         } catch (_) {
           /* ignore */
         }
       }
-      window.dispatchEvent(new CustomEvent('sui:theme-change', { detail: { theme } }));
+      Utils.emit('sui:theme-change', { theme: effective, mode: normalized });
+      return effective;
     },
     toggle() {
       const next = this.get() === 'dark' ? 'light' : 'dark';
@@ -135,10 +200,11 @@
   };
 
   /* ==========================================================================
-     3. TOAST NOTIFICATION ENGINE (Supports both v2 .show() and v3 helpers)
+     3. TOAST NOTIFICATION ENGINE (Hover + Focus Pause, Clean Timer Cleanup)
      ========================================================================== */
   const Toast = {
     _position: 'bottom-right',
+    _timers: new Map(),
     setPosition(pos = 'bottom-right') {
       this._position = pos;
       const container = document.getElementById(SUI_CONFIG.toastContainerId);
@@ -175,15 +241,11 @@
         'div',
         ['sui-toast', `sui-toast-${normalizedType}`, 'sui-animate-spring-up'],
         {
-          style:
-            'pointer-events: auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;'
+          role: normalizedType === 'danger' ? 'alert' : 'status',
+          'aria-live': normalizedType === 'danger' ? 'assertive' : 'polite',
+          tabindex: '0'
         }
       );
-
-      if (normalizedType === 'success') toast.style.borderLeftColor = 'var(--sui-color-success-500)';
-      if (normalizedType === 'danger') toast.style.borderLeftColor = 'var(--sui-color-danger-500)';
-      if (normalizedType === 'warning') toast.style.borderLeftColor = 'var(--sui-color-warning-500)';
-      if (normalizedType === 'info') toast.style.borderLeftColor = 'var(--sui-color-info-500)';
 
       const content = document.createElement('div');
       if (title) {
@@ -207,7 +269,7 @@
           type: 'button',
           'aria-label': 'Dismiss notification',
           style:
-            'background: transparent; border: none; cursor: pointer; color: var(--sui-text-muted); padding: 0.25rem;'
+            'background: transparent; border: none; cursor: pointer; color: var(--sui-text-muted); padding: 0.25rem; margin-left: auto;'
         });
         closeBtn.textContent = '\u00d7';
         closeBtn.addEventListener('click', () => this.dismiss(toast));
@@ -217,14 +279,38 @@
       container.appendChild(toast);
 
       if (duration > 0) {
-        let timer = setTimeout(() => this.dismiss(toast), duration);
-        toast.addEventListener('mouseenter', () => clearTimeout(timer));
-        toast.addEventListener('mouseleave', () => {
-          timer = setTimeout(() => this.dismiss(toast), Math.max(duration / 2, 1000));
-        });
+        let remaining = duration;
+        let startedAt = Date.now();
+        const schedule = (ms) => {
+          this._clearToastTimer(toast);
+          startedAt = Date.now();
+          const id = Utils.setTimer(() => this.dismiss(toast), ms);
+          this._timers.set(toast, id);
+        };
+        const pause = () => {
+          this._clearToastTimer(toast);
+          remaining = Math.max(800, remaining - (Date.now() - startedAt));
+        };
+        const resume = () => {
+          if (toast.parentNode) schedule(remaining);
+        };
+
+        schedule(duration);
+        toast.addEventListener('mouseenter', pause);
+        toast.addEventListener('mouseleave', resume);
+        toast.addEventListener('focusin', pause);
+        toast.addEventListener('focusout', resume);
       }
 
+      Utils.emit('sui:toast-show', { element: toast, type: normalizedType, title, message });
       return toast;
+    },
+    _clearToastTimer(toast) {
+      const id = this._timers.get(toast);
+      if (id != null) {
+        Utils.clearTimer(id);
+        this._timers.delete(toast);
+      }
     },
     success(message, title = '') {
       return this.show({ title, message, type: 'success' });
@@ -242,19 +328,27 @@
       return this.show({ title, message, type: 'info' });
     },
     dismiss(toast) {
-      if (!toast) return;
+      if (!toast) return false;
+      this._clearToastTimer(toast);
       toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(50px)';
-      setTimeout(() => {
+      Utils.setTimer(() => {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
       }, 250);
+      Utils.emit('sui:toast-dismiss', { element: toast });
+      return true;
+    },
+    dismissAll() {
+      const container = document.getElementById(SUI_CONFIG.toastContainerId);
+      if (!container) return;
+      Array.from(container.querySelectorAll('.sui-toast')).forEach((t) => this.dismiss(t));
     }
   };
 
   /* ==========================================================================
-     4. MODAL & DIALOG ENGINE (Multi-instance, Escape, Focus Restoration)
-     Supports both v3 (.sui-modal + .is-open) and v2 (.sui-dialog-overlay + .active)
+     4. MODAL & DIALOG ENGINE (Reference Component)
+     Multi-instance, Tab Focus Trap, Escape, Focus Restore, DOM-Removal Safe
      ========================================================================== */
   const Modal = {
     _stack: [],
@@ -269,35 +363,35 @@
       const modal = this._resolveElement(target);
       if (!modal) return false;
 
-      const returnFocusTo = triggerElement || document.activeElement;
       const existingIdx = this._stack.findIndex((entry) => entry.modal === modal);
       if (existingIdx !== -1) {
-        this._stack.splice(existingIdx, 1);
+        // Already open: bring to top without double-locking scroll
+        const entry = this._stack.splice(existingIdx, 1)[0];
+        this._stack.push(entry);
+        return true;
       }
+
+      const returnFocusTo = triggerElement || document.activeElement;
       this._stack.push({ modal, returnFocusTo });
 
       if (this._isLegacyDialog(modal)) {
         modal.classList.add('active');
       } else {
-        modal.classList.add('is-open');
-        modal.classList.add('active');
+        modal.classList.add('is-open', 'active');
       }
       modal.setAttribute('aria-hidden', 'false');
-      if (existingIdx === -1) ScrollLock.lock();
-
-      // Flush style/layout so visibility: visible is active before focusing
+      ScrollLock.lock();
       Utils.triggerReflow(modal);
 
-      const focusable = modal.querySelector(
-        '[autofocus], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([data-sui-modal-close]):not(.sui-modal-close), [tabindex]:not([tabindex="-1"])'
-      ) || modal.querySelector('button:not([disabled])');
+      const focusable =
+        modal.querySelector(
+          '[autofocus], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]):not([data-sui-modal-close]):not(.sui-modal-close), [tabindex]:not([tabindex="-1"])'
+        ) || modal.querySelector('button:not([disabled])');
       if (focusable && typeof focusable.focus === 'function') {
         focusable.focus();
       }
 
-      window.dispatchEvent(
-        new CustomEvent('sui:modal-open', { detail: { id: modal.id, element: modal } })
-      );
+      Utils.emit('sui:modal-open', { id: modal.id, element: modal });
       return true;
     },
     close(target) {
@@ -310,17 +404,17 @@
       }
       if (!modal) return false;
 
+      const idx = this._stack.findIndex((entry) => entry.modal === modal);
+      const wasOpen = idx !== -1 || modal.classList.contains('is-open') || modal.classList.contains('active');
+      if (!wasOpen) return false;
+
       modal.classList.remove('is-open', 'active');
       modal.setAttribute('aria-hidden', 'true');
 
       let returnFocusTo = null;
-      const idx = this._stack.findIndex((entry) => entry.modal === modal);
       if (idx !== -1) {
         returnFocusTo = this._stack[idx].returnFocusTo;
         this._stack.splice(idx, 1);
-      }
-
-      if (idx !== -1) {
         ScrollLock.unlock();
       }
 
@@ -332,10 +426,16 @@
         returnFocusTo.focus();
       }
 
-      window.dispatchEvent(
-        new CustomEvent('sui:modal-close', { detail: { id: modal.id, element: modal } })
-      );
+      Utils.emit('sui:modal-close', { id: modal.id, element: modal });
       return true;
+    },
+    toggle(target, triggerElement = null) {
+      const modal = this._resolveElement(target);
+      if (!modal) return false;
+      if (modal.classList.contains('is-open') || modal.classList.contains('active')) {
+        return this.close(modal);
+      }
+      return this.open(modal, triggerElement);
     },
     closeAll() {
       while (this._stack.length > 0) {
@@ -345,9 +445,26 @@
         .querySelectorAll('.sui-modal.is-open, .sui-dialog-overlay.active')
         .forEach((m) => this.close(m));
     },
+    _handleDetached() {
+      for (let i = this._stack.length - 1; i >= 0; i -= 1) {
+        const entry = this._stack[i];
+        if (!document.contains(entry.modal)) {
+          this._stack.splice(i, 1);
+          ScrollLock.unlock();
+          if (
+            entry.returnFocusTo &&
+            typeof entry.returnFocusTo.focus === 'function' &&
+            document.contains(entry.returnFocusTo)
+          ) {
+            entry.returnFocusTo.focus();
+          }
+          Utils.emit('sui:modal-close', { id: entry.modal.id, element: entry.modal, detached: true });
+        }
+      }
+    },
     init() {
-      document.addEventListener('click', (e) => {
-        const openBtn = e.target.closest('[data-sui-modal-target]');
+      Utils.listen(document, 'click', (e) => {
+        const openBtn = Utils.closestTarget(e, '[data-sui-modal-target]');
         if (openBtn) {
           e.preventDefault();
           const targetId = openBtn.getAttribute('data-sui-modal-target');
@@ -355,7 +472,7 @@
           return;
         }
 
-        const closeBtn = e.target.closest('[data-sui-modal-close], .sui-modal-close');
+        const closeBtn = Utils.closestTarget(e, '[data-sui-modal-close], .sui-modal-close');
         if (closeBtn) {
           e.preventDefault();
           const modal = closeBtn.closest('.sui-modal, .sui-dialog-overlay');
@@ -364,20 +481,26 @@
         }
 
         if (
-          e.target.classList.contains('sui-modal-overlay') ||
-          e.target.classList.contains('sui-dialog-overlay') ||
-          e.target.classList.contains('sui-modal')
+          e.target &&
+          e.target.classList &&
+          (e.target.classList.contains('sui-modal-overlay') ||
+            e.target.classList.contains('sui-dialog-overlay') ||
+            e.target.classList.contains('sui-modal'))
         ) {
           const modal = e.target.closest('.sui-modal, .sui-dialog-overlay');
-          this.close(modal);
+          if (modal && modal.getAttribute('data-sui-backdrop') !== 'static') {
+            this.close(modal);
+          }
         }
       });
 
-      document.addEventListener('keydown', (e) => {
+      Utils.listen(document, 'keydown', (e) => {
         if (this._stack.length === 0) return;
         const activeModal = this._stack[this._stack.length - 1].modal;
         if (e.key === 'Escape') {
-          this.close(activeModal);
+          if (activeModal.getAttribute('data-sui-keyboard') !== 'false') {
+            this.close(activeModal);
+          }
           return;
         }
         if (e.key === 'Tab') {
@@ -402,7 +525,116 @@
   };
 
   /* ==========================================================================
-     5. RESPONSIVE NAVBAR & MOBILE DRAWER ENGINE
+     5. OFFCANVAS / DRAWER ENGINE (DOM-Removal Safe + Shared ScrollLock)
+     ========================================================================== */
+  const Offcanvas = {
+    _active: null,
+    _returnFocusTo: null,
+    _backdrop: null,
+    _ensureBackdrop() {
+      if (!this._backdrop || !document.contains(this._backdrop)) {
+        this._backdrop = document.querySelector('.sui-offcanvas-backdrop');
+        if (!this._backdrop) {
+          this._backdrop = Utils.createElement('div', ['sui-offcanvas-backdrop']);
+          document.body.appendChild(this._backdrop);
+        }
+      }
+      return this._backdrop;
+    },
+    open(target, trigger = null) {
+      const panel = typeof target === 'string' ? document.getElementById(target) : target;
+      if (!panel) return false;
+      if (this._active === panel) return true;
+      if (this._active && this._active !== panel) this.close(this._active);
+
+      this._returnFocusTo = trigger || document.activeElement;
+      this._active = panel;
+      const backdrop = this._ensureBackdrop();
+      backdrop.classList.add('is-open');
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      ScrollLock.lock();
+      Utils.triggerReflow(panel);
+
+      const focusable = panel.querySelector(
+        '[autofocus], button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable && typeof focusable.focus === 'function') focusable.focus();
+      Utils.emit('sui:offcanvas-open', { id: panel.id, element: panel });
+      return true;
+    },
+    close(target = null) {
+      const panel = target
+        ? typeof target === 'string'
+          ? document.getElementById(target)
+          : target
+        : this._active;
+      if (!panel || (this._active !== panel && !panel.classList.contains('is-open'))) return false;
+
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+      if (this._backdrop) this._backdrop.classList.remove('is-open');
+      if (this._active === panel) {
+        this._active = null;
+        ScrollLock.unlock();
+      }
+
+      const returnTarget = this._returnFocusTo;
+      this._returnFocusTo = null;
+      if (returnTarget && typeof returnTarget.focus === 'function' && document.contains(returnTarget)) {
+        returnTarget.focus();
+      }
+      Utils.emit('sui:offcanvas-close', { id: panel.id, element: panel });
+      return true;
+    },
+    toggle(target, trigger = null) {
+      const panel = typeof target === 'string' ? document.getElementById(target) : target;
+      if (!panel) return false;
+      if (panel.classList.contains('is-open')) return this.close(panel);
+      return this.open(panel, trigger);
+    },
+    _handleDetached() {
+      if (this._active && !document.contains(this._active)) {
+        const panel = this._active;
+        this._active = null;
+        if (this._backdrop) this._backdrop.classList.remove('is-open');
+        ScrollLock.unlock();
+        const returnTarget = this._returnFocusTo;
+        this._returnFocusTo = null;
+        if (returnTarget && typeof returnTarget.focus === 'function' && document.contains(returnTarget)) {
+          returnTarget.focus();
+        }
+        Utils.emit('sui:offcanvas-close', { id: panel.id, element: panel, detached: true });
+      }
+    },
+    init() {
+      Utils.listen(document, 'click', (e) => {
+        const trigger = Utils.closestTarget(e, '[data-sui-offcanvas-target]');
+        if (trigger) {
+          e.preventDefault();
+          this.open(trigger.getAttribute('data-sui-offcanvas-target'), trigger);
+          return;
+        }
+        const closeBtn = Utils.closestTarget(e, '[data-sui-offcanvas-close]');
+        if (closeBtn) {
+          e.preventDefault();
+          this.close(closeBtn.closest('.sui-offcanvas'));
+          return;
+        }
+        if (e.target && e.target.classList && e.target.classList.contains('sui-offcanvas-backdrop')) {
+          if (!this._active || this._active.getAttribute('data-sui-backdrop') !== 'static') {
+            this.close();
+          }
+        }
+      });
+      Utils.listen(document, 'keydown', (e) => {
+        if (e.key === 'Escape' && this._active) this.close(this._active);
+      });
+    }
+  };
+
+  /* ==========================================================================
+     6. RESPONSIVE NAVBAR & MOBILE DRAWER ENGINE
      ========================================================================== */
   const Navbar = {
     _resolveMenu(toggleBtn) {
@@ -420,6 +652,7 @@
       const nav = toggleBtn.closest('.sui-navbar');
       if (nav) nav.classList.toggle('is-open', isOpen);
       toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      Utils.emit('sui:navbar-toggle', { open: isOpen, menu, trigger: toggleBtn });
       return isOpen;
     },
     closeAll(restoreFocus = false) {
@@ -437,27 +670,25 @@
       });
     },
     init() {
-      document.addEventListener('click', (e) => {
-        const toggleBtn = e.target.closest('.sui-navbar-toggle, [data-sui-navbar-toggle]');
+      Utils.listen(document, 'click', (e) => {
+        const toggleBtn = Utils.closestTarget(e, '.sui-navbar-toggle, [data-sui-navbar-toggle]');
         if (toggleBtn) {
           e.preventDefault();
           this.toggle(toggleBtn);
           return;
         }
-
-        // Legacy landing-page mobile drawer compatibility
-        if (e.target.closest('#mobileMenuBtn')) {
+        if (Utils.closestTarget(e, '#mobileMenuBtn')) {
           const drawer = document.getElementById('mobileDrawer');
           if (drawer) drawer.classList.add('is-open');
           return;
         }
-        if (e.target.closest('.js-drawer-close')) {
+        if (Utils.closestTarget(e, '.js-drawer-close')) {
           const drawer = document.getElementById('mobileDrawer');
           if (drawer) drawer.classList.remove('is-open');
         }
       });
 
-      document.addEventListener('keydown', (e) => {
+      Utils.listen(document, 'keydown', (e) => {
         if (e.key === 'Escape') {
           this.closeAll(true);
           const drawer = document.getElementById('mobileDrawer');
@@ -468,46 +699,63 @@
   };
 
   /* ==========================================================================
-     6. DROPDOWN ENGINE (Multi-instance, Outside-click, Escape, ARIA)
+     7. DROPDOWN ENGINE (Outside-Click, Escape + Focus Restore, Arrow Keys)
      ========================================================================== */
   const Dropdown = {
+    _triggers: new Map(),
     open(target, trigger = null) {
       const dd = typeof target === 'string' ? document.getElementById(target) : target;
       if (!dd) return false;
       dd.classList.add('is-open');
-      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      const trig =
+        trigger ||
+        (dd.id ? document.querySelector(`[data-sui-dropdown-trigger="${dd.id}"]`) : null);
+      if (trig) {
+        trig.setAttribute('aria-expanded', 'true');
+        this._triggers.set(dd, trig);
+      }
+      Utils.emit('sui:dropdown-open', { id: dd.id, element: dd });
       return true;
     },
-    close(target = null) {
+    close(target = null, restoreFocus = false) {
       if (target) {
         const dd = typeof target === 'string' ? document.getElementById(target) : target;
-        if (dd) {
-          dd.classList.remove('is-open');
-          const trigger = document.querySelector(`[data-sui-dropdown-trigger="${dd.id}"]`);
-          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        if (!dd || !dd.classList.contains('is-open')) return false;
+        dd.classList.remove('is-open');
+        const trig =
+          this._triggers.get(dd) ||
+          (dd.id ? document.querySelector(`[data-sui-dropdown-trigger="${dd.id}"]`) : null);
+        this._triggers.delete(dd);
+        if (trig) {
+          trig.setAttribute('aria-expanded', 'false');
+          if (restoreFocus && typeof trig.focus === 'function' && document.contains(trig)) {
+            trig.focus();
+          }
         }
-        return;
+        Utils.emit('sui:dropdown-close', { id: dd.id, element: dd });
+        return true;
       }
-      document.querySelectorAll('.sui-dropdown.is-open').forEach((dd) => this.close(dd));
+      document.querySelectorAll('.sui-dropdown.is-open').forEach((dd) => this.close(dd, restoreFocus));
+      return true;
     },
     toggle(target, trigger = null) {
       const dd = typeof target === 'string' ? document.getElementById(target) : target;
       if (!dd) return false;
       if (dd.classList.contains('is-open')) {
-        this.close(dd);
+        this.close(dd, false);
         return false;
       }
       this.open(dd, trigger);
       return true;
     },
     init() {
-      document.addEventListener('click', (e) => {
-        const trigger = e.target.closest('[data-sui-dropdown-trigger]');
+      Utils.listen(document, 'click', (e) => {
+        const trigger = Utils.closestTarget(e, '[data-sui-dropdown-trigger]');
         const targetId = trigger ? trigger.getAttribute('data-sui-dropdown-trigger') : null;
 
         document.querySelectorAll('.sui-dropdown.is-open').forEach((dd) => {
           if (!dd.contains(e.target) && (!targetId || targetId !== dd.id)) {
-            this.close(dd);
+            this.close(dd, false);
           }
         });
 
@@ -517,13 +765,13 @@
         }
       });
 
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          this.close();
-          return;
-        }
+      Utils.listen(document, 'keydown', (e) => {
         const openDd = document.querySelector('.sui-dropdown.is-open');
         if (!openDd) return;
+        if (e.key === 'Escape') {
+          this.close(openDd, true);
+          return;
+        }
         if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) {
           const items = Array.from(openDd.querySelectorAll('.sui-dropdown-item:not([disabled])'));
           if (items.length === 0) return;
@@ -540,50 +788,76 @@
   };
 
   /* ==========================================================================
-     7. ACCORDION & COLLAPSIBLE SYSTEM
+     8. ACCORDION & COLLAPSIBLE SECTIONS
      ========================================================================== */
   const Accordion = {
+    open(item) {
+      if (!item) return false;
+      const header = item.querySelector('.sui-accordion-header, [data-sui-accordion-trigger]');
+      const content = item.querySelector('.sui-accordion-content, .sui-accordion-body');
+      if (!content) return false;
+
+      const parentAccordion = item.closest('.sui-accordion');
+      if (parentAccordion && !parentAccordion.hasAttribute('data-sui-multi')) {
+        parentAccordion.querySelectorAll('.sui-accordion-item.is-open').forEach((sibling) => {
+          if (sibling !== item) this.close(sibling);
+        });
+      }
+
+      item.classList.add('is-open');
+      if (header) header.setAttribute('aria-expanded', 'true');
+      content.setAttribute('aria-hidden', 'false');
+      if (content.classList.contains('sui-accordion-content')) {
+        content.style.maxHeight = `${content.scrollHeight}px`;
+      }
+      Utils.emit('sui:accordion-toggle', { open: true, item });
+      return true;
+    },
+    close(item) {
+      if (!item) return false;
+      const header = item.querySelector('.sui-accordion-header, [data-sui-accordion-trigger]');
+      const content = item.querySelector('.sui-accordion-content, .sui-accordion-body');
+      if (!content) return false;
+
+      item.classList.remove('is-open');
+      if (header) header.setAttribute('aria-expanded', 'false');
+      content.setAttribute('aria-hidden', 'true');
+      if (content.classList.contains('sui-accordion-content')) {
+        content.style.maxHeight = null;
+      }
+      Utils.emit('sui:accordion-toggle', { open: false, item });
+      return true;
+    },
+    toggle(item) {
+      if (!item) return false;
+      return item.classList.contains('is-open') ? this.close(item) : this.open(item);
+    },
     init() {
-      document.addEventListener('click', (e) => {
-        const header = e.target.closest('.sui-accordion-header, [data-sui-accordion-trigger]');
+      Utils.listen(document, 'click', (e) => {
+        const collapseBtn = Utils.closestTarget(e, '[data-sui-collapse-target]');
+        if (collapseBtn) {
+          e.preventDefault();
+          const targetId = collapseBtn.getAttribute('data-sui-collapse-target');
+          const panel = document.getElementById(targetId);
+          if (panel) {
+            const isOpen = panel.classList.toggle('is-open');
+            collapseBtn.setAttribute('aria-expanded', String(isOpen));
+            panel.setAttribute('aria-hidden', String(!isOpen));
+            Utils.emit('sui:collapse-toggle', { open: isOpen, element: panel });
+          }
+          return;
+        }
+
+        const header = Utils.closestTarget(e, '.sui-accordion-header, [data-sui-accordion-trigger]');
         if (!header) return;
-
         const accordionItem = header.closest('.sui-accordion-item');
-        const parentAccordion = header.closest('.sui-accordion');
-        const content = accordionItem
-          ? accordionItem.querySelector('.sui-accordion-content, .sui-accordion-body')
-          : null;
-        if (!accordionItem || !content) return;
-
-        const isOpen = accordionItem.classList.contains('is-open');
-
-        if (parentAccordion && !parentAccordion.hasAttribute('data-sui-multi')) {
-          parentAccordion.querySelectorAll('.sui-accordion-item.is-open').forEach((item) => {
-            if (item !== accordionItem) {
-              item.classList.remove('is-open');
-              const h = item.querySelector('.sui-accordion-header, [data-sui-accordion-trigger]');
-              if (h) h.setAttribute('aria-expanded', 'false');
-              const c = item.querySelector('.sui-accordion-content, .sui-accordion-body');
-              if (c) c.style.maxHeight = null;
-            }
-          });
-        }
-
-        if (isOpen) {
-          accordionItem.classList.remove('is-open');
-          header.setAttribute('aria-expanded', 'false');
-          content.style.maxHeight = null;
-        } else {
-          accordionItem.classList.add('is-open');
-          header.setAttribute('aria-expanded', 'true');
-          content.style.maxHeight = `${content.scrollHeight}px`;
-        }
+        if (accordionItem) this.toggle(accordionItem);
       });
     }
   };
 
   /* ==========================================================================
-     8. TAB SWITCHER & SLIDING INDICATOR
+     9. TAB SWITCHER (Arrow Keys, Home, End, Dynamic Fragment Support)
      ========================================================================== */
   const TabEngine = {
     _updateIndicator(tabList, activeBtn) {
@@ -591,49 +865,64 @@
       tabList.style.setProperty('--sui-tab-left', `${activeBtn.offsetLeft}px`);
       tabList.style.setProperty('--sui-tab-width', `${activeBtn.offsetWidth}px`);
     },
-    init() {
-      document.querySelectorAll('.sui-tabs').forEach((tabList) => {
+    select(btn) {
+      if (!btn) return false;
+      const container = btn.closest(
+        '.sui-tabs, .showcase-block, .sui-tabs-container, .showcase-tabs, .sui-card'
+      );
+      if (!container) return false;
+
+      container.querySelectorAll('.tab-btn, .sui-tab').forEach((b) => {
+        b.classList.remove('active', 'sui-tab-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active', 'sui-tab-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      if (container.classList.contains('sui-tabs')) {
+        this._updateIndicator(container, btn);
+      }
+
+      const targetId = btn.getAttribute('data-target') || btn.getAttribute('aria-controls');
+      if (targetId) {
+        const parentContext = container.parentElement || document;
+        parentContext.querySelectorAll('.tab-panel').forEach((p) => {
+          p.classList.remove('active');
+          p.setAttribute('aria-hidden', 'true');
+        });
+        const targetPanel = document.getElementById(targetId);
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+          targetPanel.setAttribute('aria-hidden', 'false');
+        }
+      }
+      Utils.emit('sui:tab-change', { tab: btn, targetId });
+      return true;
+    },
+    hydrate(root = document) {
+      root.querySelectorAll('.sui-tabs').forEach((tabList) => {
         const active = tabList.querySelector(
           '.sui-tab.active, .sui-tab.sui-tab-active, .sui-tab[aria-selected="true"]'
         );
         if (active) this._updateIndicator(tabList, active);
       });
+    },
+    init() {
+      this.hydrate(document);
 
-      document.addEventListener('click', (e) => {
-        const btn = e.target.closest('.tab-btn, .sui-tab');
-        if (!btn) return;
-
-        const container = btn.closest(
-          '.sui-tabs, .showcase-block, .sui-tabs-container, .showcase-tabs, .sui-card'
-        );
-        if (!container) return;
-
-        container.querySelectorAll('.tab-btn, .sui-tab').forEach((b) => {
-          b.classList.remove('active', 'sui-tab-active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        btn.classList.add('active', 'sui-tab-active');
-        btn.setAttribute('aria-selected', 'true');
-
-        if (container.classList.contains('sui-tabs')) {
-          this._updateIndicator(container, btn);
-        }
-
-        const targetId = btn.getAttribute('data-target') || btn.getAttribute('aria-controls');
-        if (targetId) {
-          const parentContext = container.parentElement || document;
-          parentContext.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
-          const targetPanel = document.getElementById(targetId);
-          if (targetPanel) targetPanel.classList.add('active');
-        }
+      Utils.listen(document, 'click', (e) => {
+        const btn = Utils.closestTarget(e, '.tab-btn, .sui-tab');
+        if (btn) this.select(btn);
       });
 
-      document.addEventListener('keydown', (e) => {
-        const currentTab = e.target && typeof e.target.closest === 'function' ? e.target.closest('.sui-tab, .tab-btn') : null;
+      Utils.listen(document, 'keydown', (e) => {
+        const currentTab = Utils.closestTarget(e, '.sui-tab, .tab-btn');
         if (!currentTab || !['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
         const container = currentTab.closest('.sui-tabs, .sui-tabs-container, .showcase-tabs');
         if (!container) return;
-        const tabs = Array.from(container.querySelectorAll('.sui-tab:not([disabled]), .tab-btn:not([disabled])'));
+        const tabs = Array.from(
+          container.querySelectorAll('.sui-tab:not([disabled]), .tab-btn:not([disabled])')
+        );
         if (tabs.length < 2) return;
         e.preventDefault();
         const idx = tabs.indexOf(currentTab);
@@ -643,51 +932,143 @@
         else if (e.key === 'Home') nextIdx = 0;
         else if (e.key === 'End') nextIdx = tabs.length - 1;
         tabs[nextIdx].focus();
-        if (typeof tabs[nextIdx].click === 'function') tabs[nextIdx].click();
+        this.select(tabs[nextIdx]);
       });
     }
   };
 
   /* ==========================================================================
-     9. FORM UTILITIES (OTP Auto-Advance, Password Toggle, Auto-Resize)
+     10. POPOVERS & TOUCH-FRIENDLY TOOLTIPS
      ========================================================================== */
-  const FormUtilities = {
+  const Popover = {
+    _triggers: new Map(),
+    closeAll(restoreFocus = false) {
+      document.querySelectorAll('.sui-popover-panel.is-open').forEach((p) => {
+        p.classList.remove('is-open');
+        p.setAttribute('aria-hidden', 'true');
+        const trigger =
+          this._triggers.get(p) ||
+          (p.id ? document.querySelector(`[data-sui-popover-target="${p.id}"]`) : null);
+        this._triggers.delete(p);
+        if (trigger) {
+          trigger.setAttribute('aria-expanded', 'false');
+          if (restoreFocus && typeof trigger.focus === 'function' && document.contains(trigger)) {
+            trigger.focus();
+          }
+        }
+        Utils.emit('sui:popover-close', { id: p.id, element: p });
+      });
+    },
+    open(targetId, trigger = null) {
+      const panel = typeof targetId === 'string' ? document.getElementById(targetId) : targetId;
+      if (!panel) return false;
+      this.closeAll(false);
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      const trig =
+        trigger ||
+        (panel.id ? document.querySelector(`[data-sui-popover-target="${panel.id}"]`) : null);
+      if (trig) {
+        trig.setAttribute('aria-expanded', 'true');
+        this._triggers.set(panel, trig);
+      }
+      Utils.emit('sui:popover-open', { id: panel.id, element: panel });
+      return true;
+    },
+    close(targetId, restoreFocus = false) {
+      const panel = typeof targetId === 'string' ? document.getElementById(targetId) : targetId;
+      if (!panel || !panel.classList.contains('is-open')) return false;
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+      const trig = this._triggers.get(panel);
+      this._triggers.delete(panel);
+      if (trig) {
+        trig.setAttribute('aria-expanded', 'false');
+        if (restoreFocus && typeof trig.focus === 'function' && document.contains(trig)) {
+          trig.focus();
+        }
+      }
+      Utils.emit('sui:popover-close', { id: panel.id, element: panel });
+      return true;
+    },
+    toggle(targetId, trigger = null) {
+      const panel = typeof targetId === 'string' ? document.getElementById(targetId) : targetId;
+      if (!panel) return false;
+      if (panel.classList.contains('is-open')) {
+        this.close(panel, false);
+        return false;
+      }
+      this.open(panel, trigger);
+      return true;
+    },
     init() {
-      document.querySelectorAll('.sui-otp-group').forEach((group) => {
-        const inputs = Array.from(group.querySelectorAll('input'));
-        inputs.forEach((input, index) => {
-          input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !input.value && index > 0) {
-              inputs[index - 1].focus();
-              inputs[index - 1].value = '';
-            }
-          });
-          input.addEventListener('input', () => {
-            if (input.value.length === 1 && index < inputs.length - 1) {
-              inputs[index + 1].focus();
-            }
-          });
-          input.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
-            if (!pasteData) return;
-            pasteData
-              .replace(/\D/g, '')
-              .split('')
-              .forEach((digit, i) => {
-                if (inputs[i]) {
-                  inputs[i].value = digit;
-                  if (inputs[i + 1]) inputs[i + 1].focus();
-                }
-              });
-          });
+      Utils.listen(document, 'click', (e) => {
+        const trigger = Utils.closestTarget(e, '[data-sui-popover-target]');
+        if (trigger) {
+          e.preventDefault();
+          this.toggle(trigger.getAttribute('data-sui-popover-target'), trigger);
+          return;
+        }
+        if (!Utils.closestTarget(e, '.sui-popover-panel')) {
+          this.closeAll(false);
+        }
+
+        // Touch-friendly tooltip activation for [data-sui-tooltip]
+        const tooltipEl = Utils.closestTarget(e, '[data-sui-tooltip]');
+        document.querySelectorAll('[data-sui-tooltip].is-tooltip-open').forEach((el) => {
+          if (el !== tooltipEl) el.classList.remove('is-tooltip-open');
         });
+        if (tooltipEl && Utils.isTouchDevice()) {
+          tooltipEl.classList.toggle('is-tooltip-open');
+        }
       });
 
-      document.addEventListener('click', (e) => {
-        const eyeBtn = e.target.closest('[data-sui-toggle-password]');
+      Utils.listen(document, 'keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.closeAll(true);
+          document.querySelectorAll('[data-sui-tooltip].is-tooltip-open').forEach((el) => {
+            el.classList.remove('is-tooltip-open');
+          });
+        }
+      });
+    }
+  };
+
+  /* ==========================================================================
+     11. FORM ENHANCEMENTS (Delegated & Opt-In, Native Submission Preserved)
+     OTP, Password Toggle, Auto-Resize, Character Counters, Accessible Validation
+     ========================================================================== */
+  const FormUtilities = {
+    _updateCounter(input) {
+      const counterRef = input.getAttribute('data-sui-counter');
+      if (!counterRef) return;
+      const counterEl = document.getElementById(counterRef.replace(/^#/, ''));
+      if (!counterEl) return;
+      const max = input.getAttribute('maxlength');
+      const len = (input.value || '').length;
+      counterEl.textContent = max ? `${len} / ${max}` : String(len);
+    },
+    _syncFieldValidity(field) {
+      if (!field || typeof field.checkValidity !== 'function') return;
+      const valid = field.checkValidity();
+      field.classList.toggle('is-invalid', !valid);
+      field.classList.toggle('is-valid', valid && Boolean(field.value));
+      field.setAttribute('aria-invalid', String(!valid));
+    },
+    hydrate(root = document) {
+      root.querySelectorAll('[data-sui-counter]').forEach((input) => this._updateCounter(input));
+    },
+    init() {
+      this.hydrate(document);
+
+      // Delegated Password Revealer (works on dynamically inserted fragments)
+      Utils.listen(document, 'click', (e) => {
+        const eyeBtn = Utils.closestTarget(e, '[data-sui-toggle-password]');
         if (!eyeBtn) return;
-        const targetInput = eyeBtn.parentElement && eyeBtn.parentElement.querySelector('input');
+        const targetId = eyeBtn.getAttribute('data-sui-toggle-password');
+        const targetInput =
+          (targetId && document.getElementById(targetId)) ||
+          (eyeBtn.parentElement && eyeBtn.parentElement.querySelector('input'));
         if (!targetInput) return;
 
         const revealing = targetInput.type === 'password';
@@ -696,23 +1077,136 @@
         eyeBtn.setAttribute('aria-pressed', String(revealing));
       });
 
-      document.querySelectorAll('textarea.sui-auto-resize').forEach((textarea) => {
-        textarea.addEventListener('input', () => {
-          textarea.style.height = 'auto';
-          textarea.style.height = `${textarea.scrollHeight}px`;
-        });
+      // Delegated Input Handler: OTP advance, Auto-Resize Textarea, Character Counters, Opt-in Validation
+      Utils.listen(document, 'input', (e) => {
+        const target = e.target;
+        if (!target) return;
+
+        if (target.matches && target.matches('.sui-otp-group input')) {
+          const inputs = Array.from(target.closest('.sui-otp-group').querySelectorAll('input'));
+          const idx = inputs.indexOf(target);
+          if (target.value.length === 1 && idx !== -1 && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+        }
+
+        if (target.matches && target.matches('textarea.sui-auto-resize')) {
+          target.style.height = 'auto';
+          target.style.height = `${target.scrollHeight}px`;
+        }
+
+        if (target.hasAttribute && target.hasAttribute('data-sui-counter')) {
+          this._updateCounter(target);
+        }
+
+        if (
+          target.hasAttribute &&
+          (target.hasAttribute('data-sui-validate') || target.closest('form[data-sui-validate]'))
+        ) {
+          if (target.classList.contains('is-invalid') || target.classList.contains('is-valid')) {
+            this._syncFieldValidity(target);
+          }
+        }
       });
+
+      // Delegated OTP Backspace
+      Utils.listen(document, 'keydown', (e) => {
+        if (e.key !== 'Backspace') return;
+        const target = e.target;
+        if (!target || !target.matches || !target.matches('.sui-otp-group input')) return;
+        const inputs = Array.from(target.closest('.sui-otp-group').querySelectorAll('input'));
+        const idx = inputs.indexOf(target);
+        if (!target.value && idx > 0) {
+          inputs[idx - 1].focus();
+          inputs[idx - 1].value = '';
+        }
+      });
+
+      // Delegated OTP Paste
+      Utils.listen(document, 'paste', (e) => {
+        const target = e.target;
+        if (!target || !target.matches || !target.matches('.sui-otp-group input')) return;
+        e.preventDefault();
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+        if (!pasteData) return;
+        const inputs = Array.from(target.closest('.sui-otp-group').querySelectorAll('input'));
+        pasteData
+          .replace(/\D/g, '')
+          .split('')
+          .forEach((digit, i) => {
+            if (inputs[i]) {
+              inputs[i].value = digit;
+              if (inputs[i + 1]) inputs[i + 1].focus();
+            }
+          });
+      });
+
+      // Opt-in Accessible Validation (never blocks native submission)
+      Utils.listen(
+        document,
+        'invalid',
+        (e) => {
+          const field = e.target;
+          if (
+            field &&
+            field.hasAttribute &&
+            (field.hasAttribute('data-sui-validate') || field.closest('form[data-sui-validate]'))
+          ) {
+            this._syncFieldValidity(field);
+          }
+        },
+        true
+      );
+
+      Utils.listen(
+        document,
+        'blur',
+        (e) => {
+          const field = e.target;
+          if (
+            field &&
+            field.hasAttribute &&
+            (field.hasAttribute('data-sui-validate') || field.closest('form[data-sui-validate]'))
+          ) {
+            this._syncFieldValidity(field);
+          }
+        },
+        true
+      );
     }
   };
 
   /* ==========================================================================
-     10. HARDWARE-ACCELERATED RIPPLE (Respects prefers-reduced-motion)
+     12. ALERTS, RIPPLE, CLIPBOARD, CAROUSEL, SCROLLSPY & COMMAND PALETTE
      ========================================================================== */
+  const Alert = {
+    dismiss(alertEl) {
+      if (!alertEl) return false;
+      alertEl.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+      alertEl.style.opacity = '0';
+      alertEl.style.transform = 'translateY(-4px)';
+      Utils.setTimer(() => {
+        if (alertEl.parentNode) alertEl.parentNode.removeChild(alertEl);
+      }, 200);
+      Utils.emit('sui:alert-dismiss', { element: alertEl });
+      return true;
+    },
+    init() {
+      Utils.listen(document, 'click', (e) => {
+        const btn = Utils.closestTarget(e, '[data-sui-dismiss="alert"], .sui-alert-close');
+        if (!btn) return;
+        e.preventDefault();
+        const alertEl = btn.closest('.sui-alert');
+        if (alertEl) this.dismiss(alertEl);
+      });
+    }
+  };
+
   const Ripple = {
     init() {
-      document.addEventListener('pointerdown', (e) => {
+      Utils.listen(document, 'pointerdown', (e) => {
         if (Utils.prefersReducedMotion()) return;
-        const target = e.target.closest('.sui-btn, .sui-ripple');
+        const target = Utils.closestTarget(e, '.sui-btn, .sui-ripple');
         if (!target || target.disabled || target.getAttribute('aria-disabled') === 'true') return;
 
         const rect = target.getBoundingClientRect();
@@ -740,14 +1234,11 @@
         if (existing) existing.remove();
 
         target.appendChild(circle);
-        setTimeout(() => circle.remove(), 600);
+        Utils.setTimer(() => circle.remove(), 600);
       });
     }
   };
 
-  /* ==========================================================================
-     11. CLIPBOARD ONE-CLICK COPY ENGINE
-     ========================================================================== */
   const Clipboard = {
     async text(str) {
       if (!navigator.clipboard) return false;
@@ -760,13 +1251,13 @@
       return this.text(el.value || el.textContent || '');
     },
     init() {
-      document.addEventListener('click', async (e) => {
-        const copyBtn = e.target.closest('[data-sui-copy], .btn-copy-code, .sui-copy-btn');
+      Utils.listen(document, 'click', async (e) => {
+        const copyBtn = Utils.closestTarget(e, '[data-sui-copy], .btn-copy-code, .sui-copy-btn');
         if (!copyBtn) return;
 
         let textToCopy = copyBtn.getAttribute('data-sui-copy');
         if (!textToCopy) {
-          const container = copyBtn.closest('.code-reveal-panel, .u-card, .demo-section, article');
+          const container = copyBtn.closest('.docs-demo, .code-reveal-panel, .u-card, .demo-section, article');
           const codeEl = container ? container.querySelector('code, pre') : null;
           if (codeEl) textToCopy = codeEl.textContent;
         }
@@ -775,9 +1266,9 @@
         try {
           await this.text(textToCopy);
           const originalText = copyBtn.textContent;
-          copyBtn.textContent = '✓ Copied!';
+          copyBtn.textContent = '\u2713 Copied!';
           copyBtn.classList.add('copied');
-          setTimeout(() => {
+          Utils.setTimer(() => {
             copyBtn.textContent = originalText;
             copyBtn.classList.remove('copied');
           }, 2000);
@@ -788,236 +1279,6 @@
     }
   };
 
-  /* ==========================================================================
-     12. SCROLL REVEAL & NATIVE SYNTAX HIGHLIGHTER
-     ========================================================================== */
-  const ScrollEngine = {
-    init() {
-      if (!('IntersectionObserver' in window)) {
-        document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
-          el.classList.add('is-visible');
-        });
-        return;
-      }
-
-      const observer = new IntersectionObserver(
-        (entries, obs) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-visible');
-              entry.target.style.animationPlayState = 'running';
-              obs.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: SUI_CONFIG.animationThreshold, rootMargin: '0px 0px -40px 0px' }
-      );
-
-      document
-        .querySelectorAll('.reveal-on-scroll, [class*="sui-animate-"]:not(.sui-floating-nav)')
-        .forEach((el) => {
-          if (!el.classList.contains('is-visible')) {
-            if (!el.classList.contains('reveal-on-scroll')) {
-              el.style.animationPlayState = 'paused';
-            }
-            observer.observe(el);
-          }
-        });
-    }
-  };
-
-  const SyntaxHighlighter = {
-    highlightAll() {
-      document.querySelectorAll('pre code:not(.sui-highlighted)').forEach((block) => {
-        let code = block.innerHTML;
-        const isHTML = code.includes('&lt;') || code.includes('<');
-
-        if (!isHTML) {
-          code = code
-            .replace(/(\/\*[\s\S]*?\*\/)/g, '§COMMENT§$1§END§')
-            .replace(/([a-zA-Z0-9\-\.\:]+)(?=\s*\{)/g, '§SELECTOR§$1§END§')
-            .replace(/(--[a-zA-Z0-9\-]+|[a-zA-Z\-]+)(?=\s*:)/g, '§PROP§$1§END§')
-            .replace(/(oklch|clamp|var|calc)(?=\()/g, '§FUNC§$1§END§')
-            .replace(/(:?\s*)([0-9\.]+[a-zA-Z%]*|#[0-9a-fA-F]+)(?=[;\s}])/g, '$1§VAL§$2§END§');
-        } else {
-          code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          code = code
-            .replace(/(&lt;!--[\s\S]*?--&gt;)/g, '§COMMENT§$1§END§')
-            .replace(/("[^"]*")/g, '§VALUE§$1§END§')
-            .replace(/(&lt;\/?)([a-zA-Z0-9\-]+)/g, '$1§TAG§$2§END§')
-            .replace(/([a-zA-Z\-]+)(?=\=)/g, '§ATTR§$1§END§')
-            .replace(/(&lt;|&gt;)/g, '§PUNC§$1§END§');
-        }
-
-        block.innerHTML = code
-          .replace(/§COMMENT§/g, '<span class="token comment">')
-          .replace(/§VALUE§/g, '<span class="token attr-value">')
-          .replace(/§TAG§/g, '<span class="token tag">')
-          .replace(/§ATTR§/g, '<span class="token attr-name">')
-          .replace(/§PUNC§/g, '<span class="token punctuation">')
-          .replace(/§SELECTOR§/g, '<span class="token selector">')
-          .replace(/§PROP§/g, '<span class="token property">')
-          .replace(/§FUNC§/g, '<span class="token function">')
-          .replace(/§VAL§/g, '<span class="token value">')
-          .replace(/§END§/g, '</span>');
-
-        block.classList.add('sui-highlighted');
-      });
-    }
-  };
-
-  /* ==========================================================================
-     13. OFFCANVAS / DRAWER ENGINE (Bootstrap Parity)
-     ========================================================================== */
-  const Offcanvas = {
-    _active: null,
-    _returnFocusTo: null,
-    _backdrop: null,
-    _ensureBackdrop() {
-      if (!this._backdrop) {
-        this._backdrop = document.querySelector('.sui-offcanvas-backdrop');
-        if (!this._backdrop) {
-          this._backdrop = Utils.createElement('div', ['sui-offcanvas-backdrop']);
-          document.body.appendChild(this._backdrop);
-        }
-      }
-      return this._backdrop;
-    },
-    open(target, trigger = null) {
-      const panel = typeof target === 'string' ? document.getElementById(target) : target;
-      if (!panel) return false;
-      if (this._active && this._active !== panel) this.close(this._active);
-
-      this._returnFocusTo = trigger || document.activeElement;
-      this._active = panel;
-      const backdrop = this._ensureBackdrop();
-      backdrop.classList.add('is-open');
-      panel.classList.add('is-open');
-      panel.setAttribute('aria-hidden', 'false');
-      ScrollLock.lock();
-      Utils.triggerReflow(panel);
-
-      const focusable = panel.querySelector(
-        'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable && typeof focusable.focus === 'function') focusable.focus();
-      window.dispatchEvent(new CustomEvent('sui:offcanvas-open', { detail: { id: panel.id, element: panel } }));
-      return true;
-    },
-    close(target = null) {
-      const panel = target
-        ? (typeof target === 'string' ? document.getElementById(target) : target)
-        : this._active;
-      if (!panel) return false;
-
-      panel.classList.remove('is-open');
-      panel.setAttribute('aria-hidden', 'true');
-      if (this._backdrop) this._backdrop.classList.remove('is-open');
-      if (this._active === panel) {
-        this._active = null;
-        ScrollLock.unlock();
-      }
-
-      if (
-        this._returnFocusTo &&
-        typeof this._returnFocusTo.focus === 'function' &&
-        document.contains(this._returnFocusTo)
-      ) {
-        this._returnFocusTo.focus();
-      }
-      this._returnFocusTo = null;
-      window.dispatchEvent(new CustomEvent('sui:offcanvas-close', { detail: { id: panel.id, element: panel } }));
-      return true;
-    },
-    init() {
-      document.addEventListener('click', (e) => {
-        const trigger = e.target.closest('[data-sui-offcanvas-target]');
-        if (trigger) {
-          e.preventDefault();
-          this.open(trigger.getAttribute('data-sui-offcanvas-target'), trigger);
-          return;
-        }
-        const closeBtn = e.target.closest('[data-sui-offcanvas-close]');
-        if (closeBtn) {
-          e.preventDefault();
-          this.close(closeBtn.closest('.sui-offcanvas'));
-          return;
-        }
-        if (e.target.classList.contains('sui-offcanvas-backdrop')) {
-          this.close();
-        }
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this._active) this.close(this._active);
-      });
-    }
-  };
-
-  /* ==========================================================================
-     14. DISMISSIBLE ALERT & POPOVER ENGINES
-     ========================================================================== */
-  const Alert = {
-    dismiss(alertEl) {
-      if (!alertEl) return false;
-      alertEl.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-      alertEl.style.opacity = '0';
-      alertEl.style.transform = 'translateY(-4px)';
-      setTimeout(() => {
-        if (alertEl.parentNode) alertEl.parentNode.removeChild(alertEl);
-      }, 200);
-      return true;
-    },
-    init() {
-      document.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-sui-dismiss="alert"], .sui-alert-close');
-        if (!btn) return;
-        e.preventDefault();
-        const alertEl = btn.closest('.sui-alert');
-        if (alertEl) this.dismiss(alertEl);
-      });
-    }
-  };
-
-  const Popover = {
-    closeAll() {
-      document.querySelectorAll('.sui-popover-panel.is-open').forEach((p) => {
-        p.classList.remove('is-open');
-        const trigger = document.querySelector(`[data-sui-popover-target="${p.id}"]`);
-        if (trigger) trigger.setAttribute('aria-expanded', 'false');
-      });
-    },
-    toggle(targetId, trigger = null) {
-      const panel = document.getElementById(targetId);
-      if (!panel) return false;
-      const willOpen = !panel.classList.contains('is-open');
-      this.closeAll();
-      if (willOpen) {
-        panel.classList.add('is-open');
-        if (trigger) trigger.setAttribute('aria-expanded', 'true');
-      }
-      return willOpen;
-    },
-    init() {
-      document.addEventListener('click', (e) => {
-        const trigger = e.target.closest('[data-sui-popover-target]');
-        if (trigger) {
-          e.preventDefault();
-          this.toggle(trigger.getAttribute('data-sui-popover-target'), trigger);
-          return;
-        }
-        if (!e.target.closest('.sui-popover-panel')) {
-          this.closeAll();
-        }
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.closeAll();
-      });
-    }
-  };
-
-  /* ==========================================================================
-     15. CAROUSEL ENGINE
-     ========================================================================== */
   const Carousel = {
     goTo(wrapper, index) {
       if (!wrapper) return;
@@ -1029,18 +1290,22 @@
       wrapper.setAttribute('data-sui-carousel-index', String(clamped));
       const targetSlide = slides[clamped];
       if (typeof track.scrollTo === 'function') {
-        track.scrollTo({ left: targetSlide.offsetLeft, behavior: Utils.prefersReducedMotion() ? 'auto' : 'smooth' });
+        track.scrollTo({
+          left: targetSlide.offsetLeft,
+          behavior: Utils.prefersReducedMotion() ? 'auto' : 'smooth'
+        });
       }
       wrapper.querySelectorAll('.sui-carousel-dot').forEach((dot, i) => {
         dot.classList.toggle('is-active', i === clamped);
         dot.setAttribute('aria-current', i === clamped ? 'true' : 'false');
       });
+      Utils.emit('sui:carousel-change', { index: clamped, wrapper });
     },
     init() {
-      document.addEventListener('click', (e) => {
-        const prev = e.target.closest('[data-sui-carousel-prev]');
-        const next = e.target.closest('[data-sui-carousel-next]');
-        const dot = e.target.closest('[data-sui-carousel-slide-to]');
+      Utils.listen(document, 'click', (e) => {
+        const prev = Utils.closestTarget(e, '[data-sui-carousel-prev]');
+        const next = Utils.closestTarget(e, '[data-sui-carousel-next]');
+        const dot = Utils.closestTarget(e, '[data-sui-carousel-slide-to]');
         if (!prev && !next && !dot) return;
 
         const wrapper = (prev || next || dot).closest('.sui-carousel-wrapper');
@@ -1054,14 +1319,37 @@
     }
   };
 
-  /* ==========================================================================
-     16. SCROLLSPY ENGINE
-     ========================================================================== */
-  const ScrollSpy = {
-    init() {
-      const navs = document.querySelectorAll('[data-sui-scrollspy]');
-      if (navs.length === 0 || !('IntersectionObserver' in window)) return;
+  const ScrollEngine = {
+    hydrate(root = document) {
+      if (!('IntersectionObserver' in window)) {
+        root.querySelectorAll('.reveal-on-scroll').forEach((el) => el.classList.add('is-visible'));
+        return;
+      }
+      const targets = root.querySelectorAll('.reveal-on-scroll:not(.is-visible)');
+      if (targets.length === 0) return;
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.01, rootMargin: '0px 0px 40px 0px' }
+      );
+      activeObservers.add(observer);
+      targets.forEach((el) => observer.observe(el));
+    }
+  };
 
+  const ScrollSpy = {
+    init(root = document) {
+      return this.hydrate(root);
+    },
+    hydrate(root = document) {
+      const navs = root.querySelectorAll('[data-sui-scrollspy]');
+      if (navs.length === 0 || !('IntersectionObserver' in window)) return;
       navs.forEach((nav) => {
         const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
         const targets = links
@@ -1071,8 +1359,8 @@
             return section ? { link, section } : null;
           })
           .filter(Boolean);
-
         if (targets.length === 0) return;
+
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -1084,20 +1372,20 @@
           },
           { rootMargin: '-25% 0px -65% 0px' }
         );
+        activeObservers.add(observer);
         targets.forEach((t) => observer.observe(t.section));
       });
     }
   };
 
-  /* ==========================================================================
-     17. COMMAND PALETTE ENGINE (Cmd+K / Ctrl+K Spotlight) & CHIPS
-     ========================================================================== */
   const Command = {
     _active: null,
     _returnFocusTo: null,
     open(target = null, trigger = null) {
       const palette = target
-        ? (typeof target === 'string' ? document.getElementById(target) : target)
+        ? typeof target === 'string'
+          ? document.getElementById(target)
+          : target
         : document.querySelector('.sui-command');
       if (!palette) return false;
       if (this._active === palette) return true;
@@ -1115,11 +1403,14 @@
         this.filter(palette, '');
         if (typeof input.focus === 'function') input.focus();
       }
+      Utils.emit('sui:command-open', { id: palette.id, element: palette });
       return true;
     },
     close(target = null) {
       const palette = target
-        ? (typeof target === 'string' ? document.getElementById(target) : target)
+        ? typeof target === 'string'
+          ? document.getElementById(target)
+          : target
         : this._active;
       if (!palette || !palette.classList.contains('is-open')) return false;
 
@@ -1129,10 +1420,12 @@
         this._active = null;
         ScrollLock.unlock();
       }
-      if (this._returnFocusTo && typeof this._returnFocusTo.focus === 'function' && document.contains(this._returnFocusTo)) {
-        this._returnFocusTo.focus();
-      }
+      const returnTarget = this._returnFocusTo;
       this._returnFocusTo = null;
+      if (returnTarget && typeof returnTarget.focus === 'function' && document.contains(returnTarget)) {
+        returnTarget.focus();
+      }
+      Utils.emit('sui:command-close', { id: palette.id, element: palette });
       return true;
     },
     filter(palette, query) {
@@ -1153,33 +1446,39 @@
       if (empty) empty.style.display = visibleCount === 0 ? '' : 'none';
       return visibleCount;
     },
+    _handleDetached() {
+      if (this._active && !document.contains(this._active)) {
+        this._active = null;
+        ScrollLock.unlock();
+      }
+    },
     init() {
-      document.addEventListener('click', (e) => {
-        const openBtn = e.target.closest('[data-sui-command-target]');
+      Utils.listen(document, 'click', (e) => {
+        const openBtn = Utils.closestTarget(e, '[data-sui-command-target]');
         if (openBtn) {
           e.preventDefault();
           this.open(openBtn.getAttribute('data-sui-command-target'), openBtn);
           return;
         }
-        if (e.target.classList.contains('sui-command')) {
+        if (e.target && e.target.classList && e.target.classList.contains('sui-command')) {
           this.close(e.target);
           return;
         }
-        const chipClose = e.target.closest('[data-sui-dismiss="chip"], .sui-chip-close');
+        const chipClose = Utils.closestTarget(e, '[data-sui-dismiss="chip"], .sui-chip-close');
         if (chipClose) {
           const chip = chipClose.closest('.sui-chip');
           if (chip && chip.parentNode) chip.parentNode.removeChild(chip);
         }
       });
 
-      document.addEventListener('input', (e) => {
-        const input = e.target.closest('.sui-command-input');
+      Utils.listen(document, 'input', (e) => {
+        const input = Utils.closestTarget(e, '.sui-command-input');
         if (!input) return;
         const palette = input.closest('.sui-command');
         if (palette) this.filter(palette, input.value);
       });
 
-      document.addEventListener('keydown', (e) => {
+      Utils.listen(document, 'keydown', (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
           const defaultPalette = document.querySelector('.sui-command');
           if (defaultPalette) {
@@ -1222,57 +1521,155 @@
     }
   };
 
+  const SyntaxHighlighter = {
+    highlightAll(root = document) {
+      root.querySelectorAll('pre code:not(.sui-highlighted)').forEach((block) => {
+        let code = block.innerHTML;
+        const isHTML = code.includes('&lt;') || code.includes('<');
+
+        if (!isHTML) {
+          code = code
+            .replace(/(\/\*[\s\S]*?\*\/)/g, '§COMMENT§$1§END§')
+            .replace(/([a-zA-Z0-9\-\.\:]+)(?=\s*\{)/g, '§SELECTOR§$1§END§')
+            .replace(/(--[a-zA-Z0-9\-]+|[a-zA-Z\-]+)(?=\s*:)/g, '§PROP§$1§END§')
+            .replace(/(oklch|clamp|var|calc)(?=\()/g, '§FUNC§$1§END§')
+            .replace(/(:?\s*)([0-9\.]+[a-zA-Z%]*|#[0-9a-fA-F]+)(?=[;\s}])/g, '$1§VAL§$2§END§');
+        } else {
+          code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          code = code
+            .replace(/(&lt;!--[\s\S]*?--&gt;)/g, '§COMMENT§$1§END§')
+            .replace(/("[^"]*")/g, '§VALUE§$1§END§')
+            .replace(/(&lt;\/?)([a-zA-Z0-9\-]+)/g, '$1§TAG§$2§END§')
+            .replace(/([a-zA-Z\-]+)(?=\=)/g, '§ATTR§$1§END§')
+            .replace(/(&lt;|&gt;)/g, '§PUNC§$1§END§');
+        }
+
+        block.innerHTML = code
+          .replace(/§COMMENT§/g, '<span class="token comment">')
+          .replace(/§VALUE§/g, '<span class="token attr-value">')
+          .replace(/§TAG§/g, '<span class="token tag">')
+          .replace(/§ATTR§/g, '<span class="token attr-name">')
+          .replace(/§PUNC§/g, '<span class="token punctuation">')
+          .replace(/§SELECTOR§/g, '<span class="token selector">')
+          .replace(/§PROP§/g, '<span class="token property">')
+          .replace(/§FUNC§/g, '<span class="token function">')
+          .replace(/§VAL§/g, '<span class="token value">')
+          .replace(/§END§/g, '</span>');
+
+        block.classList.add('sui-highlighted');
+      });
+    }
+  };
+
   /* ==========================================================================
-     LIFECYCLE INITIALIZATION
+     LIFECYCLE: init(root?) & destroy()
      ========================================================================== */
-  function initialize() {
-    if (initialized) return;
-    initialized = true;
-
-    ThemeEngine.init();
-    Modal.init();
-    Offcanvas.init();
-    Alert.init();
-    Popover.init();
-    Carousel.init();
-    ScrollSpy.init();
-    Command.init();
-    Navbar.init();
-    Dropdown.init();
-    Accordion.init();
-    TabEngine.init();
-    FormUtilities.init();
-    Ripple.init();
-    Clipboard.init();
-    ScrollEngine.init();
-    SyntaxHighlighter.highlightAll();
-
-    document.addEventListener('click', (e) => {
-      const replayBtn = e.target.closest('.btn-replay');
-      if (!replayBtn) return;
-      const card = replayBtn.closest('.sui-card, .u-card, article');
-      const target = card ? card.querySelector('.js-anim-target') : null;
-      if (!target) return;
-      const animClass = target.getAttribute('data-anim');
-      if (animClass) {
-        target.classList.remove(animClass);
-        Utils.triggerReflow(target);
-        target.classList.add(animClass);
+  function startDomGuard() {
+    if (domObserver || typeof MutationObserver === 'undefined' || !document.body) return;
+    domObserver = new MutationObserver((mutations) => {
+      let hasRemoval = false;
+      for (const m of mutations) {
+        if (m.removedNodes && m.removedNodes.length > 0) {
+          hasRemoval = true;
+          break;
+        }
+      }
+      if (hasRemoval) {
+        Modal._handleDetached();
+        Offcanvas._handleDetached();
+        Command._handleDetached();
       }
     });
+    domObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function initialize(root = document) {
+    if (!initialized) {
+      initialized = true;
+      globalController = typeof AbortController !== 'undefined' ? new AbortController() : null;
+
+      ThemeEngine.init();
+      Modal.init();
+      Offcanvas.init();
+      Alert.init();
+      Popover.init();
+      Carousel.init();
+      Command.init();
+      Navbar.init();
+      Dropdown.init();
+      Accordion.init();
+      TabEngine.init();
+      FormUtilities.init();
+      Ripple.init();
+      Clipboard.init();
+      startDomGuard();
+
+      Utils.listen(document, 'click', (e) => {
+        const replayBtn = Utils.closestTarget(e, '.btn-replay');
+        if (!replayBtn) return;
+        const card = replayBtn.closest('.sui-card, .u-card, article');
+        const target = card ? card.querySelector('.js-anim-target') : null;
+        if (!target) return;
+        const animClass = target.getAttribute('data-anim');
+        if (animClass) {
+          target.classList.remove(animClass);
+          Utils.triggerReflow(target);
+          target.classList.add(animClass);
+        }
+      });
+    }
+
+    // Safe to call repeatedly for newly injected Flask/Django/HTMX fragments
+    const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
+    TabEngine.hydrate(scope);
+    FormUtilities.hydrate(scope);
+    ScrollEngine.hydrate(scope);
+    ScrollSpy.hydrate(scope);
+    SyntaxHighlighter.highlightAll(scope);
+  }
+
+  function destroy() {
+    if (!initialized) return;
+    if (globalController) {
+      globalController.abort();
+      globalController = null;
+    }
+    if (domObserver) {
+      domObserver.disconnect();
+      domObserver = null;
+    }
+    activeObservers.forEach((obs) => {
+      if (typeof obs.disconnect === 'function') obs.disconnect();
+    });
+    activeObservers.clear();
+    activeTimers.forEach((id) => clearTimeout(id));
+    activeTimers.clear();
+    Toast._timers.clear();
+
+    Modal._stack = [];
+    Offcanvas._active = null;
+    Offcanvas._returnFocusTo = null;
+    if (Offcanvas._backdrop) Offcanvas._backdrop.classList.remove('is-open');
+    Command._active = null;
+    Command._returnFocusTo = null;
+    Dropdown._triggers.clear();
+    Popover._triggers.clear();
+    ScrollLock.reset();
+    initialized = false;
   }
 
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initialize);
+      document.addEventListener('DOMContentLoaded', () => initialize(document), { once: true });
     } else {
-      initialize();
+      initialize(document);
     }
   }
 
   return {
     version: '3.0.0',
     init: initialize,
+    destroy,
     theme: ThemeEngine,
     modal: Modal,
     offcanvas: Offcanvas,
@@ -1285,6 +1682,7 @@
     dropdown: Dropdown,
     accordion: Accordion,
     tabs: TabEngine,
+    forms: FormUtilities,
     toast: Toast,
     clipboard: Clipboard,
     copy: Clipboard,

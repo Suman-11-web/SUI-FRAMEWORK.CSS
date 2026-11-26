@@ -71,6 +71,7 @@ const htmlFiles = [
   'docs/index.html',
   'tests/index.html',
   'tests/regression.html',
+  'tests/integration.html',
   ...fs.readdirSync(path.join(root, 'example')).filter((f) => f.endsWith('.html')).map((f) => `example/${f}`)
 ];
 const missingDocClasses = new Set();
@@ -133,6 +134,19 @@ assert('dist/sui.min.css includes v3 premium components (command, stepper, chip,
   distCss.includes('.sui-kbd') &&
   distCss.includes('.sui-toast-top-right')
 );
+assert('dist/sui.min.css includes touch tooltip .is-tooltip-open state', distCss.includes('.is-tooltip-open'));
+const badResponsiveTypos = [];
+for (const rel of htmlFiles.filter((f) => f.endsWith('.html'))) {
+  const c = fs.readFileSync(path.join(root, rel), 'utf8');
+  if (/(?:sm|md|lg|xl):sui-/.test(c)) badResponsiveTypos.push(rel);
+}
+assert('Zero invalid Tailwind-colon responsive class typos (e.g. md:sui-*) across HTML pages', badResponsiveTypos.length === 0, badResponsiveTypos.join(', '));
+const staleV2Pages = [];
+for (const rel of htmlFiles.filter((f) => f.endsWith('.html'))) {
+  const c = fs.readFileSync(path.join(root, rel), 'utf8');
+  if (/v2\.0\.0/.test(c)) staleV2Pages.push(rel);
+}
+assert('Zero stale v2.0.0 version badges across all HTML pages', staleV2Pages.length === 0, staleV2Pages.join(', '));
 
 // 6. Verify README.md has no broken markdown links inside HTML attributes
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
@@ -336,14 +350,26 @@ const doc = {
   querySelector: (sel) => docRoot.querySelector(sel),
   querySelectorAll: (sel) => docRoot.querySelectorAll(sel),
   contains: (el) => docRoot.contains(el),
-  addEventListener: (ev, fn) => (docListeners[ev] ||= []).push(fn),
+  addEventListener: (ev, fn, opts) => {
+    const entry = { fn, signal: opts && typeof opts === 'object' ? opts.signal : null };
+    (docListeners[ev] ||= []).push(entry);
+    if (entry.signal) {
+      entry.signal.addEventListener('abort', () => {
+        docListeners[ev] = (docListeners[ev] || []).filter((x) => x !== entry);
+      });
+    }
+  },
   dispatchClick: (target) => {
     const evt = { target, preventDefault: () => {} };
-    (docListeners.click || []).forEach((fn) => fn(evt));
+    (docListeners.click || []).forEach((e) => e.fn(evt));
+  },
+  dispatchInput: (target) => {
+    const evt = { target, preventDefault: () => {} };
+    (docListeners.input || []).forEach((e) => e.fn(evt));
   },
   dispatchKey: (key) => {
     const evt = { key, target: doc.activeElement, preventDefault: () => {} };
-    (docListeners.keydown || []).forEach((fn) => fn(evt));
+    (docListeners.keydown || []).forEach((e) => e.fn(evt));
   }
 };
 
@@ -363,6 +389,7 @@ const sandbox = {
   },
   getComputedStyle: () => ({ position: 'relative' }),
   console,
+  AbortController,
   setTimeout,
   clearTimeout
 };
@@ -482,6 +509,79 @@ const cmdClosed = !cmdEl.classList.contains('is-open') && doc.activeElement === 
 assert('SUI.command opens, focuses input, filters items, and closes on Escape with focus restore',
   cmdOpened && filteredCount === 1 && cmdClosed
 );
+
+// Repeated SUI.init() safety (no duplicate listeners)
+SUI.init();
+SUI.init();
+const themeBeforeRepeat = docRoot.getAttribute('data-theme');
+doc.dispatchClick(themeBtn);
+const themeAfterOneClick = docRoot.getAttribute('data-theme');
+assert('Repeated SUI.init() does not duplicate click listeners', themeAfterOneClick !== themeBeforeRepeat);
+
+// Theme system/auto mode
+SUI.theme.set('system');
+assert('SUI.theme.set("system") normalizes mode to "auto"', SUI.theme.getMode() === 'auto');
+SUI.theme.set('light');
+
+// Dropdown Escape restores focus to trigger
+const ddWrap = doc.createElement('div');
+ddWrap.setAttribute('id', 'dd-verify');
+ddWrap.classList.add('sui-dropdown');
+const ddTrig = doc.createElement('button');
+ddTrig.setAttribute('data-sui-dropdown-trigger', 'dd-verify');
+ddWrap.appendChild(ddTrig);
+body.appendChild(ddWrap);
+ddTrig.focus();
+doc.dispatchClick(ddTrig);
+const ddIsOpen = ddWrap.classList.contains('is-open') && ddTrig.getAttribute('aria-expanded') === 'true';
+doc.dispatchKey('Escape');
+const ddRestored = !ddWrap.classList.contains('is-open') && doc.activeElement === ddTrig;
+assert('Dropdown opens, closes on Escape, and restores focus to trigger', ddIsOpen && ddRestored);
+
+// Dynamic form fragment: character counter + password reveal
+const dynWrap = doc.createElement('div');
+const dynCount = doc.createElement('span');
+dynCount.setAttribute('id', 'dyn-cnt');
+const dynInput = doc.createElement('input');
+dynInput.setAttribute('maxlength', '20');
+dynInput.setAttribute('data-sui-counter', 'dyn-cnt');
+dynInput.value = 'Hello';
+const dynPass = doc.createElement('input');
+dynPass.setAttribute('id', 'dyn-pw');
+dynPass.type = 'password';
+const dynEye = doc.createElement('button');
+dynEye.setAttribute('data-sui-toggle-password', 'dyn-pw');
+dynWrap.appendChild(dynCount);
+dynWrap.appendChild(dynInput);
+dynWrap.appendChild(dynPass);
+dynWrap.appendChild(dynEye);
+body.appendChild(dynWrap);
+SUI.init(dynWrap);
+const initCountOk = dynCount.textContent === '5 / 20';
+dynInput.value = 'Hello SUI';
+doc.dispatchInput(dynInput);
+const liveCountOk = dynCount.textContent === '9 / 20';
+doc.dispatchClick(dynEye);
+const pwToggleOk = dynPass.type === 'text' && dynEye.getAttribute('aria-pressed') === 'true';
+assert('Dynamic fragment hydration updates character counter and password toggle', initCountOk && liveCountOk && pwToggleOk);
+
+// Detached open modal cleanup prevents frozen body scroll
+const tempModal = doc.createElement('div');
+tempModal.setAttribute('id', 'temp-detach-modal');
+tempModal.classList.add('sui-modal');
+body.appendChild(tempModal);
+SUI.modal.open('temp-detach-modal', openA);
+body.removeChild(tempModal);
+SUI.modal._handleDetached();
+assert('Removing an open modal cleans up state and unlocks body scroll', body.style.overflow === '' && SUI.modal._stack.length === 0);
+
+// SUI.destroy() cleans up all listeners & SUI.init() re-binds cleanly
+SUI.modal.open('modal-a', openA);
+SUI.destroy();
+const destroyedClean = body.style.overflow === '' && (docListeners.click || []).length === 0;
+SUI.init();
+const reboundClean = SUI.modal.open('modal-a', openA) && SUI.modal.close('modal-a') && body.style.overflow === '';
+assert('SUI.destroy() removes all global listeners & unlocks scroll; SUI.init() cleanly re-initializes', destroyedClean && reboundClean);
 
 console.log(`\nSUI.css Automated Verification: ${checks.filter((c) => c.pass).length}/${checks.length} passed\n`);
 for (const c of checks) {

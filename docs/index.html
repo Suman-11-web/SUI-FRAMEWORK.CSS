@@ -114,8 +114,8 @@
           <pre class="docs-code-pre"><code>&lt;!-- 1. Core Stylesheet (Required) --&gt;
 &lt;link rel="stylesheet" href="./dist/sui.min.css"&gt;
 
-&lt;!-- 2. Interactive Runtime (Optional) --&gt;
-&lt;script src="./dist/sui.min.js"&gt;&lt;/script&gt;</code></pre>
+&lt;!-- 2. Interactive Runtime (Optional — use defer in &lt;head&gt; or before &lt;/body&gt;) --&gt;
+&lt;script defer src="./dist/sui.min.js"&gt;&lt;/script&gt;</code></pre>
         </div>
       </section>
 
@@ -503,6 +503,18 @@
       <section id="js-api" class="docs-section">
         <h2 class="sui-text-2xl">JavaScript API Reference (<code>window.SUI</code>)</h2>
         <p class="docs-section-lead">Every interactive module is auto-initialized on load and exposed cleanly on <code>window.SUI</code> (v3.0.0).</p>
+        <div class="docs-demo">
+          <div class="docs-code-bar"><span>JS — Programmatic Lifecycle &amp; Dynamic Fragment Example</span></div>
+          <pre class="docs-code-pre"><code>// Open a modal and listen for its lifecycle event
+window.addEventListener('sui:modal-close', (e) =&gt; console.log('Closed:', e.detail.id));
+SUI.modal.open('myModal');
+
+// Safe to call after injecting HTML from Flask/Django/HTMX
+SUI.init(document.getElementById('dynamic-container'));
+
+// Tear down all listeners, observers, and timers cleanly
+SUI.destroy();</code></pre>
+        </div>
         <div class="sui-table-wrapper">
           <table class="sui-table-styled">
             <thead><tr><th>Module</th><th>Methods / Attributes</th><th>Description</th></tr></thead>
@@ -518,6 +530,9 @@
               <tr><td><code>SUI.carousel</code></td><td><code>.goTo(wrapper, idx)</code>, <code>[data-sui-carousel-prev/next]</code></td><td>Scroll-snap carousel navigation &amp; dot sync</td></tr>
               <tr><td><code>SUI.scrollspy</code></td><td><code>[data-sui-scrollspy]</code></td><td>Highlights active sidebar/nav links as sections scroll into view</td></tr>
               <tr><td><code>SUI.clipboard</code></td><td><code>.text(str)</code>, <code>.element(sel)</code>, <code>[data-sui-copy]</code></td><td>One-click clipboard copy (also aliased as <code>SUI.copy</code>)</td></tr>
+              <tr><td><code>SUI.forms</code></td><td><code>[data-sui-toggle-password]</code>, <code>[data-sui-counter]</code>, <code>[data-sui-validate]</code></td><td>Opt-in password reveal, live character counters, and accessible validation sync</td></tr>
+              <tr><td><code>SUI.command</code></td><td><code>.open(id)</code>, <code>.close(id)</code>, <code>Cmd+K</code> / <code>Ctrl+K</code></td><td>Spotlight command palette with live search filtering and arrow-key navigation</td></tr>
+              <tr><td><code>SUI.init / destroy</code></td><td><code>SUI.init(root?)</code>, <code>SUI.destroy()</code></td><td>Idempotent setup for dynamic HTML fragments (Flask/Django) and full listener/timer cleanup</td></tr>
             </tbody>
           </table>
         </div>

@@ -617,3 +617,21 @@
   font-size: var(--sui-text-sm);
   color: var(--sui-text-muted);
 }
+
+/* Touch-Friendly Tap Tooltip State (toggled by sui.js) */
+[data-sui-tooltip].is-tooltip-open::before,
+[data-sui-tooltip].is-tooltip-open::after {
+  opacity: 1;
+}
+.sui-tooltip-top.is-tooltip-open::before,
+.sui-tooltip-top.is-tooltip-open::after,
+.sui-tooltip-bottom.is-tooltip-open::before,
+.sui-tooltip-bottom.is-tooltip-open::after {
+  transform: translateX(-50%) translateY(0);
+}
+.sui-tooltip-left.is-tooltip-open::before,
+.sui-tooltip-left.is-tooltip-open::after,
+.sui-tooltip-right.is-tooltip-open::before,
+.sui-tooltip-right.is-tooltip-open::after {
+  transform: translateY(-50%) translateX(0);
+}
