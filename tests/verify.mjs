@@ -414,7 +414,7 @@ sandbox.addEventListener = (ev, fn) => (winListeners[ev] ||= []).push(fn);
 vm.runInNewContext(distJs, sandbox);
 
 const SUI = sandbox.SUI;
-assert('dist/sui.min.js exposes single unified window.SUI v3.0.0', SUI && SUI.version === '3.0.0', SUI?.version);
+assert('dist/sui.min.js exposes single unified window.SUI v3.0.0', SUI && SUI.version === '3.0.1', SUI?.version);
 assert('SUI.toast supports both v2 .show() and v3 .success()', typeof SUI.toast.show === 'function' && typeof SUI.toast.success === 'function');
 
 // Theme toggle test
@@ -532,6 +532,21 @@ assert('Repeated SUI.init() does not duplicate click listeners', themeAfterOneCl
 // Theme system/auto mode
 SUI.theme.set('system');
 assert('SUI.theme.set("system") normalizes mode to "auto"', SUI.theme.getMode() === 'auto');
+assert("dist/sui.min.css includes explicit [data-theme=light] and [data-theme=oled] blocks", distCss.includes("[data-theme=light]") && distCss.includes("[data-theme=oled]"));
+
+// Verify stale localStorage dark theme does NOT hijack explicit <html data-theme="oled"> when page has no theme toggle
+storage.set("sui-theme", "dark");
+docRoot.setAttribute("data-theme", "oled");
+body.removeChild(themeBtn);
+SUI.destroy();
+SUI.init();
+const oledNotHijacked = docRoot.getAttribute("data-theme") === "oled";
+body.appendChild(themeBtn);
+storage.delete("sui-theme");
+docRoot.setAttribute("data-theme", "light");
+SUI.destroy();
+SUI.init();
+assert("Stale localStorage does not override explicit <html data-theme=oled> on pages without a theme toggle", oledNotHijacked);
 SUI.theme.set('light');
 
 // Dropdown Escape restores focus to trigger
@@ -655,9 +670,9 @@ const howToUseContent = fs.readFileSync(path.join(root, "how-to-use.html"), "utf
 const sitemapContent = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
 
 assert(
-  "docs/index.html installation snippet uses jsDelivr @v3.0.0 CDN links (no local ./dist/ paths)",
-  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css") &&
-  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js") &&
+  "docs/index.html installation snippet uses jsDelivr @v3.0.1 CDN links (no local ./dist/ paths)",
+  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.css") &&
+  docsHtmlContent.includes("SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.js") &&
   !docsHtmlContent.includes('"./dist/sui.min.css"') &&
   !docsHtmlContent.includes('"./dist/sui.min.js"')
 );

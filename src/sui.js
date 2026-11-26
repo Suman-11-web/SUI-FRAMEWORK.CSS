@@ -193,13 +193,20 @@
         /* ignore storage restrictions */
       }
 
-      const declared = document.documentElement.getAttribute('data-theme');
+      const declared =
+        document.documentElement.getAttribute('data-theme') ||
+        document.documentElement.getAttribute('data-sui-theme');
+      const hasToggleControl = Boolean(
+        document.querySelector('.sui-theme-toggle, [data-sui-theme-toggle], [data-sui-theme-set]')
+      );
       this._mql =
         typeof window.matchMedia === 'function'
           ? window.matchMedia('(prefers-color-scheme: dark)')
           : null;
 
-      const initialMode = stored || declared || 'light';
+      // Respect explicit HTML data-theme on pages without a theme switcher so stale localStorage
+      // from another local page never hijacks <html data-theme="light|oled|dark|auto">
+      const initialMode = (hasToggleControl && stored) ? stored : (declared || 'light');
       this.set(initialMode, false);
 
       if (this._mql && typeof this._mql.addEventListener === 'function') {
@@ -249,7 +256,8 @@
       return effective;
     },
     toggle() {
-      const next = this.get() === 'dark' ? 'light' : 'dark';
+      const current = this.get();
+      const next = current === 'dark' || current === 'oled' ? 'light' : 'dark';
       this.set(next, true);
       return next;
     }
@@ -1800,7 +1808,7 @@
   Dropdown.getOrCreateInstance = createInstanceRegistry(Dropdown);
 
   return {
-    version: '3.0.0',
+    version: '3.0.1',
     positioner: Positioner,
     init: initialize,
     destroy,

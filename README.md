@@ -45,12 +45,12 @@ To get started immediately, copy and paste these code blocks into your `index.ht
 
 **1. CSS Core:** Place this link inside your `<head>` tag.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.css">
 ```
 
 **2. JavaScript Core:** Place this script tag at the very bottom of your document, just before the closing `</body>` tag.
 ```html
-<script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.js"></script>
 ```
 
 ### Local Offline Setup
@@ -305,7 +305,7 @@ Features fluid layout, interactive buttons, and choreographed entry animations.
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Premium Software Launch - Sui.css</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.css">
 </head>
 <body class="sui-bg">
 
@@ -337,7 +337,7 @@ Features fluid layout, interactive buttons, and choreographed entry animations.
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.js"></script>
 </body>
 </html>
 ```
@@ -352,7 +352,7 @@ Features a multi-column application layout, static sidebars, and analytical metr
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Application Dashboard - Sui.css</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.css">
 </head>
 <body class="sui-bg sui-flex" style="min-height: 100vh;">
 
@@ -392,7 +392,7 @@ Features a multi-column application layout, static sidebars, and analytical metr
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.0/dist/sui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.js"></script>
 </body>
 </html>
 ```
