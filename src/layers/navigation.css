@@ -222,6 +222,7 @@
   position: relative;
   background-color: var(--sui-surface-hover);
   padding: 4px;
+  border-bottom: none;
   border-radius: var(--sui-radius-lg);
   box-shadow: inset 0 0 0 1px var(--sui-border);
   gap: 2px;

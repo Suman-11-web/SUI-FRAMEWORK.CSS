@@ -92,10 +92,10 @@
 .sui-popover-top { position-area: top span-all; position-try-fallbacks: flip-block, flip-inline; --sui-popover-offset: 10px; }
 .sui-popover-right { position-area: right span-all; position-try-fallbacks: flip-inline, flip-block; --sui-popover-offset: -10px; }
 
-/* Anchor-Sized Menus (Dropdown matches exact width of the button) */
-.sui-dropdown-menu {
+/* Anchor-Sized Menus (Scoped to native Popover API dropdowns so standard .sui-dropdown-menu is unaffected) */
+.sui-popover.sui-dropdown-menu {
   position-area: bottom span-all;
-  width: anchor-size(width); /* Matches anchor width natively */
+  width: anchor-size(width);
   margin-top: var(--sui-space-2);
 }
 
@@ -266,19 +266,20 @@ select.sui-select-custom::picker(select) {
    8. HEIGHT: AUTO ANIMATIONS (ACCORDIONS)
    ========================================================================== */
 
-/* The Holy Grail of CSS: Animating to height: auto natively */
+/* Native CSS-Only Accordions (Scoped to <details> / checkbox pattern so JS .sui-accordion-item works cleanly) */
 .sui-accordion {
-  interpolate-size: allow-keywords; /* Enables calc() and animations to keyword sizes */
+  interpolate-size: allow-keywords;
 }
-.sui-accordion-content {
+details.sui-accordion .sui-accordion-content,
+.sui-accordion:has(> input[type="checkbox"]) .sui-accordion-content {
   height: 0;
   overflow: hidden;
   transition: height 0.4s var(--sui-ease-spring), opacity 0.3s;
   opacity: 0;
 }
-.sui-accordion:has(input:checked) .sui-accordion-content,
-.sui-accordion[open] .sui-accordion-content {
-  height: auto; /* Now animates smoothly thanks to interpolate-size */
+details.sui-accordion[open] .sui-accordion-content,
+.sui-accordion:has(> input[type="checkbox"]:checked) .sui-accordion-content {
+  height: auto;
   opacity: 1;
 }
 

@@ -5,15 +5,20 @@
   <title>6-Day Class Timetable</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Suman-11-web/SUI-FRAMEWORK.CSS@v3.0.1/dist/sui.min.css">
 
-<button class="sui-btn sui-btn-primary">
-  Get Started
-</button>
+<style>
+  #table{
+    display: none;
+  }
+</style>
 </head>
 <body>
+   <button id="showtable" class="sui-btn sui-btn-primary">
+  Show time table
+</button>
 
   <h1 align="center">Weekly Class Timetable (Monday - Saturday)</h1>
 
-  <table border="1" align="center" cellpadding="10" cellspacing="0">
+  <table id="table" border="1" align="center" cellpadding="10" cellspacing="0">
     <thead>
       <tr bgcolor="#cccccc">
         <th>Day / Time</th>
@@ -79,6 +84,15 @@
       </tr>
     </tbody>
   </table>
-
+<script>
+  const btn=document.getElementById("showtable");
+  const Timetable=document.getElementById("table");
+  btn.addEventListener('mouseenter',()=>{
+    Timetable.style.display="block"
+  })
+  btn.addEventListener('mouseleave',()=>{
+    Timetable.style.display="none"
+  })
+</script>
 </body>
 </html>

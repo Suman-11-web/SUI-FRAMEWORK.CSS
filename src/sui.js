@@ -620,7 +620,6 @@
       backdrop.classList.add('is-open');
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
-      Positioner.adjust(panel);
       ScrollLock.lock();
       Utils.triggerReflow(panel);
 
@@ -642,7 +641,6 @@
 
       panel.classList.remove('is-open');
       panel.setAttribute('aria-hidden', 'true');
-      Positioner.reset(panel);
       if (this._backdrop) this._backdrop.classList.remove('is-open');
       if (this._active === panel) {
         this._active = null;
@@ -884,7 +882,7 @@
       if (header) header.setAttribute('aria-expanded', 'true');
       content.setAttribute('aria-hidden', 'false');
       if (content.classList.contains('sui-accordion-content')) {
-        content.style.maxHeight = `${content.scrollHeight}px`;
+        content.style.maxHeight = `${content.scrollHeight + 40}px`;
       }
       Utils.emit('sui:accordion-toggle', { open: true, item });
       return true;

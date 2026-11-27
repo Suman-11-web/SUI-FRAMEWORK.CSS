@@ -289,25 +289,37 @@
   border-top-color: transparent;
 }
 
-/* Hover Reveal */
+/* Hover & Keyboard Focus Reveal */
 [data-sui-tooltip]:hover::before,
-[data-sui-tooltip]:hover::after {
+[data-sui-tooltip]:hover::after,
+[data-sui-tooltip]:focus-visible::before,
+[data-sui-tooltip]:focus-visible::after {
   opacity: 1;
   visibility: visible;
 }
 [data-sui-tooltip]:hover::before,
-.sui-tooltip-top:hover::before { transform: translateX(-50%) translateY(0); }
+[data-sui-tooltip]:focus-visible::before,
+.sui-tooltip-top:hover::before,
+.sui-tooltip-top:focus-visible::before { transform: translateX(-50%) translateY(0); }
 [data-sui-tooltip]:hover::after,
-.sui-tooltip-top:hover::after { transform: translateX(-50%) translateY(0); }
+[data-sui-tooltip]:focus-visible::after,
+.sui-tooltip-top:hover::after,
+.sui-tooltip-top:focus-visible::after { transform: translateX(-50%) translateY(0); }
 
-.sui-tooltip-bottom:hover::before { transform: translateX(-50%) translateY(0); }
-.sui-tooltip-bottom:hover::after { transform: translateX(-50%) translateY(0); }
+.sui-tooltip-bottom:hover::before,
+.sui-tooltip-bottom:focus-visible::before { transform: translateX(-50%) translateY(0); }
+.sui-tooltip-bottom:hover::after,
+.sui-tooltip-bottom:focus-visible::after { transform: translateX(-50%) translateY(0); }
 
-.sui-tooltip-left:hover::before { transform: translateY(-50%) translateX(0); }
-.sui-tooltip-left:hover::after { transform: translateY(-50%) translateX(0); }
+.sui-tooltip-left:hover::before,
+.sui-tooltip-left:focus-visible::before { transform: translateY(-50%) translateX(0); }
+.sui-tooltip-left:hover::after,
+.sui-tooltip-left:focus-visible::after { transform: translateY(-50%) translateX(0); }
 
-.sui-tooltip-right:hover::before { transform: translateY(-50%) translateX(0); }
-.sui-tooltip-right:hover::after { transform: translateY(-50%) translateX(0); }
+.sui-tooltip-right:hover::before,
+.sui-tooltip-right:focus-visible::before { transform: translateY(-50%) translateX(0); }
+.sui-tooltip-right:hover::after,
+.sui-tooltip-right:focus-visible::after { transform: translateY(-50%) translateX(0); }
 
 /* --------------------------------------------------------------------------
    4. ACCORDIONS & COLLAPSIBLE PANELS
@@ -373,7 +385,10 @@
 
 .sui-accordion-content {
   overflow: hidden;
+  height: auto;
+  opacity: 1;
   max-height: 0;
+  border-top: none;
   padding: 0 var(--sui-space-6);
   color: var(--sui-text-muted);
   font-size: 0.9rem;
@@ -622,6 +637,7 @@
 [data-sui-tooltip].is-tooltip-open::before,
 [data-sui-tooltip].is-tooltip-open::after {
   opacity: 1;
+  visibility: visible;
 }
 .sui-tooltip-top.is-tooltip-open::before,
 .sui-tooltip-top.is-tooltip-open::after,

@@ -144,6 +144,10 @@ assert('dist/sui.min.css includes v3 premium components (command, stepper, chip,
   distCss.includes('.sui-toast-top-right')
 );
 assert('dist/sui.min.css includes touch tooltip .is-tooltip-open state', distCss.includes('.is-tooltip-open'));
+assert("dist/sui.min.css touch & keyboard tooltips set visibility:visible", /is-tooltip-open:before[^{]*\{[^}]*visibility:visible/.test(distCss) && distCss.includes("[data-sui-tooltip]:focus-visible"));
+assert("dist/sui.min.css does not hijack bare .sui-dropdown-menu with anchor-size()", !/(?<!\.sui-popover)\.sui-dropdown-menu\{[^}]*anchor-size/.test(distCss));
+assert("dist/sui.min.css keeps .sui-accordion-content opacity:1 and height:auto for JS accordions", /\.sui-accordion-content\{[^}]*opacity:1/.test(distCss));
+assert("dist/sui.min.css preserves search icon left padding for .sui-search.sui-input-sm", distCss.includes(".sui-search.sui-input-sm"));
 const badResponsiveTypos = [];
 for (const rel of htmlFiles.filter((f) => f.endsWith('.html'))) {
   const c = fs.readFileSync(path.join(root, rel), 'utf8');
@@ -695,7 +699,7 @@ const codeBarsCount = (docsHtmlContent.match(/class="docs-code-bar"/g) || []).le
 const copyBtnsCount = (docsHtmlContent.match(/btn-copy-code/g) || []).length;
 assert(
   "All docs/index.html code bars have Copy buttons wired in docs/docs.js",
-  codeBarsCount > 0 && copyBtnsCount === codeBarsCount && docsJsContent.includes(".btn-copy-code"),
+  codeBarsCount > 0 && copyBtnsCount === codeBarsCount && !docsJsContent.includes(".btn-copy-code") && distJs.includes(".btn-copy-code"),
   copyBtnsCount + "/" + codeBarsCount + " code bars"
 );
 

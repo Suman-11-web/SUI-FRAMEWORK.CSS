@@ -109,6 +109,8 @@
    -------------------------------------------------------------------------- */
 .sui-input-sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: var(--sui-radius-sm); }
 .sui-input-lg { padding: 0.85rem 1.25rem; font-size: 1.1rem; border-radius: var(--sui-radius-lg); }
+.sui-search.sui-input-sm { padding-left: 2.25rem; background-position: left 0.6rem center; background-size: 1rem; }
+.sui-search.sui-input-lg { padding-left: 2.75rem; background-position: left 0.85rem center; }
 
 .sui-input-error { 
   border-color: var(--sui-color-danger-500); 

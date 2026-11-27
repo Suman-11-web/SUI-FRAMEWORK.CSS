@@ -175,9 +175,16 @@
   animation: sui-btn-spin 0.8s linear infinite;
 }
 
-/* Adjust loader color for ghost/outline variants */
+/* Adjust loader color for light/secondary/warning/ghost/outline variants */
+.sui-btn-secondary.sui-btn-loading::after,
+.sui-btn-warning.sui-btn-loading::after,
 .sui-btn-outline.sui-btn-loading::after,
-.sui-btn-ghost.sui-btn-loading::after {
+.sui-btn-ghost.sui-btn-loading::after,
+.sui-btn-outline-primary.sui-btn-loading::after,
+.sui-btn-outline-success.sui-btn-loading::after,
+.sui-btn-outline-danger.sui-btn-loading::after,
+.sui-btn-outline-warning.sui-btn-loading::after,
+.sui-btn-outline-info.sui-btn-loading::after {
   border-color: var(--sui-border-strong);
   border-top-color: var(--sui-text);
 }
@@ -245,6 +252,8 @@
 .sui-btn-group-vertical .sui-btn { border-radius: 0; margin-top: -1px; }
 .sui-btn-group-vertical .sui-btn:first-child { margin-top: 0; border-top-left-radius: var(--sui-radius-md); border-top-right-radius: var(--sui-radius-md); }
 .sui-btn-group-vertical .sui-btn:last-child { border-bottom-left-radius: var(--sui-radius-md); border-bottom-right-radius: var(--sui-radius-md); }
+.sui-btn-group-vertical .sui-btn:hover { z-index: 10; position: relative; }
+.sui-btn-group-vertical .sui-btn:focus-visible { z-index: 20; position: relative; }
 
 .sui-btn-toolbar {
   display: flex;
